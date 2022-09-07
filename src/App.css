@@ -1,0 +1,29 @@
+.map {
+  height: 100%;
+}
+.map-wrapper {
+  display: flex;  
+  width: 100%;
+  height: 100%;
+}
+
+.map-container {
+  height: 100%;
+  width: 100%;
+}
+
+.gmnoprint {
+  bottom: unset !important;
+  top: 100px;
+}
+
+/* .gm-style-iw:nth-child(3),
+.gm-style-iw:nth-child(1),
+.gm-style-iw:nth-child(4),
+.gm-style-iw:nth-child(2) {
+  display: none !important;
+} */
+
+.gm-style-iw.gm-style-iw-c:nth-child(6) {
+  display: none;
+}
