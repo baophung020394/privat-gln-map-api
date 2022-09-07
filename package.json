@@ -1,7 +1,7 @@
 {
   "name": "gln-map",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "homepage": "https://github.com/baophung020394/privat-gln-map-api/",
   "dependencies": {
     "@material-ui/core": "^4.12.4",
