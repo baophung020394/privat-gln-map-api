@@ -70,7 +70,10 @@ function Map() {
   console.log({ curMarker });
   return (
     <>
-      <Box className="seleted-marker">
+      <Box
+        className={classes.seletedMarker}
+        style={{ marginLeft: selected ? "0" : "-370px" }}
+      >
         {selected ? (
           <PlaceDetail
             isOpen={isOpen}

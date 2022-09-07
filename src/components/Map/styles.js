@@ -15,8 +15,8 @@ export default makeStyles((theme) => ({
     background: "#fff",
     borderRadius: 8,
     minWidth: 200,
-    position: "fixed",
-    top: 70,
+    position: "absolute",
+    top: 10,
     zIndex: 0,
     left: "50%",
     transform: "translateX(-50%)",
@@ -28,4 +28,10 @@ export default makeStyles((theme) => ({
     transitionProperty: 'background,box-shadow',
     transitionDuration: '.3s',
   },
+  seletedMarker: {
+    transition: '0.4s',
+    width: 370,
+    minWidth: 370,
+    marginLeft: -370
+  }
 }));
