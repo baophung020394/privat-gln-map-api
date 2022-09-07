@@ -1,4 +1,6 @@
 import { Box, CssBaseline, Grid } from "@material-ui/core";
+import { Route } from "react-router-dom";
+import { Switch } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header/Header";
 import List from "./components/List/List";
@@ -19,7 +21,11 @@ function App() {
           }}
         >
           <Box className="map-wrapper">
-            <Map />
+            <Switch>
+              <Route path="/maps">
+                <Map />
+              </Route>
+            </Switch>
           </Box>
         </Grid>
       </AppProvider>
