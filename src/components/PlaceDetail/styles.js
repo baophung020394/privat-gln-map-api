@@ -5,6 +5,7 @@ export default makeStyles((theme) => ({
     background: "#fff",
     boxShadow: "0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22)",
     transition: "0.4s",
+    height: '100%'
   },
   image: {
     maxWidth: 380,
