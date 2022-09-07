@@ -61,7 +61,7 @@ function Map() {
   }, []);
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyB5-tCnXi58TX6zOjQP8NpcNNewPOFCsh8",
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
   });
 
