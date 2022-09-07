@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "./static/css/main.ff81d916.css",
-    "main.js": "./static/js/main.296a8d53.js",
-    "static/js/787.f6271ada.chunk.js": "./static/js/787.f6271ada.chunk.js",
-    "index.html": "./index.html",
-    "main.ff81d916.css.map": "./static/css/main.ff81d916.css.map",
-    "main.296a8d53.js.map": "./static/js/main.296a8d53.js.map",
-    "787.f6271ada.chunk.js.map": "./static/js/787.f6271ada.chunk.js.map"
+    "main.css": "/baophung020394/privat-gln-map-api/static/css/main.ff81d916.css",
+    "main.js": "/baophung020394/privat-gln-map-api/static/js/main.bc4a11d8.js",
+    "static/js/787.f6271ada.chunk.js": "/baophung020394/privat-gln-map-api/static/js/787.f6271ada.chunk.js",
+    "index.html": "/baophung020394/privat-gln-map-api/index.html",
+    "main.ff81d916.css.map": "/baophung020394/privat-gln-map-api/static/css/main.ff81d916.css.map",
+    "main.bc4a11d8.js.map": "/baophung020394/privat-gln-map-api/static/js/main.bc4a11d8.js.map",
+    "787.f6271ada.chunk.js.map": "/baophung020394/privat-gln-map-api/static/js/787.f6271ada.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ff81d916.css",
-    "static/js/main.296a8d53.js"
+    "static/js/main.bc4a11d8.js"
   ]
 }
