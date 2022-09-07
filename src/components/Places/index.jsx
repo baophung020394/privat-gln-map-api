@@ -31,7 +31,7 @@ import {
 
 import useStyles from "./styles.js";
 
-function PlacesAutocomplete({ panTo }) {
+function PlacesAutocomplete({ panTo, serCurMarker }) {
   const [isValue, setIsValue] = useState(null);
 
   const classes = useStyles();
@@ -61,6 +61,7 @@ function PlacesAutocomplete({ panTo }) {
       address: results[0].formatted_address,
       lng: newObj.lng,
       lat: newObj.lat,
+      toUrl: `https://www.google.com/maps/?q=${newObj.lat},${newObj.lng}`,
       time: new Date(),
     };
 
@@ -71,6 +72,7 @@ function PlacesAutocomplete({ panTo }) {
     if (!isValue) return;
     setArrayList((oldArray) => [...oldArray, isValue]);
 
+    serCurMarker(null);
     panTo({ lat: isValue.lat, lng: isValue.lng });
   };
 

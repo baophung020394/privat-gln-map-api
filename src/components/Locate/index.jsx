@@ -19,6 +19,8 @@ function Locate({ panTo, serCurMarker }) {
             serCurMarker({
               lat: position?.coords.latitude,
               lng: position?.coords.longitude,
+              toUrl: `https://www.google.com/maps/?q=${position?.coords.latitude},${position?.coords.longitude}`,
+              time: new Date(),
             });
           },
           () => null

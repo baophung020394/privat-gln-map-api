@@ -28,6 +28,24 @@
   transition: all 0.4s ease;
 }
 
+.shadow {
+  position: relative;
+}
+
+.shadow:after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  z-index: 0;
+  transform: translateX(-50%);
+  background: #8b8b8b;
+  width: 10px;
+  height: 5px;
+  border-radius: 12px;
+  box-shadow: 0px 0px 5px 1px #333;
+}
+
 /* .gm-style-iw:nth-child(3),
 .gm-style-iw:nth-child(1),
 .gm-style-iw:nth-child(4),
