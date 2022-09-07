@@ -8,7 +8,7 @@ export default makeStyles((theme) => ({
     height: '100%'
   },
   image: {
-    maxWidth: 380,
+    maxWidth: 350,
     margin: "auto",
     "& img": {
       width: "100%",
