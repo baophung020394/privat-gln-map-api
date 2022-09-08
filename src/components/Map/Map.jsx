@@ -171,6 +171,22 @@ function Map() {
         status: "new",
       },
     ]);
+
+    setListMarkerSaved((current) => [
+      ...current,
+      {
+        address: res?.data.results[0].formatted_address,
+        name: stringAddress[0],
+        ward: stringAddress[1],
+        district: stringAddress[2],
+        city: stringAddress[3],
+        lat: mapRef?.current?.center?.lat(),
+        lng: mapRef?.current?.center?.lng(),
+        toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
+        time: new Date(),
+        status: "new",
+      },
+    ]);
     // });
 
     setCenterChanged({
@@ -208,11 +224,14 @@ function Map() {
         lng: selectMar?.lng,
         time: new Date(),
         status: "old",
+        imgSave:
+          "https://thumbs.dreamstime.com/b/cafe-icon-white-background-vector-illustration-cafe-icon-white-background-111649225.jpg",
       },
     ]);
   };
 
   const handleSaveMarkerCur = (curMar) => {
+    setSelected({ ...curMar, status: "old" });
     setListMarkerSaved((current) => [
       ...current,
       {
@@ -221,10 +240,12 @@ function Map() {
         ward: curMar?.ward,
         district: curMar?.district,
         city: curMar?.city,
-        lat: curMar?.lat,
-        lng: curMar?.lng,
+        lat: Number(curMar?.lat),
+        lng: Number(curMar?.lng),
         time: new Date(),
         status: "old",
+        imgSave:
+          "https://thumbs.dreamstime.com/b/cafe-icon-white-background-vector-illustration-cafe-icon-white-background-111649225.jpg",
       },
     ]);
   };
@@ -238,11 +259,16 @@ function Map() {
 
   console.log({ listMarkerSaved });
   console.log({ storeMarkerSaved });
+  console.log({ isOpenInfoDrag });
   // console.log({ isSaved });
-  console.log({ isShow });
-  console.log({ showMapSaved });
-  console.log({ selected });
-  console.log({ isMarkerSave });
+  // console.log({ isShow });
+  // console.log({ showMapSaved });
+  // console.log({ selected });
+  // console.log({ isMarkerSave });
+
+  useEffect(() => {
+    localStorage.setItem("showMapSaved", `${JSON.stringify(true)}`);
+  }, []);
 
   useEffect(() => {
     if (isSaved && storeMarkerSaved?.length >= 0) {
@@ -376,10 +402,14 @@ function Map() {
                 setIsOpenPlace(true);
                 setIsOpenInfo(true);
                 setIsSaved(false);
-                setCurMarker(null);
+                // setCurMarker(null);
               }}
               icon={{
-                url: `https://cdn-icons-png.flaticon.com/512/235/235353.png`,
+                url: `${
+                  selected?.status === "old" && selected?.lat === marker?.lat
+                    ? "https://thumbs.dreamstime.com/b/cafe-icon-white-background-vector-illustration-cafe-icon-white-background-111649225.jpg"
+                    : "https://cdn-icons-png.flaticon.com/512/235/235353.png"
+                }`,
                 origin: new window.google.maps.Point(0, 0),
                 anchor: new window.google.maps.Point(15, 15),
                 scaledSize: new window.google.maps.Size(30, 30),
@@ -421,11 +451,18 @@ function Map() {
         {curMarker ? (
           <div
             className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
+            style={{
+              background: `${
+                curMarker?.status === "old"
+                  ? "https://thumbs.dreamstime.com/b/cafe-icon-white-background-vector-illustration-cafe-icon-white-background-111649225.jpg"
+                  : "https://cdn-icons-png.flaticon.com/512/235/235353.png"
+              }`,
+            }}
             onClick={() => {
               setCurMarker({ ...curMarker, status: "old" });
               setIsOpenPlace(true);
               setIsOpenInfoDrag(true);
-              setSelected(null);
+              // setSelected(null);
             }}
           >
             {isOpenInfoDrag ? (
@@ -471,7 +508,7 @@ function Map() {
                 setIsOpenPlace(true);
               }}
               icon={{
-                url: `https://cdn-icons-png.flaticon.com/512/235/235353.png`,
+                url: `${marker?.imgSave}`,
                 origin: new window.google.maps.Point(0, 0),
                 anchor: new window.google.maps.Point(15, 15),
                 scaledSize: new window.google.maps.Size(30, 30),
