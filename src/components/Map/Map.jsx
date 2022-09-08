@@ -13,12 +13,6 @@ import { AppContext } from "../../context/AppProvider";
 import Locate from "../Locate";
 import PlaceDetail from "../PlaceDetail";
 import PlacesAutocomplete from "../Places";
-
-import usePlacesAutocomplete, {
-  getGeocode,
-  getLatLng,
-} from "use-places-autocomplete";
-
 import useStyles from "./styles.js";
 import axios from "axios";
 
@@ -40,6 +34,7 @@ function Map() {
   const closePlace = () => {
     setIsOpen(false);
   };
+
   const { arrList, setArrayList } = useContext(AppContext);
 
   const center = useMemo(
@@ -57,12 +52,15 @@ function Map() {
       }`
     );
 
-    console.log({ res });
+    const stringAddress = res?.data.results[0].formatted_address.split(",");
 
     setArrayList((current) => [
       ...current,
       {
         address: res?.data.results[0].formatted_address,
+        ward: stringAddress[1],
+        district: stringAddress[2],
+        city: stringAddress[3],
         lat: e.latLng.lat(),
         lng: e.latLng.lng(),
         toUrl: `https://www.google.com/maps/?q=${e.latLng.lat()},${e.latLng.lng()}`,
@@ -84,7 +82,7 @@ function Map() {
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: ["places", "geometry"],
+    libraries: ["places"],
   });
 
   if (!isLoaded) return <div>Loading...</div>;
@@ -101,7 +99,7 @@ function Map() {
 
   const handleDragStart = () => {
     setDragStart(true);
-    setIsOpenPlace(false);
+    // setIsOpenPlace(false);
     setArrayList([]);
     setSelected(null);
   };
@@ -121,11 +119,17 @@ function Map() {
       }`
     );
 
+    const stringAddress = res?.data.results[0].formatted_address.split(",");
+
     res?.data?.results.slice(0, 5).forEach((x) => {
+      const stringAddress2 = x?.formatted_address.split(",");
       setArrayList((current) => [
         ...current,
         {
           address: x?.formatted_address,
+          ward: stringAddress2[1],
+          district: stringAddress2[2],
+          city: stringAddress2[3],
           lat: x?.geometry.location.lat,
           lng: x?.geometry.location.lng,
           time: new Date(),
@@ -135,13 +139,21 @@ function Map() {
 
     serCurMarker({
       address: res?.data.results[0].formatted_address,
+      ward: stringAddress[1],
+      district: stringAddress[2],
+      city: stringAddress[3],
       lat: mapRef?.current?.center?.lat(),
       lng: mapRef?.current?.center?.lng(),
       toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
       time: new Date(),
     });
 
-    console.log({ res });
+    console.log({res})
+
+    mapRef.current.panTo({
+      lat: res?.data.results[0].geometry.location.lat,
+      lng: res?.data.results[0].geometry.location.lng,
+    });
   };
 
   const handleZoomChanged = () => {
@@ -150,6 +162,8 @@ function Map() {
     //   lng: curMarker.lng(),
     // });
   };
+
+  console.log({ selected });
 
   return (
     <>
@@ -183,7 +197,7 @@ function Map() {
       </Box>
 
       <GoogleMap
-        zoom={15}
+        zoom={18}
         center={center}
         onZoomChanged={handleZoomChanged}
         mapContainerClassName="map-container"
@@ -231,22 +245,22 @@ function Map() {
               setSelected(null);
             }}
           >
-            <div>
-              <h2>
-                <span role="img" aria-label="bear">
-                  🐻
-                </span>{" "}
-                Alert
-              </h2>
-              <p>Address: {selected?.address} </p>
+            <div className="wrapper-info">
+              <h3>{selected?.address} </h3>
+              <p>Ward: {selected?.ward}</p>
+              <p>Disctrict: {selected?.district}</p>
+              <p>City: {selected?.city}</p>
               <p>Spotted {formatRelative(selected.time, new Date())}</p>
+              <a href={selected?.toUrl} target="_blank">
+                View on Google Maps
+              </a>
             </div>
           </InfoWindow>
         ) : null}
 
         {curMarker ? (
           <div
-            className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
+            className={`${classes.currentMark} ${dragStart ? "shadow" : "bounce2"}`}
             onClick={() => {
               serCurMarker(curMarker);
               setIsOpenPlace(true);
@@ -261,15 +275,15 @@ function Map() {
                   setIsOpenPlace(false);
                 }}
               >
-                <div>
-                  <h2>
-                    <span role="img" aria-label="bear">
-                      🐻
-                    </span>{" "}
-                    Alert
-                  </h2>
-                  <p>Address: <a href={curMarker?.toUrl} target="_blank">{curMarker?.address}</a> </p>
-                  <p>Spotted {formatRelative(curMarker?.time, new Date())}</p>
+                <div className="wrapper-info">
+                  <h3>{curMarker?.address} </h3>
+                  <p>Ward: {curMarker?.ward}</p>
+                  <p>Disctrict: {curMarker?.district}</p>
+                  <p>City: {curMarker?.city}</p>
+                  <p>Spotted {formatRelative(curMarker.time, new Date())}</p>
+                  <a href={curMarker?.toUrl} target="_blank">
+                    View on Google Maps
+                  </a>
                 </div>
               </InfoWindow>
             ) : null}

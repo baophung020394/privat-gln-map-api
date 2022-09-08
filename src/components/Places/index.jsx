@@ -51,14 +51,18 @@ function PlacesAutocomplete({ panTo, serCurMarker }) {
   const handleSelect = async (address) => {
     setValue(address, false);
     clearSuggestions();
-    console.log({ address });
+
     const results = await getGeocode({ address });
     const objLo = await getLatLng(results[0]);
     let newObj = { ...objLo };
 
-    console.log({ results });
+    const stringAddress = results[0]?.formatted_address.split(",");
+    
     newObj = {
       address: results[0].formatted_address,
+      ward: stringAddress[1],
+      district: stringAddress[2],
+      city: stringAddress[3],
       lng: newObj.lng,
       lat: newObj.lat,
       toUrl: `https://www.google.com/maps/?q=${newObj.lat},${newObj.lng}`,
