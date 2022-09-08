@@ -84,6 +84,8 @@ function Map() {
         toUrl: `https://www.google.com/maps/?q=${e.latLng.lat()},${e.latLng.lng()}`,
         time: new Date(),
         status: "new",
+        imgSabe:
+          "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
       },
     ]);
   }, []);
@@ -116,6 +118,9 @@ function Map() {
 
   const handleDragStart = () => {
     setDragStart(true);
+    setIsOpenInfoDrag(false);
+    // setSelected(null);
+    // setCurMarker(null);
     // setListMarkerInput([]);
     // setSelected(null);
   };
@@ -151,42 +156,48 @@ function Map() {
       toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
       time: new Date(),
       status: "new",
+      imgSave:
+        "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
     });
 
     // Set marker list for drag end
     // res?.data?.results.slice(1, 5).forEach((x) => {
     //   const stringAddress2 = x?.formatted_address.split(",");
-    setListMarkerInput((current) => [
-      ...current,
-      {
-        address: res?.data.results[0].formatted_address,
-        name: stringAddress[0],
-        ward: stringAddress[1],
-        district: stringAddress[2],
-        city: stringAddress[3],
-        lat: mapRef?.current?.center?.lat(),
-        lng: mapRef?.current?.center?.lng(),
-        toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
-        time: new Date(),
-        status: "new",
-      },
-    ]);
+    // setListMarkerInput((current) => [
+    //   ...current,
+    //   {
+    //     address: res?.data.results[0].formatted_address,
+    //     name: stringAddress[0],
+    //     ward: stringAddress[1],
+    //     district: stringAddress[2],
+    //     city: stringAddress[3],
+    //     lat: mapRef?.current?.center?.lat(),
+    //     lng: mapRef?.current?.center?.lng(),
+    //     toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
+    //     time: new Date(),
+    //     status: "new",
+    //     imgSave:
+    //       "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
+    //   },
+    // ]);
 
-    setListMarkerSaved((current) => [
-      ...current,
-      {
-        address: res?.data.results[0].formatted_address,
-        name: stringAddress[0],
-        ward: stringAddress[1],
-        district: stringAddress[2],
-        city: stringAddress[3],
-        lat: mapRef?.current?.center?.lat(),
-        lng: mapRef?.current?.center?.lng(),
-        toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
-        time: new Date(),
-        status: "new",
-      },
-    ]);
+    // setListMarkerSaved((current) => [
+    //   ...current,
+    //   {
+    //     address: res?.data.results[0].formatted_address,
+    //     name: stringAddress[0],
+    //     ward: stringAddress[1],
+    //     district: stringAddress[2],
+    //     city: stringAddress[3],
+    //     lat: mapRef?.current?.center?.lat(),
+    //     lng: mapRef?.current?.center?.lng(),
+    //     toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
+    //     time: new Date(),
+    //     status: "new",
+    //     imgSave:
+    //       "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
+    //   },
+    // ]);
     // });
 
     setCenterChanged({
@@ -194,12 +205,6 @@ function Map() {
       lng: mapRef?.current?.center?.lng(),
     });
 
-    console.log({ res });
-
-    // mapRef.current.panTo({
-    //   lat: res?.data.results[0].geometry.location.lat,
-    //   lng: res?.data.results[0].geometry.location.lng,
-    // });
     // mapRef.current.setZoom(20);
   };
 
@@ -225,13 +230,13 @@ function Map() {
         time: new Date(),
         status: "old",
         imgSave:
-          "https://thumbs.dreamstime.com/b/cafe-icon-white-background-vector-illustration-cafe-icon-white-background-111649225.jpg",
+          "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
       },
     ]);
   };
 
   const handleSaveMarkerCur = (curMar) => {
-    setSelected({ ...curMar, status: "old" });
+    setCurMarker({ ...curMar, status: "old" });
     setListMarkerSaved((current) => [
       ...current,
       {
@@ -245,7 +250,7 @@ function Map() {
         time: new Date(),
         status: "old",
         imgSave:
-          "https://thumbs.dreamstime.com/b/cafe-icon-white-background-vector-illustration-cafe-icon-white-background-111649225.jpg",
+          "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
       },
     ]);
   };
@@ -395,20 +400,21 @@ function Map() {
         {listMarkerInput &&
           listMarkerInput.map((marker, index) => (
             <Marker
+              // draggable={true}
               key={index}
               position={{ lat: marker.lat, lng: marker.lng }}
               onClick={() => {
                 setSelected(marker);
                 setIsOpenPlace(true);
                 setIsOpenInfo(true);
+                setIsOpenInfoDrag(false);
                 setIsSaved(false);
-                // setCurMarker(null);
               }}
               icon={{
                 url: `${
                   selected?.status === "old" && selected?.lat === marker?.lat
-                    ? "https://thumbs.dreamstime.com/b/cafe-icon-white-background-vector-illustration-cafe-icon-white-background-111649225.jpg"
-                    : "https://cdn-icons-png.flaticon.com/512/235/235353.png"
+                    ? "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png"
+                    : "https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png"
                 }`,
                 origin: new window.google.maps.Point(0, 0),
                 anchor: new window.google.maps.Point(15, 15),
@@ -452,17 +458,17 @@ function Map() {
           <div
             className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
             style={{
-              background: `${
-                curMarker?.status === "old"
-                  ? "https://thumbs.dreamstime.com/b/cafe-icon-white-background-vector-illustration-cafe-icon-white-background-111649225.jpg"
-                  : "https://cdn-icons-png.flaticon.com/512/235/235353.png"
+              backgroundImage: `${
+                dragStart && curMarker?.status === "old"
+                  ? "url(https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png)"
+                  : ""
               }`,
             }}
             onClick={() => {
-              setCurMarker({ ...curMarker, status: "old" });
               setIsOpenPlace(true);
+              setIsOpenInfo(false);
               setIsOpenInfoDrag(true);
-              // setSelected(null);
+              setSelected(null);
             }}
           >
             {isOpenInfoDrag ? (

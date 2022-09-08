@@ -7,7 +7,7 @@ export default makeStyles((theme) => ({
     left: "50%",
     zIndex: 0,
     transform: "translate(-50%,-50%)",
-    // background: "url(https://cdn-icons-png.flaticon.com/512/235/235353.png)",
+    background: "url(https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png)",
     backgroundSize: "cover",
     width: 30,
     height: 30,

@@ -76,6 +76,8 @@ function PlacesAutocomplete({
       toUrl: `https://www.google.com/maps/?q=${newObj.lat},${newObj.lng}`,
       time: new Date(),
       status: "new",
+      imgSave:
+        "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
     };
 
     setIsValue(newObj);
