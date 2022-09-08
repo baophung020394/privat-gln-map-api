@@ -122,7 +122,7 @@ function Map() {
 
     const stringAddress = res?.data.results[0].formatted_address.split(",");
 
-    res?.data?.results.slice(0, 5).forEach((x) => {
+    res?.data?.results.slice(1, 5).forEach((x) => {
       const stringAddress2 = x?.formatted_address.split(",");
       setArrayList((current) => [
         ...current,
@@ -151,19 +151,24 @@ function Map() {
       time: new Date(),
     });
 
-    console.log({res})
-
-    mapRef.current.panTo({
-      lat: res?.data.results[0].geometry.location.lat,
-      lng: res?.data.results[0].geometry.location.lng,
+    setCenterChanged({
+      lat: mapRef?.current?.center?.lat(),
+      lng: mapRef?.current?.center?.lng(),
     });
+
+    console.log({ res });
+
+    // mapRef.current.panTo({
+    //   lat: res?.data.results[0].geometry.location.lat,
+    //   lng: res?.data.results[0].geometry.location.lng,
+    // });
+    // mapRef.current.setZoom(20);
   };
 
   const handleZoomChanged = () => {
-    // mapRef.current.panTo({
-    //   lat: curMarker.lat(),
-    //   lng: curMarker.lng(),
-    // });
+    if(centerChanged) {
+      mapRef.current.panTo({ lat: centerChanged.lat, lng: centerChanged.lng });
+    }
   };
 
   console.log({ selected });
@@ -208,7 +213,7 @@ function Map() {
       </Box>
 
       <GoogleMap
-        zoom={18}
+        zoom={20}
         center={center}
         onZoomChanged={handleZoomChanged}
         mapContainerClassName="map-container"
@@ -271,7 +276,9 @@ function Map() {
 
         {curMarker ? (
           <div
-            className={`${classes.currentMark} ${dragStart ? "shadow" : "bounce2"}`}
+            className={`${classes.currentMark} ${
+              dragStart ? "shadow" : ""
+            }`}
             onClick={() => {
               serCurMarker(curMarker);
               setIsOpenPlace(true);
@@ -279,7 +286,6 @@ function Map() {
           >
             {isOpenPlace ? (
               <InfoWindow
-                style={{ top: "-15px" }}
                 zIndex={1}
                 position={{ lat: curMarker?.lat, lng: curMarker?.lng }}
                 onCloseClick={() => {
