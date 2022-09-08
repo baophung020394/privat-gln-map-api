@@ -19,6 +19,7 @@ import axios from "axios";
 function Map() {
   const [curMarker, setCurMarker] = useState();
   const [selected, setSelected] = useState(null);
+  const [isMarkerSave, setIsMarkerSaved] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [dragStart, setDragStart] = useState(null);
   const [isOpenPlace, setIsOpenPlace] = useState(null);
@@ -193,6 +194,8 @@ function Map() {
   };
 
   const handleSaveMarker = (selectMar) => {
+    setSelected({ ...selectMar, status: "old" });
+    // setIsOpenInfo(true);
     setListMarkerSaved((current) => [
       ...current,
       {
@@ -239,6 +242,7 @@ function Map() {
   console.log({ isShow });
   console.log({ showMapSaved });
   console.log({ selected });
+  console.log({ isMarkerSave });
 
   useEffect(() => {
     if (isSaved && storeMarkerSaved?.length >= 0) {
@@ -268,7 +272,7 @@ function Map() {
         className={classes.seletedMarker}
         style={{
           marginLeft:
-            isOpenPlace || (isOpenPlace && curMarker) ? "0" : "-370px",
+            isOpenPlace || (isOpenPlace && curMarker) ? "0" : "-390px",
         }}
       >
         {selected ? (
@@ -324,6 +328,9 @@ function Map() {
             <Locate panTo={panTo} setCurMarker={setCurMarker} />
             <PlacesAutocomplete
               panTo={panTo}
+              selected={selected}
+              curMarker={curMarker}
+              setIsOpenPlace={setIsOpenPlace}
               setCurMarker={setCurMarker}
               setListMarkerSaved={setListMarkerSaved}
             />
@@ -369,6 +376,7 @@ function Map() {
                 setIsOpenPlace(true);
                 setIsOpenInfo(true);
                 setIsSaved(false);
+                setCurMarker(null);
               }}
               icon={{
                 url: `https://cdn-icons-png.flaticon.com/512/235/235353.png`,
@@ -376,12 +384,6 @@ function Map() {
                 anchor: new window.google.maps.Point(15, 15),
                 scaledSize: new window.google.maps.Size(30, 30),
               }}
-              // animation={
-              //   isSeleted && (selected?.lat === curMarker?.lat)
-              //     ? window.google.maps.Animation.BOUNCE
-              //     : window.google.maps.Animation.DROP
-              // }
-              // draggable={true}
             />
           ))}
 
@@ -410,7 +412,7 @@ function Map() {
                   setIsSaved(true);
                 }}
               >
-                Save - {isSaved ? "old" : "new"}
+                Save - {selected?.status === "old" ? "old" : "new"}
               </Button>
             </div>
           </InfoWindow>
@@ -420,9 +422,10 @@ function Map() {
           <div
             className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
             onClick={() => {
-              setCurMarker(curMarker);
+              setCurMarker({ ...curMarker, status: "old" });
               setIsOpenPlace(true);
               setIsOpenInfoDrag(true);
+              setSelected(null);
             }}
           >
             {isOpenInfoDrag ? (
@@ -449,7 +452,7 @@ function Map() {
                       setIsSaved(true);
                     }}
                   >
-                    Save - {isSaved ? "old" : "new"}
+                    Save - {curMarker?.status === "old" ? "old" : "new"}
                   </Button>
                 </div>
               </InfoWindow>

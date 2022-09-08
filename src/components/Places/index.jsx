@@ -31,7 +31,14 @@ import {
 
 import useStyles from "./styles.js";
 
-function PlacesAutocomplete({ panTo, setCurMarker, setListMarkerSaved }) {
+function PlacesAutocomplete({
+  panTo,
+  setCurMarker,
+  setListMarkerSaved,
+  setIsOpenPlace,
+  selected,
+  curMarker,
+}) {
   const [isValue, setIsValue] = useState(null);
 
   const classes = useStyles();
@@ -72,16 +79,11 @@ function PlacesAutocomplete({ panTo, setCurMarker, setListMarkerSaved }) {
     };
 
     setIsValue(newObj);
-    // setListMarkerInput((current) => [...current, newObj]);
-
-    // setListMarkerSaved((current) => [...current, newObj]);
   };
 
   const handleSubmit = () => {
     if (!isValue) return;
     setListMarkerInput((current) => [...current, isValue]);
-
-    // setListMarkerSaved((current) => [...current, isValue]);
 
     setCurMarker(null);
     panTo({ lat: isValue.lat, lng: isValue.lng });
@@ -115,6 +117,19 @@ function PlacesAutocomplete({ panTo, setCurMarker, setListMarkerSaved }) {
         >
           <SearchIcon style={{ width: 20, height: 20, marginLeft: 16 }} />
         </Button>
+
+        {selected || curMarker ? (
+          <Button
+            className={classes.buttonClose}
+            onClick={() => setIsOpenPlace(false)}
+          >
+            <Typography
+              variant="body1"
+              component="span"
+              className="iconClose"
+            ></Typography>
+          </Button>
+        ) : null}
 
         {value ? (
           <Button className={classes.buttonClose} onClick={() => setValue("")}>
