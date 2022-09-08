@@ -1,5 +1,5 @@
 import { Box, CssBaseline, Grid } from "@material-ui/core";
-import { Route } from "react-router-dom";
+import { Route,Redirect } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header/Header";
@@ -22,6 +22,7 @@ function App() {
         >
           <Box className="map-wrapper">
             <Switch>
+              <Redirect exact from="/" to="/maps" />
               <Route path="/maps">
                 <Map />
               </Route>

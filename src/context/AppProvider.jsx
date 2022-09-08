@@ -4,7 +4,7 @@ export const AppContext = React.createContext();
 
 export default function AppProvider({ children }) {
   const [listMarkerInput, setListMarkerInput] = useState([]);
-  const [listMarkerSaved, setListMarkerSaved] = useState([]);
+  const [listMarkerSaved, setListMarkerSaved] = useState(JSON.parse(localStorage.getItem("listItemSaved")) || []);
 
   return (
     <AppContext.Provider

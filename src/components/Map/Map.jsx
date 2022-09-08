@@ -155,19 +155,21 @@ function Map() {
     // Set marker list for drag end
     // res?.data?.results.slice(1, 5).forEach((x) => {
     //   const stringAddress2 = x?.formatted_address.split(",");
-    // setListMarkerInput((current) => [
-    //   ...current,
-    //   {
-    //     address: x?.formatted_address,
-    //     name: stringAddress2[0],
-    //     ward: stringAddress2[1],
-    //     district: stringAddress2[2],
-    //     city: stringAddress2[3],
-    //     lat: x?.geometry.location.lat,
-    //     lng: x?.geometry.location.lng,
-    //     time: new Date(),
-    //   },
-    // ]);
+    setListMarkerInput((current) => [
+      ...current,
+      {
+        address: res?.data.results[0].formatted_address,
+        name: stringAddress[0],
+        ward: stringAddress[1],
+        district: stringAddress[2],
+        city: stringAddress[3],
+        lat: mapRef?.current?.center?.lat(),
+        lng: mapRef?.current?.center?.lng(),
+        toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
+        time: new Date(),
+        status: "new",
+      },
+    ]);
     // });
 
     setCenterChanged({
@@ -206,6 +208,7 @@ function Map() {
       },
     ]);
   };
+
   const handleSaveMarkerCur = (curMar) => {
     setListMarkerSaved((current) => [
       ...current,
@@ -221,7 +224,6 @@ function Map() {
         status: "old",
       },
     ]);
-    console.log({ listMarkerSaved });
   };
 
   const handleShowMarkSaved = () => {
@@ -231,16 +233,15 @@ function Map() {
     }
   };
 
-  // console.log({ listMarkerSaved });
+  console.log({ listMarkerSaved });
   console.log({ storeMarkerSaved });
   // console.log({ isSaved });
   console.log({ isShow });
   console.log({ showMapSaved });
+  console.log({ selected });
 
   useEffect(() => {
-    let newListMarkerSaved = [...listMarkerSaved];
-
-    if (isSaved) {
+    if (isSaved && storeMarkerSaved?.length >= 0) {
       localStorage.setItem("listItemSaved", JSON.stringify(listMarkerSaved));
       setStoreMarkerSaved(JSON.parse(localStorage.getItem("listItemSaved")));
     }
@@ -321,7 +322,11 @@ function Map() {
         <Box className={classes.topHeader}>
           <Box className={classes.placesContainer}>
             <Locate panTo={panTo} setCurMarker={setCurMarker} />
-            <PlacesAutocomplete panTo={panTo} setCurMarker={setCurMarker} />
+            <PlacesAutocomplete
+              panTo={panTo}
+              setCurMarker={setCurMarker}
+              setListMarkerSaved={setListMarkerSaved}
+            />
           </Box>
           <Box className={classes.optionsChoose}>
             {showMapSaved ? (
@@ -394,7 +399,7 @@ function Map() {
               <p>Ward: {selected?.ward}</p>
               <p>Disctrict: {selected?.district}</p>
               <p>City: {selected?.city}</p>
-              <p>Spotted {formatRelative(selected.time, new Date())}</p>
+              {/* <p>Spotted {formatRelative(selected.time, new Date())}</p> */}
               <a href={selected?.toUrl} target="_blank">
                 View on Google Maps
               </a>
@@ -433,7 +438,7 @@ function Map() {
                   <p>Ward: {curMarker?.ward}</p>
                   <p>Disctrict: {curMarker?.district}</p>
                   <p>City: {curMarker?.city}</p>
-                  <p>Spotted {formatRelative(curMarker.time, new Date())}</p>
+                  {/* <p>Spotted {formatRelative(curMarker.time, new Date())}</p> */}
                   <a href={curMarker?.toUrl} target="_blank">
                     View on Google Maps
                   </a>
@@ -449,27 +454,6 @@ function Map() {
                 </div>
               </InfoWindow>
             ) : null}
-
-            {/* <Marker
-              key={`${curMarker.lat}-${curMarker.lng}`}
-              position={{ lat: curMarker.lat, lng: curMarker.lng }}
-              onClick={() => {
-                setSelected(curMarker);
-                openPlace();
-              }}
-              icon={{
-                url: `https://cdn-icons-png.flaticon.com/512/235/235353.png`,
-                origin: new window.google.maps.Point(0, 0),
-                anchor: new window.google.maps.Point(15, 15),
-                scaledSize: new window.google.maps.Size(30, 30),
-              }}
-              animation={
-                selected?.lng === curMarker?.lng
-                  ? window.google.maps.Animation.BOUNCE
-                  : window.google.maps.Animation.DROP
-              }
-              draggable={true}
-            /> */}
           </div>
         ) : null}
 
@@ -482,8 +466,6 @@ function Map() {
               onClick={() => {
                 setSelected(marker);
                 setIsOpenPlace(true);
-                setIsOpenInfo(true);
-                setIsSaved(false);
               }}
               icon={{
                 url: `https://cdn-icons-png.flaticon.com/512/235/235353.png`,
@@ -491,12 +473,6 @@ function Map() {
                 anchor: new window.google.maps.Point(15, 15),
                 scaledSize: new window.google.maps.Size(30, 30),
               }}
-              // animation={
-              //   isSeleted && (selected?.lat === curMarker?.lat)
-              //     ? window.google.maps.Animation.BOUNCE
-              //     : window.google.maps.Animation.DROP
-              // }
-              // draggable={true}
             />
           ))}
       </GoogleMap>

@@ -75,7 +75,7 @@ function PlaceDetail({
             </Typography> */}
           </Box>
 
-          <Box className={classes.listImage}>
+          {/* <Box className={classes.listImage}>
             <img src="https://placehold.jp/70x70.png" alt="" />
             <img src="https://placehold.jp/70x70.png" alt="" />
             <img src="https://placehold.jp/70x70.png" alt="" />
@@ -111,7 +111,7 @@ function PlaceDetail({
                 alt=""
               />
             </span>
-          </Box>
+          </Box> */}
         </Box>
       </Box>
       {/* <Box

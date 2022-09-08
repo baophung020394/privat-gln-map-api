@@ -31,7 +31,7 @@ import {
 
 import useStyles from "./styles.js";
 
-function PlacesAutocomplete({ panTo, setCurMarker }) {
+function PlacesAutocomplete({ panTo, setCurMarker, setListMarkerSaved }) {
   const [isValue, setIsValue] = useState(null);
 
   const classes = useStyles();
@@ -72,11 +72,16 @@ function PlacesAutocomplete({ panTo, setCurMarker }) {
     };
 
     setIsValue(newObj);
+    // setListMarkerInput((current) => [...current, newObj]);
+
+    // setListMarkerSaved((current) => [...current, newObj]);
   };
 
   const handleSubmit = () => {
     if (!isValue) return;
-    setListMarkerInput((oldArray) => [...oldArray, isValue]);
+    setListMarkerInput((current) => [...current, isValue]);
+
+    // setListMarkerSaved((current) => [...current, isValue]);
 
     setCurMarker(null);
     panTo({ lat: isValue.lat, lng: isValue.lng });
