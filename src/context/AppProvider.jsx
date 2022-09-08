@@ -3,21 +3,16 @@ import React, { useMemo, useRef, useState } from "react";
 export const AppContext = React.createContext();
 
 export default function AppProvider({ children }) {
-  const [map, setMap] = useState(/** @type google.maps.Map */ (null));
-  const [directionsResponse, setDirectionsResponse] = useState(null);
-  const [distance, setDistance] = useState("");
-  const [duration, setDuration] = useState("");
-
-  
-  const [arrList, setArrayList] = useState([]);
+  const [listMarkerInput, setListMarkerInput] = useState([]);
+  const [listMarkerSaved, setListMarkerSaved] = useState([]);
 
   return (
     <AppContext.Provider
       value={{
-        map,
-        setMap,
-        arrList,
-        setArrayList
+        listMarkerInput,
+        setListMarkerInput,
+        listMarkerSaved,
+        setListMarkerSaved,
       }}
     >
       {children}

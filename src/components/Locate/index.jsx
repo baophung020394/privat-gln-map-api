@@ -3,7 +3,7 @@ import React from "react";
 
 import useStyles from "./styles.js";
 
-function Locate({ panTo, serCurMarker }) {
+function Locate({ panTo, setCurMarker }) {
   const classes = useStyles();
 
   return (
@@ -16,7 +16,7 @@ function Locate({ panTo, serCurMarker }) {
               lat: position?.coords.latitude,
               lng: position?.coords.longitude,
             });
-            serCurMarker({
+            setCurMarker({
               lat: position?.coords.latitude,
               lng: position?.coords.longitude,
               toUrl: `https://www.google.com/maps/?q=${position?.coords.latitude},${position?.coords.longitude}`,

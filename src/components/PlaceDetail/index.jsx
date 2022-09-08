@@ -26,22 +26,43 @@ function PlaceDetail({
         style={{ left: isOpen ? "0px" : "-100%" }}
       >
         <Box className={classes.image}>
-          <img src="https://placehold.jp/600x600.png" alt="" />
+          {/* <img src="https://placehold.jp/600x600.png" alt="" /> */}
+          <img
+            src="https://maps.gstatic.com/tactile/pane/default_geocode-1x.png"
+            alt=""
+          />
         </Box>
         <Box className={classes.content}>
           <Box className={classes.top}>
             <Typography variant="body1" className={classes.title}>
               {name}
             </Typography>
+            {/* <Box className="">
 
-            <Typography variant="body1" style={{fontWeight: 'normal'}}>
+            </Box> */}
+            <ul className={classes.listContainer}>
+              <li className={classes.item}>
+                <img
+                  src="https://www.gstatic.com/images/icons/material/system_gm/1x/place_gm_blue_24dp.png"
+                  alt=""
+                />
+                <Typography variant="body1">
+                  {name}, {ward}, {district}, {city}
+                </Typography>
+              </li>
+            </ul>
+            {/* <Typography variant="body1" className={classes.title}>
+              {name}
+            </Typography>
+
+            <Typography variant="body1" style={{ fontWeight: "normal" }}>
               Ward: {ward}
             </Typography>
-            <Typography variant="body1" style={{fontWeight: 'normal'}}>
+            <Typography variant="body1" style={{ fontWeight: "normal" }}>
               District: {district}
             </Typography>
 
-            <Typography variant="body1" style={{fontWeight: 'normal'}}>
+            <Typography variant="body1" style={{ fontWeight: "normal" }}>
               City: {city}
             </Typography>
 
@@ -51,7 +72,7 @@ function PlaceDetail({
 
             <Typography variant="body1" className={classes.location}>
               Lat: {lat ? lat : ""}
-            </Typography>
+            </Typography> */}
           </Box>
 
           <Box className={classes.listImage}>

@@ -11,7 +11,7 @@ function List() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [place, setPlace] = useState({});
-  const { arrList } = useContext(AppContext);
+  const { listMarkerInput } = useContext(AppContext);
 
   const openPlace = (x) => {
     setPlace(x);
@@ -26,8 +26,8 @@ function List() {
     <>
       <Box className={classes.list}>
         <ul className={classes.items}>
-          {arrList.length > 0 &&
-            arrList.map((x, index) => (
+          {listMarkerInput.length > 0 &&
+            listMarkerInput.map((x, index) => (
               <li
                 className={classes.item}
                 key={index}

@@ -1,4 +1,4 @@
-import { Box } from "@material-ui/core";
+import { Box, Button } from "@material-ui/core";
 import "@reach/combobox/styles.css";
 import {
   GoogleMap,
@@ -8,7 +8,7 @@ import {
   Autocomplete,
 } from "@react-google-maps/api";
 import { formatRelative } from "date-fns";
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { AppContext } from "../../context/AppProvider";
 import Locate from "../Locate";
 import PlaceDetail from "../PlaceDetail";
@@ -17,13 +17,31 @@ import useStyles from "./styles.js";
 import axios from "axios";
 
 function Map() {
-  const [curMarker, serCurMarker] = useState();
+  const [curMarker, setCurMarker] = useState();
   const [selected, setSelected] = useState(null);
-  const [markerClick, setMarkerClick] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [dragStart, setDragStart] = useState(null);
   const [isOpenPlace, setIsOpenPlace] = useState(null);
+  const [isOpenInfo, setIsOpenInfo] = useState(null);
+  const [isOpenInfoDrag, setIsOpenInfoDrag] = useState(null);
+  const [isSaved, setIsSaved] = useState(null);
+  const [isShow, setIsShow] = useState(null);
   const [centerChanged, setCenterChanged] = useState(null);
+
+  const [storeMarkerSaved, setStoreMarkerSaved] = useState(
+    JSON.parse(localStorage.getItem("listItemSaved")) || []
+  );
+
+  const [showMapSaved, setShowMapSaved] = useState(
+    JSON.parse(localStorage.getItem("showMapSaved"))
+  );
+
+  const {
+    listMarkerInput,
+    setListMarkerInput,
+    listMarkerSaved,
+    setListMarkerSaved,
+  } = useContext(AppContext);
 
   const classes = useStyles();
 
@@ -34,8 +52,6 @@ function Map() {
   const closePlace = () => {
     setIsOpen(false);
   };
-
-  const { arrList, setArrayList } = useContext(AppContext);
 
   const center = useMemo(
     () => ({
@@ -54,7 +70,7 @@ function Map() {
 
     const stringAddress = res?.data.results[0].formatted_address.split(",");
 
-    setArrayList((current) => [
+    setListMarkerInput((current) => [
       ...current,
       {
         address: res?.data.results[0].formatted_address,
@@ -66,6 +82,7 @@ function Map() {
         lng: e.latLng.lng(),
         toUrl: `https://www.google.com/maps/?q=${e.latLng.lat()},${e.latLng.lng()}`,
         time: new Date(),
+        status: "new",
       },
     ]);
   }, []);
@@ -86,8 +103,6 @@ function Map() {
     libraries: ["places"],
   });
 
-  if (!isLoaded) return <div>Loading...</div>;
-
   const handleCenterChange = () => {
     console.log(mapRef?.current?.center?.lat());
     window.setTimeout(() => {
@@ -100,14 +115,15 @@ function Map() {
 
   const handleDragStart = () => {
     setDragStart(true);
-    // setIsOpenPlace(false);
-    setArrayList([]);
-    setSelected(null);
+    // setListMarkerInput([]);
+    // setSelected(null);
   };
 
   const handleDragEnd = async () => {
     setDragStart(false);
     setIsOpenPlace(true);
+    setIsOpenInfoDrag(true);
+    setIsSaved(false);
 
     mapRef.current.panTo({
       lat: mapRef?.current?.center?.lat(),
@@ -120,26 +136,10 @@ function Map() {
       }`
     );
 
+    // Set marker current for drag end
     const stringAddress = res?.data.results[0].formatted_address.split(",");
 
-    res?.data?.results.slice(1, 5).forEach((x) => {
-      const stringAddress2 = x?.formatted_address.split(",");
-      setArrayList((current) => [
-        ...current,
-        {
-          address: x?.formatted_address,
-          name: stringAddress2[0],
-          ward: stringAddress2[1],
-          district: stringAddress2[2],
-          city: stringAddress2[3],
-          lat: x?.geometry.location.lat,
-          lng: x?.geometry.location.lng,
-          time: new Date(),
-        },
-      ]);
-    });
-
-    serCurMarker({
+    setCurMarker({
       address: res?.data.results[0].formatted_address,
       name: stringAddress[0],
       ward: stringAddress[1],
@@ -149,7 +149,26 @@ function Map() {
       lng: mapRef?.current?.center?.lng(),
       toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
       time: new Date(),
+      status: "new",
     });
+
+    // Set marker list for drag end
+    // res?.data?.results.slice(1, 5).forEach((x) => {
+    //   const stringAddress2 = x?.formatted_address.split(",");
+    // setListMarkerInput((current) => [
+    //   ...current,
+    //   {
+    //     address: x?.formatted_address,
+    //     name: stringAddress2[0],
+    //     ward: stringAddress2[1],
+    //     district: stringAddress2[2],
+    //     city: stringAddress2[3],
+    //     lat: x?.geometry.location.lat,
+    //     lng: x?.geometry.location.lng,
+    //     time: new Date(),
+    //   },
+    // ]);
+    // });
 
     setCenterChanged({
       lat: mapRef?.current?.center?.lat(),
@@ -166,19 +185,89 @@ function Map() {
   };
 
   const handleZoomChanged = () => {
-    if(centerChanged) {
+    if (centerChanged) {
       mapRef.current.panTo({ lat: centerChanged.lat, lng: centerChanged.lng });
     }
   };
 
-  console.log({ selected });
+  const handleSaveMarker = (selectMar) => {
+    setListMarkerSaved((current) => [
+      ...current,
+      {
+        address: selectMar?.address,
+        name: selectMar?.name,
+        ward: selectMar?.ward,
+        district: selectMar?.district,
+        city: selectMar?.city,
+        lat: selectMar?.lat,
+        lng: selectMar?.lng,
+        time: new Date(),
+        status: "old",
+      },
+    ]);
+  };
+  const handleSaveMarkerCur = (curMar) => {
+    setListMarkerSaved((current) => [
+      ...current,
+      {
+        address: curMar?.address,
+        name: curMar?.name,
+        ward: curMar?.ward,
+        district: curMar?.district,
+        city: curMar?.city,
+        lat: curMar?.lat,
+        lng: curMar?.lng,
+        time: new Date(),
+        status: "old",
+      },
+    ]);
+    console.log({ listMarkerSaved });
+  };
+
+  const handleShowMarkSaved = () => {
+    setIsShow((show) => !show);
+    if (listMarkerInput?.length > 0) {
+      setListMarkerInput(null);
+    }
+  };
+
+  // console.log({ listMarkerSaved });
+  console.log({ storeMarkerSaved });
+  // console.log({ isSaved });
+  console.log({ isShow });
+  console.log({ showMapSaved });
+
+  useEffect(() => {
+    let newListMarkerSaved = [...listMarkerSaved];
+
+    if (isSaved) {
+      localStorage.setItem("listItemSaved", JSON.stringify(listMarkerSaved));
+      setStoreMarkerSaved(JSON.parse(localStorage.getItem("listItemSaved")));
+    }
+  }, [isSaved]);
+
+  useEffect(() => {
+    // setShowMapSaved(JSON.parse(localStorage.getItem("showMapSaved")));
+    if (isShow) {
+      localStorage.getItem("showMapSaved");
+      // localStorage.setItem("showMapSaved", `${JSON.stringify(true)}`);
+      setShowMapSaved(JSON.parse(localStorage.getItem("showMapSaved")));
+    } else {
+      localStorage.getItem("showMapSaved");
+      // localStorage.setItem("showMapSaved", `${JSON.stringify(false)}`);
+      setShowMapSaved(JSON.parse(localStorage.getItem("showMapSaved")));
+    }
+  }, [isShow]);
+
+  if (!isLoaded) return <div>Loading...</div>;
 
   return (
     <>
       <Box
         className={classes.seletedMarker}
         style={{
-          marginLeft: selected || (isOpenPlace && curMarker) ? "0" : "-370px",
+          marginLeft:
+            isOpenPlace || (isOpenPlace && curMarker) ? "0" : "-370px",
         }}
       >
         {selected ? (
@@ -213,52 +302,91 @@ function Map() {
       </Box>
 
       <GoogleMap
+        options={{
+          zoomControl: false,
+          streetViewControl: false,
+          mapTypeControl: false,
+          fullscreenControl: false,
+        }}
         zoom={20}
         center={center}
-        onZoomChanged={handleZoomChanged}
         mapContainerClassName="map-container"
         onClick={onMapClick}
         onLoad={onMapLoad}
         // onCenterChanged={handleCenterChange}
+        onZoomChanged={handleZoomChanged}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <Box className={classes.placesContainer}>
-          <Locate panTo={panTo} serCurMarker={serCurMarker} />
-          <PlacesAutocomplete panTo={panTo} serCurMarker={serCurMarker} />
+        <Box className={classes.topHeader}>
+          <Box className={classes.placesContainer}>
+            <Locate panTo={panTo} setCurMarker={setCurMarker} />
+            <PlacesAutocomplete panTo={panTo} setCurMarker={setCurMarker} />
+          </Box>
+          <Box className={classes.optionsChoose}>
+            {showMapSaved ? (
+              <Button
+                className={classes.btnOption}
+                onClick={() => {
+                  handleShowMarkSaved();
+                  localStorage.setItem(
+                    "showMapSaved",
+                    `${JSON.stringify(false)}`
+                  );
+                }}
+              >
+                Show map saved
+              </Button>
+            ) : (
+              <Button
+                className={classes.btnOption}
+                onClick={() => {
+                  handleShowMarkSaved();
+                  localStorage.setItem(
+                    "showMapSaved",
+                    `${JSON.stringify(true)}`
+                  );
+                }}
+              >
+                Show map saved
+              </Button>
+            )}
+          </Box>
         </Box>
 
-        {arrList.map((marker, index) => (
-          <Marker
-            key={index}
-            position={{ lat: marker.lat, lng: marker.lng }}
-            onClick={() => {
-              setSelected(marker);
-              serCurMarker(null);
-              openPlace();
-            }}
-            icon={{
-              url: `https://cdn-icons-png.flaticon.com/512/235/235353.png`,
-              origin: new window.google.maps.Point(0, 0),
-              anchor: new window.google.maps.Point(15, 15),
-              scaledSize: new window.google.maps.Size(30, 30),
-            }}
-            animation={
-              selected?.lng === marker?.lng
-                ? window.google.maps.Animation.BOUNCE
-                : window.google.maps.Animation.DROP
-            }
-            draggable={true}
-          />
-        ))}
+        {listMarkerInput &&
+          listMarkerInput.map((marker, index) => (
+            <Marker
+              key={index}
+              position={{ lat: marker.lat, lng: marker.lng }}
+              onClick={() => {
+                setSelected(marker);
+                setIsOpenPlace(true);
+                setIsOpenInfo(true);
+                setIsSaved(false);
+              }}
+              icon={{
+                url: `https://cdn-icons-png.flaticon.com/512/235/235353.png`,
+                origin: new window.google.maps.Point(0, 0),
+                anchor: new window.google.maps.Point(15, 15),
+                scaledSize: new window.google.maps.Size(30, 30),
+              }}
+              // animation={
+              //   isSeleted && (selected?.lat === curMarker?.lat)
+              //     ? window.google.maps.Animation.BOUNCE
+              //     : window.google.maps.Animation.DROP
+              // }
+              // draggable={true}
+            />
+          ))}
 
-        {selected ? (
+        {isOpenInfo ? (
           <InfoWindow
             style={{ top: "-15px" }}
             zIndex={1}
-            position={{ lat: selected.lat, lng: selected.lng }}
+            position={{ lat: selected?.lat, lng: selected?.lng }}
             onCloseClick={() => {
-              setSelected(null);
+              setIsOpenInfo(false);
             }}
           >
             <div className="wrapper-info">
@@ -270,26 +398,34 @@ function Map() {
               <a href={selected?.toUrl} target="_blank">
                 View on Google Maps
               </a>
+              <Button
+                className={classes.save}
+                onClick={() => {
+                  handleSaveMarker(selected);
+                  setIsSaved(true);
+                }}
+              >
+                Save - {isSaved ? "old" : "new"}
+              </Button>
             </div>
           </InfoWindow>
         ) : null}
 
         {curMarker ? (
           <div
-            className={`${classes.currentMark} ${
-              dragStart ? "shadow" : ""
-            }`}
+            className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
             onClick={() => {
-              serCurMarker(curMarker);
+              setCurMarker(curMarker);
               setIsOpenPlace(true);
+              setIsOpenInfoDrag(true);
             }}
           >
-            {isOpenPlace ? (
+            {isOpenInfoDrag ? (
               <InfoWindow
                 zIndex={1}
                 position={{ lat: curMarker?.lat, lng: curMarker?.lng }}
                 onCloseClick={() => {
-                  setIsOpenPlace(false);
+                  setIsOpenInfoDrag(false);
                 }}
               >
                 <div className="wrapper-info">
@@ -301,6 +437,15 @@ function Map() {
                   <a href={curMarker?.toUrl} target="_blank">
                     View on Google Maps
                   </a>
+                  <Button
+                    className={classes.save}
+                    onClick={() => {
+                      handleSaveMarkerCur(curMarker);
+                      setIsSaved(true);
+                    }}
+                  >
+                    Save - {isSaved ? "old" : "new"}
+                  </Button>
                 </div>
               </InfoWindow>
             ) : null}
@@ -327,6 +472,33 @@ function Map() {
             /> */}
           </div>
         ) : null}
+
+        {storeMarkerSaved &&
+          showMapSaved &&
+          storeMarkerSaved?.map((marker, index) => (
+            <Marker
+              key={index}
+              position={{ lat: marker.lat, lng: marker.lng }}
+              onClick={() => {
+                setSelected(marker);
+                setIsOpenPlace(true);
+                setIsOpenInfo(true);
+                setIsSaved(false);
+              }}
+              icon={{
+                url: `https://cdn-icons-png.flaticon.com/512/235/235353.png`,
+                origin: new window.google.maps.Point(0, 0),
+                anchor: new window.google.maps.Point(15, 15),
+                scaledSize: new window.google.maps.Size(30, 30),
+              }}
+              // animation={
+              //   isSeleted && (selected?.lat === curMarker?.lat)
+              //     ? window.google.maps.Animation.BOUNCE
+              //     : window.google.maps.Animation.DROP
+              // }
+              // draggable={true}
+            />
+          ))}
       </GoogleMap>
     </>
   );

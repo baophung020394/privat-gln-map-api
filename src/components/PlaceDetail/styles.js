@@ -5,25 +5,30 @@ export default makeStyles((theme) => ({
     background: "#fff",
     boxShadow: "0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22)",
     transition: "0.4s",
-    height: '100%',
-    width: '100%',
+    height: "100%",
+    width: "100%",
   },
+
   image: {
     "& img": {
       width: "100%",
     },
   },
-  content: { padding: "0 10px" },
+
+  content: {  },
+
   top: {
     "& p": {
       fontWeight: "bold",
     },
   },
+
   bot: {
     display: "flex",
     justifyContent: "space-between",
     "& span": {},
   },
+
   botItem: {
     cursor: "pointer",
     marginTop: 16,
@@ -33,10 +38,15 @@ export default makeStyles((theme) => ({
       objectFit: "contain",
     },
   },
+
   title: {
-    margin: "15px 0",
-    fontSize: 24
+    // margin: "15px 0",
+    fontSize: 22,
+    fontWeight: "400 !important",
+    borderBottom: '1px solid #e8eaed',
+    padding: '5px 10px'
   },
+
   location: {
     fontSize: 14,
     fontStyle: "italic",
@@ -44,6 +54,7 @@ export default makeStyles((theme) => ({
     display: "inline-block",
     marginRight: 8,
   },
+
   layer: {
     position: "fixed",
     top: 0,
@@ -56,6 +67,7 @@ export default makeStyles((theme) => ({
 
     filter: "blur(4px)",
   },
+
   listImage: {
     marginTop: 16,
     cursor: "pointer",
@@ -64,6 +76,30 @@ export default makeStyles((theme) => ({
       height: 70,
       objectFit: "contain",
       marginRight: 8,
+    },
+  },
+
+  listContainer: {
+    listStyle: "none",
+    padding: "0 10px",
+  },
+
+  item: {
+    display: "flex",
+    alignItems: "center",
+
+    '& p': {
+      fontWeight: 400,
+      fontSize: 14,
+      color: 'rgb(60,64,67)',
+      lineHeight: '20px'
+    },
+
+    "& img": {
+      width: 24,
+      height: 24,
+      objectFit: "cotain",
+      marginRight: 16,
     },
   },
 }));

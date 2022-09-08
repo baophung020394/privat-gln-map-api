@@ -31,14 +31,14 @@ import {
 
 import useStyles from "./styles.js";
 
-function PlacesAutocomplete({ panTo, serCurMarker }) {
+function PlacesAutocomplete({ panTo, setCurMarker }) {
   const [isValue, setIsValue] = useState(null);
 
   const classes = useStyles();
 
   const center = { lat: 10.7670948, lng: 106.7015026 };
 
-  const { setArrayList } = React.useContext(AppContext);
+  const { setListMarkerInput } = React.useContext(AppContext);
 
   const {
     ready,
@@ -57,9 +57,10 @@ function PlacesAutocomplete({ panTo, serCurMarker }) {
     let newObj = { ...objLo };
 
     const stringAddress = results[0]?.formatted_address.split(",");
-    
+
     newObj = {
       address: results[0].formatted_address,
+      name: stringAddress[0],
       ward: stringAddress[1],
       district: stringAddress[2],
       city: stringAddress[3],
@@ -67,6 +68,7 @@ function PlacesAutocomplete({ panTo, serCurMarker }) {
       lat: newObj.lat,
       toUrl: `https://www.google.com/maps/?q=${newObj.lat},${newObj.lng}`,
       time: new Date(),
+      status: "new",
     };
 
     setIsValue(newObj);
@@ -74,9 +76,9 @@ function PlacesAutocomplete({ panTo, serCurMarker }) {
 
   const handleSubmit = () => {
     if (!isValue) return;
-    setArrayList((oldArray) => [...oldArray, isValue]);
+    setListMarkerInput((oldArray) => [...oldArray, isValue]);
 
-    serCurMarker(null);
+    setCurMarker(null);
     panTo({ lat: isValue.lat, lng: isValue.lng });
   };
 
