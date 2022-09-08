@@ -131,7 +131,7 @@ function PlacesAutocomplete({
           </Button>
         ) : null}
 
-        {value ? (
+        {/* {value  ? (
           <Button className={classes.buttonClose} onClick={() => setValue("")}>
             <Typography
               variant="body1"
@@ -139,7 +139,7 @@ function PlacesAutocomplete({
               className="iconClose"
             ></Typography>
           </Button>
-        ) : null}
+        ) : null} */}
       </Box>
     </>
   );

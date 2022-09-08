@@ -31,8 +31,8 @@ export default makeStyles((theme) => ({
     position: "absolute",
     top: 10,
     zIndex: 1,
-    left: 10,
-    // transform: "translateX(-50%)",
+    left: '52%',
+    transform: "translateX(-50%)",
     display: "flex",
   },
 
