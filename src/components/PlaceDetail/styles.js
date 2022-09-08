@@ -9,8 +9,6 @@ export default makeStyles((theme) => ({
     width: '100%',
   },
   image: {
-    maxWidth: 350,
-    margin: "auto",
     "& img": {
       width: "100%",
     },
@@ -37,6 +35,7 @@ export default makeStyles((theme) => ({
   },
   title: {
     margin: "15px 0",
+    fontSize: 24
   },
   location: {
     fontSize: 14,

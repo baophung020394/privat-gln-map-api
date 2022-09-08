@@ -3,7 +3,20 @@ import React from "react";
 
 import useStyles from "./styles.js";
 
-function PlaceDetail({ img, address, phone, lng, lat, isOpen, isClose, toUrl }) {
+function PlaceDetail({
+  img,
+  address,
+  phone,
+  lng,
+  lat,
+  isOpen,
+  isClose,
+  toUrl,
+  name,
+  ward,
+  district,
+  city,
+}) {
   const classes = useStyles();
 
   return (
@@ -18,7 +31,18 @@ function PlaceDetail({ img, address, phone, lng, lat, isOpen, isClose, toUrl }) 
         <Box className={classes.content}>
           <Box className={classes.top}>
             <Typography variant="body1" className={classes.title}>
-              Address: <a href={toUrl} target="_blank">{address ? address : ""}</a>
+              {name}
+            </Typography>
+
+            <Typography variant="body1" style={{fontWeight: 'normal'}}>
+              Ward: {ward}
+            </Typography>
+            <Typography variant="body1" style={{fontWeight: 'normal'}}>
+              District: {district}
+            </Typography>
+
+            <Typography variant="body1" style={{fontWeight: 'normal'}}>
+              City: {city}
             </Typography>
 
             <Typography variant="body1" className={classes.location}>

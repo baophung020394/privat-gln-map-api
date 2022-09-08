@@ -58,6 +58,7 @@ function Map() {
       ...current,
       {
         address: res?.data.results[0].formatted_address,
+        name: stringAddress[0],
         ward: stringAddress[1],
         district: stringAddress[2],
         city: stringAddress[3],
@@ -127,6 +128,7 @@ function Map() {
         ...current,
         {
           address: x?.formatted_address,
+          name: stringAddress2[0],
           ward: stringAddress2[1],
           district: stringAddress2[2],
           city: stringAddress2[3],
@@ -139,6 +141,7 @@ function Map() {
 
     serCurMarker({
       address: res?.data.results[0].formatted_address,
+      name: stringAddress[0],
       ward: stringAddress[1],
       district: stringAddress[2],
       city: stringAddress[3],
@@ -178,6 +181,10 @@ function Map() {
             isOpen={isOpen}
             isClose={closePlace}
             address={selected?.address}
+            name={selected?.name}
+            ward={selected?.ward}
+            district={selected?.district}
+            city={selected?.city}
             lat={selected?.lat}
             lng={selected?.lng}
             toUrl={selected?.toUrl}
@@ -189,6 +196,10 @@ function Map() {
             isOpen={isOpen}
             isClose={closePlace}
             address={curMarker?.address}
+            name={curMarker?.name}
+            ward={curMarker?.ward}
+            district={curMarker?.district}
+            city={curMarker?.city}
             lat={curMarker?.lat}
             lng={curMarker?.lng}
             toUrl={curMarker?.toUrl}
@@ -246,7 +257,7 @@ function Map() {
             }}
           >
             <div className="wrapper-info">
-              <h3>{selected?.address} </h3>
+              <h3>{selected?.name} </h3>
               <p>Ward: {selected?.ward}</p>
               <p>Disctrict: {selected?.district}</p>
               <p>City: {selected?.city}</p>
@@ -276,7 +287,7 @@ function Map() {
                 }}
               >
                 <div className="wrapper-info">
-                  <h3>{curMarker?.address} </h3>
+                  <h3>{curMarker?.name} </h3>
                   <p>Ward: {curMarker?.ward}</p>
                   <p>Disctrict: {curMarker?.district}</p>
                   <p>City: {curMarker?.city}</p>
