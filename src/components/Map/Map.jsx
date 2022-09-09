@@ -127,14 +127,15 @@ function Map() {
    * Start drag map
    */
   const handleDragStart = () => {
-    setDragStart(true);
-    setIsOpenInfoDrag(false);
-    setSelected(null);
+    setCurMarker(null)
     setMarkerDrag({
       status: "go",
       imgSave:
         "https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png",
     });
+    setDragStart(true);
+    setIsOpenInfoDrag(false);
+    setSelected(null);
   };
 
   /**
@@ -142,7 +143,7 @@ function Map() {
    */
   const handleDragEnd = async () => {
     // setCurMarker({});
-    setMarkerDrag(null);
+    // setMarkerDrag(null);
     setDragStart(false);
     setIsOpenInfoDrag(true);
     setIsSaved(false);
@@ -175,46 +176,6 @@ function Map() {
       imgSave:
         "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
     });
-
-    // Set marker list for drag end
-    // res?.data?.results.slice(1, 5).forEach((x) => {
-    //   const stringAddress2 = x?.formatted_address.split(",");
-    // setListMarkerInput((current) => [
-    //   ...current,
-    //   {
-    //     address: res?.data.results[0].formatted_address,
-    //     name: stringAddress[0],
-    //     ward: stringAddress[1],
-    //     district: stringAddress[2],
-    //     city: stringAddress[3],
-    //     lat: mapRef?.current?.center?.lat(),
-    //     lng: mapRef?.current?.center?.lng(),
-    //     toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
-    //     time: new Date(),
-    //     status: "new",
-    //     imgSave:
-    //       "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
-    //   },
-    // ]);
-
-    // setListMarkerSaved((current) => [
-    //   ...current,
-    //   {
-    //     address: res?.data.results[0].formatted_address,
-    //     name: stringAddress[0],
-    //     ward: stringAddress[1],
-    //     district: stringAddress[2],
-    //     city: stringAddress[3],
-    //     lat: mapRef?.current?.center?.lat(),
-    //     lng: mapRef?.current?.center?.lng(),
-    //     toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
-    //     time: new Date(),
-    //     status: "new",
-    //     imgSave:
-    //       "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
-    //   },
-    // ]);
-    // });
 
     setCenterChanged({
       lat: mapRef?.current?.center?.lat(),
@@ -274,12 +235,6 @@ function Map() {
    * @param {*} curMar
    */
   const handleSaveMarkerCur = (curMar) => {
-    // setListMarkerInput(
-    //   listMarkerInput?.map((x) =>
-    //     x?.lng === curMar?.lng ? { ...x, status: "old" } : x
-    //   )
-    // );
-
     setCurMarker({
       ...curMar,
       status: "old",
@@ -534,15 +489,8 @@ function Map() {
             className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
             style={{
               backgroundImage: `${
-                dragStart &&
-                "url(https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png)"
+                dragStart ? `url(${markerDrag?.imgSave})` : ""
               }`,
-            }}
-            onClick={() => {
-              setIsOpenPlace(true);
-              setIsOpenInfo(false);
-              setIsOpenInfoDrag(true);
-              setSelected(null);
             }}
           ></div>
         ) : null}
