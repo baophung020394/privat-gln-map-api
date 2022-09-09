@@ -55,6 +55,12 @@
 	60% {transform: translateY(-10px);}
 }
 
+.wrapper-info a {
+  display: block;
+  margin-bottom: 8px;
+}
+
+
 /* .gm-style-iw:nth-child(3),
 .gm-style-iw:nth-child(1),
 .gm-style-iw:nth-child(4),

@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 
-import { Autocomplete } from "@react-google-maps/api";
 import SearchIcon from "@material-ui/icons/Search";
 import usePlacesAutocomplete, {
   getGeocode,
@@ -102,7 +101,7 @@ function PlacesAutocomplete({
             className={`${classes.input} combobox-input`}
             placeholder="Search an address"
           />
-          <ComboboxPopover>
+          <ComboboxPopover style={{ zIndex: 9}}>
             <ComboboxList>
               {status === "OK" &&
                 data.map(({ place_id, description }) => (

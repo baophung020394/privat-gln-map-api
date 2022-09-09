@@ -27,12 +27,14 @@ export default makeStyles((theme) => ({
       transform: "translateY(0)",
     },
   },
+
   topHeader: {
     position: "absolute",
     top: 10,
     zIndex: 1,
-    left: '52%',
-    transform: "translateX(-50%)",
+    left: 10,
+    // left: '52%',
+    // transform: "translateX(-50%)",
     display: "flex",
   },
 
@@ -62,6 +64,7 @@ export default makeStyles((theme) => ({
       background: "#fff",
     },
   },
+
   placesContainer: {
     display: "flex",
     alignItems: "center",
@@ -86,7 +89,7 @@ export default makeStyles((theme) => ({
     position: "fixed",
     top: 55,
     left: 0,
-    zIndex: 1,
+    zIndex: 0,
     height: "100%",
   },
 

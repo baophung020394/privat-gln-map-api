@@ -62,6 +62,9 @@ function Map() {
     []
   );
 
+  /**
+   * Click any where on map
+   */
   const onMapClick = React.useCallback(async (e) => {
     const res = await axios.get(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${e.latLng.lat()},${e.latLng.lng()}&key=${
@@ -91,6 +94,7 @@ function Map() {
   }, []);
 
   const mapRef = React.useRef();
+
   const onMapLoad = React.useCallback((map) => {
     mapRef.current = map;
     console.log({ mapRef });
@@ -116,6 +120,9 @@ function Map() {
     }, 3000);
   };
 
+  /**
+   * Start drag map
+   */
   const handleDragStart = () => {
     setDragStart(true);
     setIsOpenInfoDrag(false);
@@ -125,6 +132,9 @@ function Map() {
     // setSelected(null);
   };
 
+  /**
+   * End drag map
+   */
   const handleDragEnd = async () => {
     setDragStart(false);
     setIsOpenPlace(true);
@@ -208,12 +218,19 @@ function Map() {
     // mapRef.current.setZoom(20);
   };
 
+  /**
+   * handle event zoom changed
+   */
   const handleZoomChanged = () => {
     if (centerChanged) {
       mapRef.current.panTo({ lat: centerChanged.lat, lng: centerChanged.lng });
     }
   };
 
+  /**
+   * Save marker input, drag
+   * @param {*} selectMar
+   */
   const handleSaveMarker = (selectMar) => {
     setSelected({ ...selectMar, status: "old" });
     // setIsOpenInfo(true);
@@ -235,6 +252,10 @@ function Map() {
     ]);
   };
 
+  /**
+   * Save marker current
+   * @param {*} curMar
+   */
   const handleSaveMarkerCur = (curMar) => {
     setCurMarker({ ...curMar, status: "old" });
     setListMarkerSaved((current) => [
@@ -255,6 +276,9 @@ function Map() {
     ]);
   };
 
+  /**
+   * Show mark saved
+   */
   const handleShowMarkSaved = () => {
     setIsShow((show) => !show);
     if (listMarkerInput?.length > 0) {
@@ -299,44 +323,6 @@ function Map() {
 
   return (
     <>
-      <Box
-        className={classes.seletedMarker}
-        style={{
-          marginLeft:
-            isOpenPlace || (isOpenPlace && curMarker) ? "0" : "-390px",
-        }}
-      >
-        {selected ? (
-          <PlaceDetail
-            isOpen={isOpen}
-            isClose={closePlace}
-            address={selected?.address}
-            name={selected?.name}
-            ward={selected?.ward}
-            district={selected?.district}
-            city={selected?.city}
-            lat={selected?.lat}
-            lng={selected?.lng}
-            toUrl={selected?.toUrl}
-          />
-        ) : null}
-
-        {curMarker ? (
-          <PlaceDetail
-            isOpen={isOpen}
-            isClose={closePlace}
-            address={curMarker?.address}
-            name={curMarker?.name}
-            ward={curMarker?.ward}
-            district={curMarker?.district}
-            city={curMarker?.city}
-            lat={curMarker?.lat}
-            lng={curMarker?.lng}
-            toUrl={curMarker?.toUrl}
-          />
-        ) : null}
-      </Box>
-
       <GoogleMap
         options={{
           zoomControl: false,
@@ -394,6 +380,16 @@ function Map() {
                 Show map saved
               </Button>
             )}
+
+            <Button
+              className={classes.btnOption}
+              onClick={() => {
+                localStorage.removeItem("listItemSaved");
+                setStoreMarkerSaved([]);
+              }}
+            >
+              Clear map saved
+            </Button>
           </Box>
         </Box>
 
@@ -423,9 +419,9 @@ function Map() {
             />
           ))}
 
-        {isOpenInfo ? (
+        {isOpenInfo && selected?.status === "new" ? (
           <InfoWindow
-            style={{ top: "-15px" }}
+            // style={{ top: "-15px" }}
             zIndex={1}
             position={{ lat: selected?.lat, lng: selected?.lng }}
             onCloseClick={() => {
@@ -457,13 +453,13 @@ function Map() {
         {curMarker ? (
           <div
             className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
-            style={{
-              backgroundImage: `${
-                dragStart && curMarker?.status === "old"
-                  ? "url(https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png)"
-                  : ""
-              }`,
-            }}
+            // style={{
+            //   backgroundImage: `${
+            //     dragStart && curMarker?.status === "old"
+            //       ? "url(https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png)"
+            //       : "url(https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png)"
+            //   }`,
+            // }}
             onClick={() => {
               setIsOpenPlace(true);
               setIsOpenInfo(false);
@@ -487,6 +483,9 @@ function Map() {
                   {/* <p>Spotted {formatRelative(curMarker.time, new Date())}</p> */}
                   <a href={curMarker?.toUrl} target="_blank">
                     View on Google Maps
+                  </a>
+                  <a href={curMarker?.toUrl} target="_blank">
+                    {curMarker?.lat} - {curMarker?.lng}
                   </a>
                   <Button
                     className={classes.save}
@@ -521,6 +520,44 @@ function Map() {
               }}
             />
           ))}
+
+        <Box
+          className={classes.seletedMarker}
+          style={{
+            marginLeft:
+              isOpenPlace || (isOpenPlace && curMarker) ? "0" : "-390px",
+          }}
+        >
+          {selected ? (
+            <PlaceDetail
+              isOpen={isOpen}
+              isClose={closePlace}
+              address={selected?.address}
+              name={selected?.name}
+              ward={selected?.ward}
+              district={selected?.district}
+              city={selected?.city}
+              lat={selected?.lat}
+              lng={selected?.lng}
+              toUrl={selected?.toUrl}
+            />
+          ) : null}
+
+          {curMarker ? (
+            <PlaceDetail
+              isOpen={isOpen}
+              isClose={closePlace}
+              address={curMarker?.address}
+              name={curMarker?.name}
+              ward={curMarker?.ward}
+              district={curMarker?.district}
+              city={curMarker?.city}
+              lat={curMarker?.lat}
+              lng={curMarker?.lng}
+              toUrl={curMarker?.toUrl}
+            />
+          ) : null}
+        </Box>
       </GoogleMap>
     </>
   );

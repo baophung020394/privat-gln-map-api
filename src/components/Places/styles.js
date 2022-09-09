@@ -70,6 +70,8 @@ export default makeStyles((theme) => ({
   },
   searchInput: {
     flex: 3,
-    marginRight: 16
+    marginRight: 16,
+    position:'relative',
+    zIndex: 1
   },
 }));
