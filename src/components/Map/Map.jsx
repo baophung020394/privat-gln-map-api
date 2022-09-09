@@ -130,10 +130,10 @@ function Map() {
     // setIsOpenInfo(false);
     setIsOpenInfoDrag(false);
     setSelected(null);
-    // setCurMarker({
-    //   imgSave:
-    //     "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
-    // });
+    setCurMarker({
+      imgSave:
+        "https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png",
+    });
     // setListMarkerInput([]);
     // setSelected(null);
   };
@@ -239,8 +239,19 @@ function Map() {
    * @param {*} selectMar
    */
   const handleSaveMarker = (selectMar) => {
-    setSelected({ ...selectMar, status: "old" });
-    // setIsOpenInfo(true);
+    setListMarkerInput(
+      listMarkerInput?.map((x) =>
+        x?.lng === selectMar?.lng ? { ...x, status: "old" } : x
+      )
+    );
+
+    // setSelected({
+    //   ...selectMar,
+    //   status: "old",
+    //   imgSave:
+    //     "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
+    // });
+
     setListMarkerSaved((current) => [
       ...current,
       {
@@ -264,7 +275,19 @@ function Map() {
    * @param {*} curMar
    */
   const handleSaveMarkerCur = (curMar) => {
-    setCurMarker({ ...curMar, status: "old" });
+    // setListMarkerInput(
+    //   listMarkerInput?.map((x) =>
+    //     x?.lng === curMar?.lng ? { ...x, status: "old" } : x
+    //   )
+    // );
+
+    // setCurMarker({
+    //   ...curMar,
+    //   status: "old",
+    //   imgSave:
+    //     "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
+    // });
+
     setListMarkerSaved((current) => [
       ...current,
       {
@@ -294,7 +317,7 @@ function Map() {
   };
 
   console.log({ dragStart });
-  // console.log({ listMarkerSaved });
+  console.log({ listMarkerInput });
   // console.log({ storeMarkerSaved });
   // console.log({ isOpenInfoDrag });
   // console.log({ isSaved });
@@ -329,6 +352,7 @@ function Map() {
 
   if (!isLoaded) return <div>Loading...</div>;
 
+  console.log({ selected });
   return (
     <>
       <GoogleMap
@@ -402,31 +426,30 @@ function Map() {
         </Box>
 
         {listMarkerInput &&
-          listMarkerInput.map((marker, index) => (
-            <Marker
-              // draggable={true}
-              key={index}
-              position={{ lat: marker.lat, lng: marker.lng }}
-              onClick={() => {
-                setSelected(marker);
-                setIsOpenPlace(true);
-                setIsOpenInfo(true);
-                setIsOpenInfoDrag(false);
-                setIsSaved(false);
-              }}
-              icon={{
-                url: `${
-                  selected?.status === "old" && selected?.lat === marker?.lat
-                    ? "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png"
-                    : "https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png"
-                }`,
-                origin: new window.google.maps.Point(0, 0),
-                anchor: new window.google.maps.Point(15, 15),
-                scaledSize: new window.google.maps.Size(30, 30),
-              }}
-            />
-          ))}
+          listMarkerInput
+            .filter((x) => x?.status === "new")
+            .map((marker, index) => (
+              <Marker
+                // draggable={true}
+                key={`${marker.lat}-${index}`}
+                position={{ lat: marker.lat, lng: marker.lng }}
+                onClick={() => {
+                  setSelected(marker);
+                  setIsOpenPlace(true);
+                  setIsOpenInfo(true);
+                  setIsOpenInfoDrag(false);
+                  setIsSaved(false);
+                }}
+                icon={{
+                  url: `https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png`,
+                  origin: new window.google.maps.Point(0, 0),
+                  anchor: new window.google.maps.Point(15, 15),
+                  scaledSize: new window.google.maps.Size(30, 30),
+                }}
+              />
+            ))}
 
+        {/* https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png */}
         {isOpenInfo && selected?.status === "new" ? (
           <InfoWindow
             zIndex={2}
@@ -460,13 +483,9 @@ function Map() {
         {curMarker ? (
           <div
             className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
-            // style={{
-            //   backgroundImage: `${
-            //     dragStart && curMarker?.status === "old"
-            //       ? "url(https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png)"
-            //       : "url(https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png)"
-            //   }`,
-            // }}
+            style={{
+              backgroundImage: `url(https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png)`,
+            }}
             onClick={() => {
               setIsOpenPlace(true);
               setIsOpenInfo(false);
@@ -487,7 +506,6 @@ function Map() {
                   <p>Ward: {curMarker?.ward}</p>
                   <p>Disctrict: {curMarker?.district}</p>
                   <p>City: {curMarker?.city}</p>
-                  {/* <p>Spotted {formatRelative(curMarker.time, new Date())}</p> */}
                   <a href={curMarker?.toUrl} target="_blank">
                     View on Google Maps
                   </a>
@@ -511,22 +529,24 @@ function Map() {
 
         {storeMarkerSaved &&
           showMapSaved &&
-          storeMarkerSaved?.map((marker, index) => (
-            <Marker
-              key={index}
-              position={{ lat: marker.lat, lng: marker.lng }}
-              onClick={() => {
-                setSelected(marker);
-                setIsOpenPlace(true);
-              }}
-              icon={{
-                url: `${marker?.imgSave}`,
-                origin: new window.google.maps.Point(0, 0),
-                anchor: new window.google.maps.Point(15, 15),
-                scaledSize: new window.google.maps.Size(30, 30),
-              }}
-            />
-          ))}
+          storeMarkerSaved
+            ?.filter((x) => x?.status === "old")
+            ?.map((marker, index) => (
+              <Marker
+                key={index}
+                position={{ lat: marker.lat, lng: marker.lng }}
+                onClick={() => {
+                  setSelected(marker);
+                  setIsOpenPlace(true);
+                }}
+                icon={{
+                  url: `${marker?.imgSave}`,
+                  origin: new window.google.maps.Point(0, 0),
+                  anchor: new window.google.maps.Point(15, 15),
+                  scaledSize: new window.google.maps.Size(30, 30),
+                }}
+              />
+            ))}
 
         <Box
           className={classes.seletedMarker}
