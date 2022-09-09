@@ -16,6 +16,7 @@ function PlaceDetail({
   ward,
   district,
   city,
+  dragStart
 }) {
   const classes = useStyles();
 
@@ -41,15 +42,17 @@ function PlaceDetail({
 
             </Box> */}
             <ul className={classes.listContainer}>
-              <li className={classes.item}>
-                <img
-                  src="https://www.gstatic.com/images/icons/material/system_gm/1x/place_gm_blue_24dp.png"
-                  alt=""
-                />
-                <Typography variant="body1">
-                  {name}, {ward}, {district}, {city}
-                </Typography>
-              </li>
+              {address ? (
+                <li className={classes.item}>
+                  <img
+                    src="https://www.gstatic.com/images/icons/material/system_gm/1x/place_gm_blue_24dp.png"
+                    alt=""
+                  />
+                  <Typography variant="body1">
+                    {name}, {ward}, {district}, {city}
+                  </Typography>
+                </li>
+              ) : null}
             </ul>
             {/* <Typography variant="body1" className={classes.title}>
               {name}

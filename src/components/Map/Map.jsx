@@ -66,31 +66,33 @@ function Map() {
    * Click any where on map
    */
   const onMapClick = React.useCallback(async (e) => {
-    const res = await axios.get(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${e.latLng.lat()},${e.latLng.lng()}&key=${
-        process.env.REACT_APP_GOOGLE_MAPS_API_KEY
-      }`
-    );
+    if (e?.latLng.lat() && e?.latLng.lng()) {
+      const res = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${e.latLng.lat()},${e.latLng.lng()}&key=${
+          process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+        }`
+      );
 
-    const stringAddress = res?.data.results[0].formatted_address.split(",");
+      const stringAddress = res?.data.results[0].formatted_address.split(",");
 
-    setListMarkerInput((current) => [
-      ...current,
-      {
-        address: res?.data.results[0].formatted_address,
-        name: stringAddress[0],
-        ward: stringAddress[1],
-        district: stringAddress[2],
-        city: stringAddress[3],
-        lat: e.latLng.lat(),
-        lng: e.latLng.lng(),
-        toUrl: `https://www.google.com/maps/?q=${e.latLng.lat()},${e.latLng.lng()}`,
-        time: new Date(),
-        status: "new",
-        imgSabe:
-          "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
-      },
-    ]);
+      setListMarkerInput((current) => [
+        ...current,
+        {
+          address: res?.data.results[0].formatted_address,
+          name: stringAddress[0],
+          ward: stringAddress[1],
+          district: stringAddress[2],
+          city: stringAddress[3],
+          lat: e?.latLng.lat(),
+          lng: e?.latLng.lng(),
+          toUrl: `https://www.google.com/maps/?q=${e?.latLng.lat()},${e?.latLng.lng()}`,
+          time: new Date(),
+          status: "new",
+          imgSabe:
+            "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
+        },
+      ]);
+    }
   }, []);
 
   const mapRef = React.useRef();
@@ -125,9 +127,13 @@ function Map() {
    */
   const handleDragStart = () => {
     setDragStart(true);
+    // setIsOpenInfo(false);
     setIsOpenInfoDrag(false);
-    // setSelected(null);
-    // setCurMarker(null);
+    setSelected(null);
+    // setCurMarker({
+    //   imgSave:
+    //     "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
+    // });
     // setListMarkerInput([]);
     // setSelected(null);
   };
@@ -136,8 +142,9 @@ function Map() {
    * End drag map
    */
   const handleDragEnd = async () => {
+    setCurMarker({});
     setDragStart(false);
-    setIsOpenPlace(true);
+    // setIsOpenPlace(true);
     setIsOpenInfoDrag(true);
     setIsSaved(false);
 
@@ -286,9 +293,10 @@ function Map() {
     }
   };
 
-  console.log({ listMarkerSaved });
-  console.log({ storeMarkerSaved });
-  console.log({ isOpenInfoDrag });
+  console.log({ dragStart });
+  // console.log({ listMarkerSaved });
+  // console.log({ storeMarkerSaved });
+  // console.log({ isOpenInfoDrag });
   // console.log({ isSaved });
   // console.log({ isShow });
   // console.log({ showMapSaved });
@@ -421,8 +429,7 @@ function Map() {
 
         {isOpenInfo && selected?.status === "new" ? (
           <InfoWindow
-            // style={{ top: "-15px" }}
-            zIndex={1}
+            zIndex={2}
             position={{ lat: selected?.lat, lng: selected?.lng }}
             onCloseClick={() => {
               setIsOpenInfo(false);
@@ -467,7 +474,7 @@ function Map() {
               setSelected(null);
             }}
           >
-            {isOpenInfoDrag ? (
+            {!dragStart && isOpenInfoDrag && curMarker?.status === "new" ? (
               <InfoWindow
                 zIndex={1}
                 position={{ lat: curMarker?.lat, lng: curMarker?.lng }}
@@ -476,7 +483,7 @@ function Map() {
                 }}
               >
                 <div className="wrapper-info">
-                  <h3>{curMarker?.name} </h3>
+                  <h3>{curMarker?.name} - Chim bé Huy thơm quá </h3>
                   <p>Ward: {curMarker?.ward}</p>
                   <p>Disctrict: {curMarker?.district}</p>
                   <p>City: {curMarker?.city}</p>
@@ -524,8 +531,8 @@ function Map() {
         <Box
           className={classes.seletedMarker}
           style={{
-            marginLeft:
-              isOpenPlace || (isOpenPlace && curMarker) ? "0" : "-390px",
+            // || (isOpenPlace && curMarker)
+            marginLeft: isOpenPlace ? "0" : "-390px",
           }}
         >
           {selected ? (
@@ -540,11 +547,13 @@ function Map() {
               lat={selected?.lat}
               lng={selected?.lng}
               toUrl={selected?.toUrl}
+              dragStart={dragStart}
             />
           ) : null}
 
           {curMarker ? (
             <PlaceDetail
+              dragStart={dragStart}
               isOpen={isOpen}
               isClose={closePlace}
               address={curMarker?.address}
