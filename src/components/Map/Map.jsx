@@ -483,7 +483,7 @@ function Map() {
                 }}
               >
                 <div className="wrapper-info">
-                  <h3>{curMarker?.name} - Chim bé Huy thơm quá </h3>
+                  <h3>{curMarker?.name} </h3>
                   <p>Ward: {curMarker?.ward}</p>
                   <p>Disctrict: {curMarker?.district}</p>
                   <p>City: {curMarker?.city}</p>
