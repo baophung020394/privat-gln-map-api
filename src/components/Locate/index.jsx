@@ -21,6 +21,9 @@ function Locate({ panTo, setCurMarker }) {
               lng: position?.coords.longitude,
               toUrl: `https://www.google.com/maps/?q=${position?.coords.latitude},${position?.coords.longitude}`,
               time: new Date(),
+              status: "new",
+              imgSave:
+                "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
             });
           },
           () => null
