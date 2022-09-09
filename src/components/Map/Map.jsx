@@ -27,6 +27,7 @@ function Map() {
   const [isOpenInfoDrag, setIsOpenInfoDrag] = useState(null);
   const [isSaved, setIsSaved] = useState(null);
   const [isShow, setIsShow] = useState(null);
+  const [markerDrag, setMarkerDrag] = useState(null);
   const [centerChanged, setCenterChanged] = useState(null);
 
   const [storeMarkerSaved, setStoreMarkerSaved] = useState(
@@ -127,24 +128,22 @@ function Map() {
    */
   const handleDragStart = () => {
     setDragStart(true);
-    // setIsOpenInfo(false);
     setIsOpenInfoDrag(false);
     setSelected(null);
-    setCurMarker({
+    setMarkerDrag({
+      status: "go",
       imgSave:
         "https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png",
     });
-    // setListMarkerInput([]);
-    // setSelected(null);
   };
 
   /**
    * End drag map
    */
   const handleDragEnd = async () => {
-    setCurMarker({});
+    // setCurMarker({});
+    setMarkerDrag(null);
     setDragStart(false);
-    // setIsOpenPlace(true);
     setIsOpenInfoDrag(true);
     setIsSaved(false);
 
@@ -281,12 +280,12 @@ function Map() {
     //   )
     // );
 
-    // setCurMarker({
-    //   ...curMar,
-    //   status: "old",
-    //   imgSave:
-    //     "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
-    // });
+    setCurMarker({
+      ...curMar,
+      status: "old",
+      imgSave:
+        "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
+    });
 
     setListMarkerSaved((current) => [
       ...current,
@@ -417,7 +416,11 @@ function Map() {
               className={classes.btnOption}
               onClick={() => {
                 localStorage.removeItem("listItemSaved");
+                setSelected(null);
+                setCurMarker(null);
                 setStoreMarkerSaved([]);
+                setListMarkerInput([]);
+                window.location.reload();
               }}
             >
               Clear map saved
@@ -463,7 +466,6 @@ function Map() {
               <p>Ward: {selected?.ward}</p>
               <p>Disctrict: {selected?.district}</p>
               <p>City: {selected?.city}</p>
-              {/* <p>Spotted {formatRelative(selected.time, new Date())}</p> */}
               <a href={selected?.toUrl} target="_blank">
                 View on Google Maps
               </a>
@@ -480,7 +482,7 @@ function Map() {
           </InfoWindow>
         ) : null}
 
-        {curMarker ? (
+        {curMarker?.status === "new" ? (
           <div
             className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
             style={{
@@ -525,6 +527,24 @@ function Map() {
               </InfoWindow>
             ) : null}
           </div>
+        ) : null}
+
+        {markerDrag?.status === "go" ? (
+          <div
+            className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
+            style={{
+              backgroundImage: `${
+                dragStart &&
+                "url(https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png)"
+              }`,
+            }}
+            onClick={() => {
+              setIsOpenPlace(true);
+              setIsOpenInfo(false);
+              setIsOpenInfoDrag(true);
+              setSelected(null);
+            }}
+          ></div>
         ) : null}
 
         {storeMarkerSaved &&
