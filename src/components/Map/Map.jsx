@@ -16,6 +16,14 @@ import PlacesAutocomplete from "../Places";
 import useStyles from "./styles.js";
 import axios from "axios";
 
+const imageMaker = {
+  market:
+    "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
+  marker:
+    "https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png",
+  test: "https://image-us.24h.com.vn/upload/1-2022/images/2022-03-16/baukrysie_275278910_3174792849424333_1380029197326773703_n-1647427653-670-width1440height1800.jpg",
+};
+
 function Map() {
   const [curMarker, setCurMarker] = useState();
   const [selected, setSelected] = useState(null);
@@ -198,18 +206,13 @@ function Map() {
    * @param {*} selectMar
    */
   const handleSaveMarker = (selectMar) => {
+    console.log({ selectMar });
+
     setListMarkerInput(
       listMarkerInput?.map((x) =>
         x?.lng === selectMar?.lng ? { ...x, status: "old" } : x
       )
     );
-
-    // setSelected({
-    //   ...selectMar,
-    //   status: "old",
-    //   imgSave:
-    //     "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
-    // });
 
     setListMarkerSaved((current) => [
       ...current,
@@ -234,6 +237,7 @@ function Map() {
    * @param {*} curMar
    */
   const handleSaveMarkerCur = (curMar) => {
+    console.log({ curMar });
 
     setCurMarker({
       ...curMar,
@@ -288,6 +292,7 @@ function Map() {
     if (isSaved && storeMarkerSaved?.length >= 0) {
       localStorage.setItem("listItemSaved", JSON.stringify(listMarkerSaved));
       setStoreMarkerSaved(JSON.parse(localStorage.getItem("listItemSaved")));
+      setIsSaved(false);
     }
   }, [isSaved]);
 
@@ -433,13 +438,13 @@ function Map() {
           </InfoWindow>
         ) : null}
 
-{/* https://image-us.24h.com.vn/upload/1-2022/images/2022-03-16/baukrysie_275278910_3174792849424333_1380029197326773703_n-1647427653-670-width1440height1800.jpg*/}
+        {/*https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png*/}
 
         {curMarker?.status === "new" ? (
           <div
             className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
             style={{
-              backgroundImage: `url(https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png)`,
+              backgroundImage: `url(${imageMaker?.test})`,
             }}
             onClick={() => {
               setIsOpenPlace(true);
@@ -484,7 +489,9 @@ function Map() {
 
         {markerDrag?.status === "go" ? (
           <div
-            className={`${classes.currentMark} ${dragStart ? "shadow" : "displayNone"}`}
+            className={`${classes.currentMark} ${
+              dragStart ? "shadow chim bé huy" : "displayNone"
+            }`}
             style={{
               backgroundImage: `${
                 dragStart ? `url(${markerDrag?.imgSave})` : ""
