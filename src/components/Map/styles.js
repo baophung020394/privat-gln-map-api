@@ -3,7 +3,7 @@ import { alpha, makeStyles } from "@material-ui/core/styles";
 export default makeStyles((theme) => ({
   currentMark: {
     position: "absolute",
-    top: "51%",
+    top: "50%",
     left: "50%",
     zIndex: 0,
     transform: "translate(-50%,-50%)",

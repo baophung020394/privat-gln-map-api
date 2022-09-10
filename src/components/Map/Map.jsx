@@ -134,9 +134,13 @@ function Map() {
    * Start drag map
    */
   const handleDragStart = () => {
-    setCurMarker(null);
-    setMarkerDrag({
-      status: "go",
+    // setCurMarker(null);
+    // setMarkerDrag({
+    //   status: "go",
+    //   imgSave:
+    //     "https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png",
+    // });
+    setCurMarker({
       imgSave:
         "https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png",
     });
@@ -149,8 +153,6 @@ function Map() {
    * End drag map
    */
   const handleDragEnd = async () => {
-    // setCurMarker({});
-    // setMarkerDrag(null);
     setDragStart(false);
     setIsOpenInfoDrag(true);
     setIsSaved(false);
@@ -206,8 +208,6 @@ function Map() {
    * @param {*} selectMar
    */
   const handleSaveMarker = (selectMar) => {
-    console.log({ selectMar });
-
     setListMarkerInput(
       listMarkerInput?.map((x) =>
         x?.lng === selectMar?.lng ? { ...x, status: "old" } : x
@@ -237,14 +237,7 @@ function Map() {
    * @param {*} curMar
    */
   const handleSaveMarkerCur = (curMar) => {
-    console.log({ curMar });
-
-    setCurMarker({
-      ...curMar,
-      status: "old",
-      imgSave:
-        "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
-    });
+    setCurMarker(null);
 
     setListMarkerSaved((current) => [
       ...current,
@@ -440,9 +433,9 @@ function Map() {
 
         {/*https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png*/}
 
-        {curMarker?.status === "new" ? (
+        {curMarker ? (
           <div
-            className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
+            className={`curMarker ${classes.currentMark} ${dragStart ? "shadow" : ""}`}
             style={{
               backgroundImage: `url(${imageMaker?.marker})`,
             }}
@@ -487,9 +480,9 @@ function Map() {
           </div>
         ) : null}
 
-        {markerDrag?.status === "go" ? (
+        {/* {markerDrag?.status === "go" ? (
           <div
-            className={`${classes.currentMark} ${
+            className={`curMarkerGo ${classes.currentMark} ${
               dragStart ? "shadow go" : "displayNone"
             }`}
             style={{
@@ -498,7 +491,7 @@ function Map() {
               }`,
             }}
           ></div>
-        ) : null}
+        ) : null} */}
 
         {storeMarkerSaved &&
           showMapSaved &&
