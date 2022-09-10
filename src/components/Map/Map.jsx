@@ -100,7 +100,6 @@ function Map() {
 
   const onMapLoad = React.useCallback((map) => {
     mapRef.current = map;
-    console.log({ mapRef });
   }, []);
 
   const panTo = React.useCallback(({ lat, lng }) => {
@@ -235,6 +234,7 @@ function Map() {
    * @param {*} curMar
    */
   const handleSaveMarkerCur = (curMar) => {
+
     setCurMarker({
       ...curMar,
       status: "old",
@@ -270,8 +270,8 @@ function Map() {
     }
   };
 
-  console.log({ dragStart });
-  console.log({ listMarkerInput });
+  // console.log({ dragStart });
+  // console.log({ listMarkerInput });
   // console.log({ storeMarkerSaved });
   // console.log({ isOpenInfoDrag });
   // console.log({ isSaved });
@@ -295,18 +295,15 @@ function Map() {
     // setShowMapSaved(JSON.parse(localStorage.getItem("showMapSaved")));
     if (isShow) {
       localStorage.getItem("showMapSaved");
-      // localStorage.setItem("showMapSaved", `${JSON.stringify(true)}`);
       setShowMapSaved(JSON.parse(localStorage.getItem("showMapSaved")));
     } else {
       localStorage.getItem("showMapSaved");
-      // localStorage.setItem("showMapSaved", `${JSON.stringify(false)}`);
       setShowMapSaved(JSON.parse(localStorage.getItem("showMapSaved")));
     }
   }, [isShow]);
 
   if (!isLoaded) return <div>Loading...</div>;
 
-  console.log({ selected });
   return (
     <>
       <GoogleMap
@@ -407,7 +404,6 @@ function Map() {
               />
             ))}
 
-        {/* https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png */}
         {isOpenInfo && selected?.status === "new" ? (
           <InfoWindow
             zIndex={2}
@@ -436,6 +432,8 @@ function Map() {
             </div>
           </InfoWindow>
         ) : null}
+
+{/* https://image-us.24h.com.vn/upload/1-2022/images/2022-03-16/baukrysie_275278910_3174792849424333_1380029197326773703_n-1647427653-670-width1440height1800.jpg*/}
 
         {curMarker?.status === "new" ? (
           <div
@@ -486,13 +484,7 @@ function Map() {
 
         {markerDrag?.status === "go" ? (
           <div
-            onClick={() => {
-              setIsOpenPlace(true);
-              setIsOpenInfo(false);
-              setIsOpenInfoDrag(true);
-              setSelected(null);
-            }}
-            className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
+            className={`${classes.currentMark} ${dragStart ? "shadow" : "displayNone"}`}
             style={{
               backgroundImage: `${
                 dragStart ? `url(${markerDrag?.imgSave})` : ""
