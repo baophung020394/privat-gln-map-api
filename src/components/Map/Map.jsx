@@ -444,7 +444,7 @@ function Map() {
           <div
             className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
             style={{
-              backgroundImage: `url(${imageMaker?.test})`,
+              backgroundImage: `url(${imageMaker?.marker})`,
             }}
             onClick={() => {
               setIsOpenPlace(true);
@@ -455,7 +455,7 @@ function Map() {
           >
             {!dragStart && isOpenInfoDrag && curMarker?.status === "new" ? (
               <InfoWindow
-                zIndex={1}
+                zIndex={2}
                 position={{ lat: curMarker?.lat, lng: curMarker?.lng }}
                 onCloseClick={() => {
                   setIsOpenInfoDrag(false);
@@ -490,7 +490,7 @@ function Map() {
         {markerDrag?.status === "go" ? (
           <div
             className={`${classes.currentMark} ${
-              dragStart ? "shadow chim bé huy" : "displayNone"
+              dragStart ? "shadow go" : "displayNone"
             }`}
             style={{
               backgroundImage: `${
