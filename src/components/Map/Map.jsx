@@ -127,7 +127,7 @@ function Map() {
    * Start drag map
    */
   const handleDragStart = () => {
-    setCurMarker(null)
+    setCurMarker(null);
     setMarkerDrag({
       status: "go",
       imgSave:
@@ -486,6 +486,12 @@ function Map() {
 
         {markerDrag?.status === "go" ? (
           <div
+            onClick={() => {
+              setIsOpenPlace(true);
+              setIsOpenInfo(false);
+              setIsOpenInfoDrag(true);
+              setSelected(null);
+            }}
             className={`${classes.currentMark} ${dragStart ? "shadow" : ""}`}
             style={{
               backgroundImage: `${
