@@ -111,7 +111,6 @@ function Map() {
   }, []);
 
   const panTo = React.useCallback(({ lat, lng }) => {
-    console.log("chim be huy u");
     mapRef.current.panTo({ lat, lng });
     mapRef.current.setZoom(20);
   }, []);
@@ -195,7 +194,10 @@ function Map() {
     console.log({ centerChanged });
     if (centerChanged) {
       // panTo({ lat: isValue?.lat, lng: isValue?.lng });
-      await mapRef?.current.panTo({ lat: centerChanged?.lat, lng: centerChanged?.lng });
+      await mapRef?.current.panTo({
+        lat: centerChanged?.lat,
+        lng: centerChanged?.lng,
+      });
     }
   };
 
