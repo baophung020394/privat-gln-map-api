@@ -60,7 +60,6 @@ function Locate({
   };
 
   useEffect(() => {
-    console.log("chim be huy");
     if (curMarker?.lat) {
       panTo({
         lat: curMarker?.lat,
@@ -68,6 +67,7 @@ function Locate({
       });
     }
   }, [curMarker?.lat]);
+  
   return (
     <button
       className={classes.locate}
