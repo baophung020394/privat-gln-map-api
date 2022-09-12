@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import SearchIcon from "@material-ui/icons/Search";
 import usePlacesAutocomplete, {
@@ -37,6 +37,8 @@ function PlacesAutocomplete({
   setIsOpenPlace,
   selected,
   curMarker,
+  centerChanged,
+  setCenterChanged,
 }) {
   const [isValue, setIsValue] = useState(null);
 
@@ -84,11 +86,36 @@ function PlacesAutocomplete({
 
   const handleSubmit = () => {
     if (!isValue) return;
+
     setListMarkerInput((current) => [...current, isValue]);
 
-    setCurMarker(null);
+    setCenterChanged(null);
     panTo({ lat: isValue.lat, lng: isValue.lng });
   };
+
+  useEffect(() => {
+    if (centerChanged?.lat) {
+      setCenterChanged({
+        lat: isValue?.lat,
+        lng: isValue?.lng,
+      });
+    }
+  }, [centerChanged?.lat]);
+  // const handleSubmit = React.useCallback(() => {
+  //   if (!isValue) return;
+
+  //   setListMarkerInput((current) => [...current, isValue]);
+
+  //   // setCurMarker(null);
+  //   console.log({ isValue });
+
+  //   setCenterChanged({
+  //     lat: isValue.lat,
+  //     lng: isValue.lng,
+  //   });
+
+  //   panTo({ lat: isValue.lat, lng: isValue.lng });
+  // }, [isValue?.lat]);
 
   return (
     <>
@@ -101,7 +128,7 @@ function PlacesAutocomplete({
             className={`${classes.input} combobox-input`}
             placeholder="Search an address"
           />
-          <ComboboxPopover style={{ zIndex: 9}}>
+          <ComboboxPopover style={{ zIndex: 9 }}>
             <ComboboxList>
               {status === "OK" &&
                 data.map(({ place_id, description }) => (

@@ -110,36 +110,32 @@ function Map() {
     mapRef.current = map;
   }, []);
 
-  const panTo = React.useCallback(({ lat, lng }) => {
-    mapRef.current.panTo({ lat, lng });
-    mapRef.current.setZoom(20);
-  }, []);
+  const panTo = React.useCallback(
+    ({ lat, lng }) => {
+      mapRef.current.panTo({ lat, lng });
+      mapRef.current.setZoom(20);
+    },
+    [mapRef?.current?.center?.lat()]
+  );
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
   });
 
-  const handleCenterChange = () => {
-    console.log(mapRef?.current?.center?.lat());
-    window.setTimeout(() => {
-      mapRef.current.panTo({
-        lat: mapRef?.current?.center?.lat(),
-        lng: mapRef?.current?.center?.lng(),
-      });
-    }, 3000);
-  };
+  // const handleCenterChange = () => {
+  //   window.setTimeout(() => {
+  //     mapRef.current.panTo({
+  //       lat: mapRef?.current?.center?.lat(),
+  //       lng: mapRef?.current?.center?.lng(),
+  //     });
+  //   }, 3000);
+  // };
 
   /**
    * Start drag map
    */
   const handleDragStart = () => {
-    // setCurMarker(null);
-    // setMarkerDrag({
-    //   status: "go",
-    //   imgSave:
-    //     "https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png",
-    // });
     setCurMarker({
       imgSave:
         "https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png",
@@ -208,6 +204,8 @@ function Map() {
    * @param {*} selectMar
    */
   const handleSaveMarker = (selectMar) => {
+    // localStorage.setItem("showMapSaved", `${JSON.stringify(true)}`);
+
     setListMarkerInput(
       listMarkerInput?.map((x) =>
         x?.lng === selectMar?.lng ? { ...x, status: "old" } : x
@@ -262,24 +260,13 @@ function Map() {
    */
   const handleShowMarkSaved = () => {
     setIsShow((show) => !show);
-    if (listMarkerInput?.length > 0) {
-      setListMarkerInput(null);
-    }
   };
 
-  // console.log({ dragStart });
-  // console.log({ listMarkerInput });
-  // console.log({ storeMarkerSaved });
-  // console.log({ isOpenInfoDrag });
-  // console.log({ isSaved });
-  // console.log({ isShow });
-  // console.log({ showMapSaved });
-  // console.log({ selected });
-  // console.log({ isMarkerSave });
-
   useEffect(() => {
-    localStorage.setItem("showMapSaved", `${JSON.stringify(true)}`);
-  }, []);
+    if (!localStorage.getItem("showMapSaved")) {
+      localStorage.setItem("showMapSaved", `${JSON.stringify(true)}`);
+    }
+  }, [localStorage.getItem("showMapSaved")]);
 
   useEffect(() => {
     if (isSaved && storeMarkerSaved?.length >= 0) {
@@ -316,7 +303,6 @@ function Map() {
         mapContainerClassName="map-container"
         onClick={onMapClick}
         onLoad={onMapLoad}
-        // onCenterChanged={handleCenterChange}
         onZoomChanged={handleZoomChanged}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
@@ -325,6 +311,8 @@ function Map() {
           <Box className={classes.placesContainer}>
             <Locate panTo={panTo} setCurMarker={setCurMarker} />
             <PlacesAutocomplete
+              centerChanged={centerChanged}
+              setCenterChanged={setCenterChanged}
               panTo={panTo}
               selected={selected}
               curMarker={curMarker}
@@ -435,7 +423,9 @@ function Map() {
 
         {curMarker ? (
           <div
-            className={`curMarker ${classes.currentMark} ${dragStart ? "shadow" : ""}`}
+            className={`curMarker ${classes.currentMark} ${
+              dragStart ? "shadow" : ""
+            }`}
             style={{
               backgroundImage: `url(${imageMaker?.marker})`,
             }}
@@ -479,19 +469,6 @@ function Map() {
             ) : null}
           </div>
         ) : null}
-
-        {/* {markerDrag?.status === "go" ? (
-          <div
-            className={`curMarkerGo ${classes.currentMark} ${
-              dragStart ? "shadow go" : "displayNone"
-            }`}
-            style={{
-              backgroundImage: `${
-                dragStart ? `url(${markerDrag?.imgSave})` : ""
-              }`,
-            }}
-          ></div>
-        ) : null} */}
 
         {storeMarkerSaved &&
           showMapSaved &&
