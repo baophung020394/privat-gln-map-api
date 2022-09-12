@@ -183,18 +183,14 @@ function Map() {
       lat: mapRef?.current?.center?.lat(),
       lng: mapRef?.current?.center?.lng(),
     });
-
-    // mapRef.current.setZoom(20);
   };
 
   /**
    * handle event zoom changed
    */
   const handleZoomChanged = async () => {
-    console.log({ centerChanged });
-    if (centerChanged) {
-      // panTo({ lat: isValue?.lat, lng: isValue?.lng });
-      await mapRef?.current.panTo({
+    if (centerChanged?.lat) {
+      mapRef?.current.panTo({
         lat: centerChanged?.lat,
         lng: centerChanged?.lng,
       });
@@ -265,6 +261,16 @@ function Map() {
   };
 
   useEffect(() => {
+    console.log({ centerChanged });
+    if (curMarker) {
+      setCenterChanged({
+        lat: curMarker?.lat,
+        lng: curMarker?.lng,
+      });
+    }
+  }, [curMarker?.lat]);
+
+  useEffect(() => {
     if (!localStorage.getItem("showMapSaved")) {
       localStorage.setItem("showMapSaved", `${JSON.stringify(true)}`);
     }
@@ -311,7 +317,13 @@ function Map() {
       >
         <Box className={classes.topHeader}>
           <Box className={classes.placesContainer}>
-            <Locate panTo={panTo} setCurMarker={setCurMarker} />
+            <Locate
+              curMarker={curMarker}
+              panTo={panTo}
+              setCurMarker={setCurMarker}
+              setListMarkerInput={setListMarkerInput}
+              setCenterChanged={setCenterChanged}
+            />
             <PlacesAutocomplete
               centerChanged={centerChanged}
               setCenterChanged={setCenterChanged}
