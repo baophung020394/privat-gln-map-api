@@ -110,13 +110,11 @@ function Map() {
     mapRef.current = map;
   }, []);
 
-  const panTo = React.useCallback(
-    ({ lat, lng }) => {
-      mapRef.current.panTo({ lat, lng });
-      mapRef.current.setZoom(20);
-    },
-    [mapRef?.current?.center?.lat()]
-  );
+  const panTo = React.useCallback(({ lat, lng }) => {
+    console.log("chim be huy u");
+    mapRef.current.panTo({ lat, lng });
+    mapRef.current.setZoom(20);
+  }, []);
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -193,9 +191,11 @@ function Map() {
   /**
    * handle event zoom changed
    */
-  const handleZoomChanged = () => {
+  const handleZoomChanged = async () => {
+    console.log({ centerChanged });
     if (centerChanged) {
-      mapRef.current.panTo({ lat: centerChanged.lat, lng: centerChanged.lng });
+      // panTo({ lat: isValue?.lat, lng: isValue?.lng });
+      await mapRef?.current.panTo({ lat: centerChanged?.lat, lng: centerChanged?.lng });
     }
   };
 

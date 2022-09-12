@@ -84,23 +84,23 @@ function PlacesAutocomplete({
     setIsValue(newObj);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!isValue) return;
 
     setListMarkerInput((current) => [...current, isValue]);
-
-    setCenterChanged(null);
-    panTo({ lat: isValue.lat, lng: isValue.lng });
+    await setCenterChanged(null);
+    await panTo({ lat: isValue?.lat, lng: isValue?.lng });
   };
 
-  useEffect(() => {
-    if (centerChanged?.lat) {
-      setCenterChanged({
-        lat: isValue?.lat,
-        lng: isValue?.lng,
-      });
-    }
-  }, [centerChanged?.lat]);
+  // useEffect(() => {
+  //   if (centerChanged?.lat) {
+  //     setCenterChanged({
+  //       lat: Number(isValue?.lat),
+  //       lng: Number(isValue?.lng),
+  //     });
+  //   }
+  // }, [centerChanged?.lat]);
+
   // const handleSubmit = React.useCallback(() => {
   //   if (!isValue) return;
 
