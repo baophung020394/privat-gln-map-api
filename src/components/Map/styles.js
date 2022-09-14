@@ -1,6 +1,35 @@
 import { alpha, makeStyles } from "@material-ui/core/styles";
 
 export default makeStyles((theme) => ({
+  buttonDirection: {
+    minWidth: "unset",
+    padding: 0,
+    marginRight: 16,
+    opacity: "0.8",
+
+    "&:hover": {
+      opacity: 1,
+    },
+
+    "& img": {
+      width: 18,
+      height: 18,
+      objectFit: "cover",
+    },
+  },
+  directions: {
+    background: '#e8eaed',
+    transition: "0.4s",
+    width: 425,
+    minWidth: 425,
+    marginLeft: -425,
+    position: "fixed",
+    top: 55,
+    left: 0,
+    zIndex: 1,
+    height: "100%",
+    boxShadow: "0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22)",
+  },
   currentMark: {
     position: "absolute",
     top: "50%",
@@ -12,15 +41,15 @@ export default makeStyles((theme) => ({
     width: 30,
     height: 30,
     cursor: "pointer",
-    transition: '0.4s',
+    transition: "0.4s",
 
     "&.shadow": {
       top: "48%",
     },
 
-    '&.displayNone': {
-      display: 'none'
-    }
+    "&.displayNone": {
+      display: "none",
+    },
   },
   "@keyframes myEffect": {
     "0%": {
@@ -38,13 +67,14 @@ export default makeStyles((theme) => ({
     top: 10,
     zIndex: 1,
     left: 10,
-    // left: '52%',
-    // transform: "translateX(-50%)",
     display: "flex",
+    width: "100%",
+    justifyContent: "space-between",
+    paddingRight: 10,
   },
 
   optionsChoose: {
-    display: 'flex',
+    display: "flex",
 
     "& button": {
       background: "#fff",
@@ -90,9 +120,9 @@ export default makeStyles((theme) => ({
 
   seletedMarker: {
     transition: "0.4s",
-    width: 390,
-    minWidth: 390,
-    marginLeft: -390,
+    width: 425,
+    minWidth: 425,
+    marginLeft: -425,
     position: "fixed",
     top: 55,
     left: 0,

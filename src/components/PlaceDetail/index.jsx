@@ -16,7 +16,7 @@ function PlaceDetail({
   ward,
   district,
   city,
-  dragStart
+  dragStart,
 }) {
   const classes = useStyles();
 
@@ -27,7 +27,6 @@ function PlaceDetail({
         style={{ left: isOpen ? "0px" : "-100%" }}
       >
         <Box className={classes.image}>
-          {/* <img src="https://placehold.jp/600x600.png" alt="" /> */}
           <img
             src="https://maps.gstatic.com/tactile/pane/default_geocode-1x.png"
             alt=""

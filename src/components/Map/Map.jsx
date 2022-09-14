@@ -5,9 +5,8 @@ import {
   InfoWindow,
   Marker,
   useLoadScript,
-  Autocomplete,
+  DirectionsRenderer,
 } from "@react-google-maps/api";
-import { formatRelative } from "date-fns";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { AppContext } from "../../context/AppProvider";
 import Locate from "../Locate";
@@ -15,6 +14,7 @@ import PlaceDetail from "../PlaceDetail";
 import PlacesAutocomplete from "../Places";
 import useStyles from "./styles.js";
 import axios from "axios";
+import Directions from "../Directions";
 
 const imageMaker = {
   market:
@@ -27,7 +27,6 @@ const imageMaker = {
 function Map() {
   const [curMarker, setCurMarker] = useState();
   const [selected, setSelected] = useState(null);
-  const [isMarkerSave, setIsMarkerSaved] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [dragStart, setDragStart] = useState(null);
   const [isOpenPlace, setIsOpenPlace] = useState(null);
@@ -35,8 +34,14 @@ function Map() {
   const [isOpenInfoDrag, setIsOpenInfoDrag] = useState(null);
   const [isSaved, setIsSaved] = useState(null);
   const [isShow, setIsShow] = useState(null);
-  const [markerDrag, setMarkerDrag] = useState(null);
+  const [openDirection, setOpenDirection] = useState(null);
   const [centerChanged, setCenterChanged] = useState(null);
+  const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [distance, setDistance] = useState("");
+  const [duration, setDuration] = useState("");
+  const [listRoutes, setListRoutes] = useState(null);
+  const [autocomplete, setAutocomplete] = useState("");
+  const [autocompleteDes, setAutocompleteDes] = useState("");
 
   const [storeMarkerSaved, setStoreMarkerSaved] = useState(
     JSON.parse(localStorage.getItem("listItemSaved")) || []
@@ -61,6 +66,13 @@ function Map() {
 
   const closePlace = () => {
     setIsOpen(false);
+  };
+
+  const openDirections = () => {
+    setOpenDirection(true);
+  };
+  const closeDirection = () => {
+    setOpenDirection(false);
   };
 
   const center = useMemo(
@@ -107,6 +119,7 @@ function Map() {
   const mapRef = React.useRef();
 
   const onMapLoad = React.useCallback((map) => {
+    console.log({ map });
     mapRef.current = map;
   }, []);
 
@@ -140,6 +153,7 @@ function Map() {
     setDragStart(true);
     setIsOpenInfoDrag(false);
     setSelected(null);
+    setDirectionsResponse(null)
   };
 
   /**
@@ -202,13 +216,16 @@ function Map() {
    * @param {*} selectMar
    */
   const handleSaveMarker = (selectMar) => {
-    // localStorage.setItem("showMapSaved", `${JSON.stringify(true)}`);
-
     setListMarkerInput(
       listMarkerInput?.map((x) =>
         x?.lng === selectMar?.lng ? { ...x, status: "old" } : x
       )
     );
+
+    setSelected({
+      ...selected,
+      status: "old",
+    });
 
     setListMarkerSaved((current) => [
       ...current,
@@ -315,6 +332,23 @@ function Map() {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
+        {directionsResponse && (
+          <DirectionsRenderer
+            directions={directionsResponse}
+            options={{
+              directions: directionsResponse,
+            }}
+          />
+        )}
+
+        {/* {
+          listRoutes && listRoutes?.length > 0 ? (
+            <DirectionsRenderer options={{
+
+            }} />
+          ) : null
+        } */}
+
         <Box className={classes.topHeader}>
           <Box className={classes.placesContainer}>
             <Locate
@@ -334,7 +368,15 @@ function Map() {
               setCurMarker={setCurMarker}
               setListMarkerSaved={setListMarkerSaved}
             />
+
+            <Button
+              className={classes.buttonDirection}
+              onClick={openDirections}
+            >
+              <img src="https://maps.gstatic.com/tactile/omnibox/directions-2x-20150909.png" />
+            </Button>
           </Box>
+
           <Box className={classes.optionsChoose}>
             {showMapSaved ? (
               <Button
@@ -420,15 +462,17 @@ function Map() {
               <a href={selected?.toUrl} target="_blank">
                 View on Google Maps
               </a>
-              <Button
-                className={classes.save}
-                onClick={() => {
-                  handleSaveMarker(selected);
-                  setIsSaved(true);
-                }}
-              >
-                Save - {selected?.status === "old" ? "old" : "new"}
-              </Button>
+              {selected?.status === "new" ? (
+                <Button
+                  className={classes.save}
+                  onClick={() => {
+                    handleSaveMarker(selected);
+                    setIsSaved(true);
+                  }}
+                >
+                  Save
+                </Button>
+              ) : null}
             </div>
           </InfoWindow>
         ) : null}
@@ -469,15 +513,17 @@ function Map() {
                   <a href={curMarker?.toUrl} target="_blank">
                     {curMarker?.lat} - {curMarker?.lng}
                   </a>
-                  <Button
-                    className={classes.save}
-                    onClick={() => {
-                      handleSaveMarkerCur(curMarker);
-                      setIsSaved(true);
-                    }}
-                  >
-                    Save - {curMarker?.status === "old" ? "old" : "new"}
-                  </Button>
+                  {curMarker?.status === "new" ? (
+                    <Button
+                      className={classes.save}
+                      onClick={() => {
+                        handleSaveMarkerCur(curMarker);
+                        setIsSaved(true);
+                      }}
+                    >
+                      Save
+                    </Button>
+                  ) : null}
                 </div>
               </InfoWindow>
             ) : null}
@@ -509,7 +555,7 @@ function Map() {
           className={classes.seletedMarker}
           style={{
             // || (isOpenPlace && curMarker)
-            marginLeft: isOpenPlace ? "0" : "-390px",
+            marginLeft: isOpenPlace ? "0" : "-425px",
           }}
         >
           {selected ? (
@@ -543,6 +589,30 @@ function Map() {
               toUrl={curMarker?.toUrl}
             />
           ) : null}
+        </Box>
+
+        <Box
+          className={classes.directions}
+          style={{
+            // || (isOpenPlace && curMarker)
+            marginLeft: openDirection ? "0" : "-425px",
+          }}
+        >
+          <Directions
+            isClose={closeDirection}
+            setDirectionsResponse={setDirectionsResponse}
+            distance={distance}
+            duration={duration}
+            listRoutes={listRoutes}
+            autocomplete={autocomplete}
+            autocompleteDes={autocompleteDes}
+            directionsResponse={directionsResponse}
+            setDistance={setDistance}
+            setDuration={setDuration}
+            setListRoutes={setListRoutes}
+            setAutocomplete={setAutocomplete}
+            setAutocompleteDes={setAutocompleteDes}
+          />
         </Box>
       </GoogleMap>
     </>
