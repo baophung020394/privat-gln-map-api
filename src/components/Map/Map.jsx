@@ -123,10 +123,20 @@ function Map() {
     mapRef.current = map;
   }, []);
 
-  const panTo = React.useCallback(({ lat, lng }) => {
-    mapRef.current.panTo({ lat, lng });
-    mapRef.current.setZoom(20);
-  }, []);
+  const panTo = React.useCallback(
+    ({ lat, lng }) => {
+      mapRef.current.panTo({ lat, lng });
+      if (
+        directionsResponse?.routes.length < 0 ||
+        directionsResponse === null
+      ) {
+        mapRef.current.setZoom(20);
+      } else {
+        mapRef.current.setZoom(17);
+      }
+    },
+    [directionsResponse]
+  );
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -153,7 +163,6 @@ function Map() {
     setDragStart(true);
     setIsOpenInfoDrag(false);
     setSelected(null);
-    setDirectionsResponse(null)
   };
 
   /**
@@ -302,7 +311,6 @@ function Map() {
   }, [isSaved]);
 
   useEffect(() => {
-    // setShowMapSaved(JSON.parse(localStorage.getItem("showMapSaved")));
     if (isShow) {
       localStorage.getItem("showMapSaved");
       setShowMapSaved(JSON.parse(localStorage.getItem("showMapSaved")));
@@ -323,7 +331,7 @@ function Map() {
           mapTypeControl: false,
           fullscreenControl: false,
         }}
-        zoom={20}
+        zoom={17}
         center={center}
         mapContainerClassName="map-container"
         onClick={onMapClick}
@@ -336,18 +344,10 @@ function Map() {
           <DirectionsRenderer
             directions={directionsResponse}
             options={{
-              directions: directionsResponse,
+              draggable: true,
             }}
           />
         )}
-
-        {/* {
-          listRoutes && listRoutes?.length > 0 ? (
-            <DirectionsRenderer options={{
-
-            }} />
-          ) : null
-        } */}
 
         <Box className={classes.topHeader}>
           <Box className={classes.placesContainer}>
@@ -601,6 +601,7 @@ function Map() {
           <Directions
             isClose={closeDirection}
             setDirectionsResponse={setDirectionsResponse}
+            listMarkerSaved={listMarkerSaved}
             distance={distance}
             duration={duration}
             listRoutes={listRoutes}

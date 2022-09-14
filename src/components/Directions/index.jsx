@@ -1,15 +1,10 @@
 import { Box, Button, Input, Typography } from "@material-ui/core";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { Autocomplete, DirectionsRenderer } from "@react-google-maps/api";
 
 import useStyles from "./styles.js";
+import { set } from "date-fns/esm";
 
 const MENU_ICON_TOP = [
   {
@@ -58,6 +53,7 @@ function Directions({
   listRoutes,
   distance,
   duration,
+  listMarkerSaved,
   directionsResponse,
   autocomplete,
   autocompleteDes,
@@ -71,16 +67,20 @@ function Directions({
   const classes = useStyles();
   const [activeIdx, setActiveIdx] = useState(0);
   const [activeIdxRoute, setActiveIdxRoute] = useState(0);
+  const [activeIdxListSaved, setActiveIdxListSaved] = useState([]);
   const [travelModel, setTravelModel] = useState("DRIVING");
-  const [changeOrigin, setchangeOrigin] = useState({
-    origin: "",
-    destiantion: "",
+  const [listChoose, setListChoose] = useState([]);
+
+  const [origin, setOrigin] = useState({
+    lat: "",
+    lng: "",
+  });
+  const [destination, setDestination] = useState({
+    lat: "",
+    lng: "",
   });
 
-  const [fromTo, setFromTo] = useState({
-    origin: "",
-    destiantion: "",
-  });
+  let arrChooseRoute = [];
 
   /** @type React.MutableRefObject<HTMLInputElement> */
   const originRef = useRef();
@@ -93,9 +93,9 @@ function Directions({
 
   const onPlaceChanged = () => {
     if (autocomplete !== null) {
-      setFromTo({
-        ...fromTo,
-        origin: autocomplete?.getPlace(),
+      setOrigin({
+        lat: autocomplete?.getPlace().geometry.location.lat(),
+        lng: autocomplete?.getPlace().geometry.location.lng(),
       });
     } else {
       console.log(" Autocomplete is not loaded yet!");
@@ -108,9 +108,9 @@ function Directions({
 
   const onPlaceChangedDes = () => {
     if (autocompleteDes !== null) {
-      setFromTo({
-        ...fromTo,
-        destiantion: autocompleteDes?.getPlace(),
+      setDestination({
+        lat: autocompleteDes?.getPlace().geometry.location.lat(),
+        lng: autocompleteDes?.getPlace().geometry.location.lng(),
       });
     } else {
       console.log("Autocomplete is not loaded yet!");
@@ -118,15 +118,16 @@ function Directions({
   };
 
   const calculateRoute = async () => {
-    if (fromTo?.origin === "" || fromTo?.destiantion === "") {
+    if (origin?.lat === "" || destination?.lat === "") {
       return;
     }
 
+    console.log("ua vo chua?");
     const directionsService =
       new google.maps.DirectionsService(); /*global google*/
     const results = await directionsService.route({
-      origin: `${fromTo?.origin.geometry.location.lat()}, ${fromTo?.origin.geometry.location.lng()}`,
-      destination: `${fromTo?.destiantion.geometry.location.lat()}, ${fromTo?.destiantion.geometry.location.lng()}`,
+      origin: `${origin?.lat}, ${origin?.lng}`,
+      destination: `${destination.lat}, ${destination.lng}`,
       travelMode: google.maps.TravelMode[travelModel],
       provideRouteAlternatives: true,
       // travelMode: google.maps.TravelMode.RECOMMENDED,
@@ -137,6 +138,9 @@ function Directions({
     setDirectionsResponse(results);
     setDistance(results.routes[0].legs[0].distance.text);
     setDuration(results.routes[0].legs[0].duration.text);
+    setListChoose([]);
+    setActiveIdxListSaved([]);
+    // arrChooseRoute = [];
   };
 
   const handleClickTravel = (value) => {
@@ -184,9 +188,48 @@ function Directions({
     });
   };
 
+  const handleChoosePlace = (value, idx) => {
+    setActiveIdxListSaved((current) => [...current, idx]);
+
+    setListChoose((current) => [...current, value]);
+    // const index = arrChooseRoute.indexOf(value.lat);
+
+    // index === -1 ? arrChooseRoute.push(value) : arrChooseRoute.splice(index, 1);
+    // console.log({ arrChooseRoute });
+
+    // if (arrChooseRoute.length >= 2) {
+    //   setOrigin({
+    //     lat: arrChooseRoute[0]?.lat,
+    //     lng: arrChooseRoute[0]?.lng,
+    //   });
+    //   setDestination({
+    //     lat: arrChooseRoute[1]?.lat,
+    //     lng: arrChooseRoute[1]?.lng,
+    //   });
+    // }
+  };
+
   useEffect(() => {
     calculateRoute();
   }, [travelModel]);
+
+  useEffect(() => {
+    if (listChoose.length >= 3) {
+      setListChoose([]);
+      setActiveIdxListSaved([]);
+    }
+
+    if (listChoose.length === 2) {
+      setOrigin({
+        lat: listChoose[0]?.lat,
+        lng: listChoose[0]?.lng,
+      });
+      setDestination({
+        lat: listChoose[1]?.lat,
+        lng: listChoose[1]?.lng,
+      });
+    }
+  }, [listChoose.length]);
 
   return (
     <>
@@ -241,10 +284,15 @@ function Directions({
           </Box>
 
           <Button className={classes.revertLocation} onClick={calculateRoute}>
+            {/* https://fonts.gstatic.com/s/i/googlematerialicons/search/v16/gm_blue-24dp/1x/gm_search_gm_blue_24dp.png */}
             <img
-              src="https://maps.gstatic.com/consumer/images/icons/1x/swap_vert_grey800_24dp.png"
+              src="https://fonts.gstatic.com/s/i/googlematerialicons/search/v16/gm_grey-24dp/1x/gm_search_gm_grey_24dp.png"
               alt=""
             />
+            {/* <img
+              src="https://maps.gstatic.com/consumer/images/icons/1x/swap_vert_grey800_24dp.png"
+              alt=""
+            /> */}
           </Button>
         </Box>
 
@@ -273,6 +321,52 @@ function Directions({
                       {x?.legs[0].distance?.text}
                     </Typography>
                   </Box>
+                </Box>
+              );
+            })}
+        </Box>
+
+        <Box className={classes.content}>
+          <h1>
+            Choose place in list saved
+            {listChoose && listChoose.length >= 2 && (
+              <img
+                src="https://fonts.gstatic.com/s/i/googlematerialicons/search/v16/gm_grey-24dp/1x/gm_search_gm_grey_24dp.png"
+                alt=""
+                onClick={calculateRoute}
+              />
+            )}
+          </h1>
+          {listMarkerSaved &&
+            listMarkerSaved?.map((x, idx) => {
+              return (
+                <Box
+                  className={`${classes.vehicle} ${
+                    activeIdxListSaved.includes(idx) ? "active" : ""
+                  }`}
+                  key={idx}
+                  onClick={() => {
+                    handleChoosePlace(x, idx);
+                    if (idx === activeIdxListSaved) {
+                      console.log("test");
+                      //   setActiveIdxListSaved("active");
+                    }
+                  }}
+                >
+                  <Box className="left">
+                    <img src={renderImgRoutes()} alt="" />
+                  </Box>
+                  <Box className="mid">
+                    <Typography variant="body1">{x?.name}</Typography>
+                  </Box>
+                  {/* <Box className="right">
+                    <Typography variant="body1">
+                      {x?.legs[0].duration?.text}
+                    </Typography>
+                    <Typography variant="body1">
+                      {x?.legs[0].distance?.text}
+                    </Typography>
+                  </Box> */}
                 </Box>
               );
             })}

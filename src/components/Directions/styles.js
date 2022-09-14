@@ -8,6 +8,7 @@ export default makeStyles((theme) => ({
     height: "100%",
     width: "100%",
     // paddingTop: 20,
+    overflowY: "auto",
   },
   topService: {
     display: "flex",
@@ -138,22 +139,22 @@ export default makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     background: "#fff",
-    position: 'relative',
-    cursor: 'pointer',
-    
-    "&.active":{
-      "&::before":{
+    position: "relative",
+    cursor: "pointer",
+
+    "&.active": {
+      "&::before": {
         content: '""',
-        position: 'absolute',
+        position: "absolute",
         top: 0,
         left: 0,
-        borderLeft: '5px solid rgb(26,115,232)',
-        height: '100%',
+        borderLeft: "5px solid rgb(26,115,232)",
+        height: "100%",
       },
     },
 
     "& p": {
-      fontSize: 16,
+      fontSize: 14,
       color: "rgb(32,33,36)",
       fontWeight: 500,
     },
@@ -163,20 +164,37 @@ export default makeStyles((theme) => ({
       fontSize: 14,
     },
 
+    "& .left": { flex: 1 },
     "& .mid": {
+      flex: 3,
       minWidth: 100,
       "& p": {
         color: "rgb(32,33,36)",
-        textAlign: 'left'
+        textAlign: "left",
+        fontSize: 14,
       },
     },
 
     "& .right": {
-      textAlign: 'right'
-    }
+      textAlign: "right",
+    },
   },
   // rgb(24,128,56)
   content: {
+    background: "#fff",
     marginTop: 8,
+
+    "& h1": {
+      fontSize: 20,
+      margin: 0,
+      padding: "10px 20px 0",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+
+      "& img": {
+        cursor: "pointer",
+      },
+    },
   },
 }));
