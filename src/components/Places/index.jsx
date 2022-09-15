@@ -44,8 +44,6 @@ function PlacesAutocomplete({
 
   const classes = useStyles();
 
-  const center = { lat: 10.7670948, lng: 106.7015026 };
-
   const { setListMarkerInput } = React.useContext(AppContext);
 
   const {

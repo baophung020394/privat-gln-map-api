@@ -9,27 +9,6 @@ import Map from "./components/Map/Map";
 import AppProvider from "./context/AppProvider";
 
 function App() {
-  const [list] = useState([
-    { id: 0, name: "a" },
-    { id: 1, name: "b" },
-    { id: 2, name: "c" },
-    { id: 3, name: "d" },
-  ]);
-  let arr1 = [];
-  const handleClick = (value, idx) => {
-    let obj = { ...value };
-
-    const index = arr1.indexOf(value.name);
-    console.log(index);
-    index === -1 ? arr1.push(value) : arr1.splice(index, 1);
-    console.log(arr1);
-    // arr1.push(obj)
-    // arr2.push({...obj});
-    // arr1.push(...arr2)
-
-    // console.log(arr1);
-  };
-
   return (
     <>
       <AppProvider>

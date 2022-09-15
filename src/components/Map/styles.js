@@ -18,7 +18,7 @@ export default makeStyles((theme) => ({
     },
   },
   directions: {
-    background: '#e8eaed',
+    background: "#e8eaed",
     transition: "0.4s",
     width: 425,
     minWidth: 425,
@@ -71,6 +71,10 @@ export default makeStyles((theme) => ({
     width: "100%",
     justifyContent: "space-between",
     paddingRight: 10,
+    [theme.breakpoints.down(768)]: {
+      flexDirection: "column",
+      alignItems: "flex-start",
+    },
   },
 
   optionsChoose: {
@@ -96,6 +100,7 @@ export default makeStyles((theme) => ({
       fontSize: 15,
     },
   },
+
   btnOption: {
     "&:hover": {
       background: "#fff",
@@ -116,6 +121,8 @@ export default makeStyles((theme) => ({
     transitionProperty: "background,box-shadow",
     transitionDuration: ".3s",
     marginRight: 16,
+
+    [theme.breakpoints.down(768)]: {},
   },
 
   seletedMarker: {

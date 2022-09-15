@@ -6,7 +6,6 @@ export default makeStyles((theme) => ({
     alignItems: "center",
     order: 0,
     marginRight: 8,
-    
   },
 
   buttonSubmit: {
@@ -67,11 +66,15 @@ export default makeStyles((theme) => ({
       border: "none",
       outline: "none",
     },
+
+    [theme.breakpoints.down(440)]: {
+      minWidth: "auto",
+    },
   },
   searchInput: {
     flex: 3,
     marginRight: 16,
-    position:'relative',
-    zIndex: 1
+    position: "relative",
+    zIndex: 1,
   },
 }));
