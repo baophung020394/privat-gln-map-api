@@ -326,19 +326,19 @@ function Directions({
             })}
         </Box>
 
-        <Box className={classes.content}>
-          <h1>
-            Choose place in list saved
-            {listChoose && listChoose.length >= 2 && (
-              <img
-                src="https://fonts.gstatic.com/s/i/googlematerialicons/search/v16/gm_grey-24dp/1x/gm_search_gm_grey_24dp.png"
-                alt=""
-                onClick={calculateRoute}
-              />
-            )}
-          </h1>
-          {listMarkerSaved &&
-            listMarkerSaved?.map((x, idx) => {
+        {listMarkerSaved?.length > 0 ? (
+          <Box className={classes.content}>
+            <h1>
+              Choose place in list saved
+              {listChoose && listChoose.length >= 2 && (
+                <img
+                  src="https://fonts.gstatic.com/s/i/googlematerialicons/search/v16/gm_grey-24dp/1x/gm_search_gm_grey_24dp.png"
+                  alt=""
+                  onClick={calculateRoute}
+                />
+              )}
+            </h1>
+            {listMarkerSaved?.map((x, idx) => {
               return (
                 <Box
                   className={`${classes.vehicle} ${
@@ -370,7 +370,8 @@ function Directions({
                 </Box>
               );
             })}
-        </Box>
+          </Box>
+        ) : null}
       </Box>
     </>
   );

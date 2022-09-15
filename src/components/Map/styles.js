@@ -155,4 +155,44 @@ export default makeStyles((theme) => ({
     fontWeight: "bold",
     fontSize: 15,
   },
+
+  listCategory: {
+    position: "absolute",
+    right: 10,
+    bottom: 10,
+    zIndex: 0,
+    display: "flex",
+    flexDirection: "column",
+  },
+
+  btnCategory: {
+    minWidth: "unset",
+    padding: 0,
+    margin: "0 0 8px 0",
+    width: 30,
+    height: 30,
+    borderRadius: "100%",
+    background: "#fff",
+    border: "none",
+    color: "rgb(60,64,67)",
+    cursor: "inherit",
+    textTransform: "initial",
+    boxShadow:
+      "0 1px 2px rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%)",
+    cursor: "pointer",
+    fontWeight: "bold",
+    fontSize: 15,
+
+    "&:hover": {
+      background: "#fff",
+      backgroundColor: "#fff",
+    },
+
+    "& img": {
+      width: 25,
+      height: 25,
+      borderRadius: "100%",
+      objectFit: "cover",
+    },
+  },
 }));

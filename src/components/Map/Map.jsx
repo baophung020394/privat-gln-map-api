@@ -7,7 +7,7 @@ import {
   useLoadScript,
   DirectionsRenderer,
 } from "@react-google-maps/api";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AppContext } from "../../context/AppProvider";
 import Locate from "../Locate";
 import PlaceDetail from "../PlaceDetail";
@@ -23,6 +23,61 @@ const imageMaker = {
     "https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png",
   test: "https://image-us.24h.com.vn/upload/1-2022/images/2022-03-16/baukrysie_275278910_3174792849424333_1380029197326773703_n-1647427653-670-width1440height1800.jpg",
 };
+
+const CATEGORIES = [
+  {
+    id: 0,
+    name: "Hotel",
+    value: "hotel",
+    urlImg:
+      "https://i.pinimg.com/736x/a0/08/02/a00802aaa967adf9a347ed226de6d90b.jpg",
+  },
+  {
+    id: 1,
+    name: "Restaurant",
+    value: "restaurant",
+    urlImg:
+      "https://www.iconpacks.net/icons/1/free-restaurant-icon-952-thumb.png",
+  },
+  {
+    id: 2,
+    name: "Street food",
+    value: "street_food",
+    urlImg: "https://cdn-icons-png.flaticon.com/512/651/651209.png",
+  },
+  {
+    id: 3,
+    name: "Hospital",
+    value: "hospital",
+    urlImg: "https://cdn-icons-png.flaticon.com/512/33/33777.png",
+  },
+  {
+    id: 4,
+    name: "Building",
+    value: "building",
+    urlImg:
+      "https://png.pngtree.com/png-vector/20190927/ourmid/pngtree-school-building-icon-png-image_1753757.jpg",
+  },
+  {
+    id: 5,
+    name: "School",
+    value: "school",
+    urlImg:
+      "https://cdn1.vectorstock.com/i/1000x1000/36/10/high-school-icon-vector-26623610.jpg",
+  },
+  {
+    id: 6,
+    name: "Office",
+    value: "office",
+    urlImg: "https://cdn-icons-png.flaticon.com/512/63/63611.png",
+  },
+  {
+    id: 7,
+    name: "All",
+    value: "all",
+    urlImg: "https://cdn-icons-png.flaticon.com/512/5110/5110770.png",
+  },
+];
 
 function Map() {
   const [curMarker, setCurMarker] = useState();
@@ -42,6 +97,7 @@ function Map() {
   const [listRoutes, setListRoutes] = useState(null);
   const [autocomplete, setAutocomplete] = useState("");
   const [autocompleteDes, setAutocompleteDes] = useState("");
+  const [categ, setCateg] = useState(localStorage.getItem("categ"));
 
   const [storeMarkerSaved, setStoreMarkerSaved] = useState(
     JSON.parse(localStorage.getItem("listItemSaved")) || []
@@ -59,6 +115,8 @@ function Map() {
   } = useContext(AppContext);
 
   const classes = useStyles();
+
+  const selectRef = useRef(null);
 
   const openPlace = () => {
     setIsOpen(true);
@@ -220,6 +278,13 @@ function Map() {
     }
   };
 
+  // const handleSelectedOnMap = (marker, idx) => {
+  //   console.log({ idx });
+  //   setSelected({
+  //     ...marker,
+  //     index: idx,
+  //   });
+  // };
   /**
    * Save marker input, drag
    * @param {*} selectMar
@@ -246,10 +311,12 @@ function Map() {
         city: selectMar?.city,
         lat: selectMar?.lat,
         lng: selectMar?.lng,
+        category: selectMar?.category ? selectMar?.category : "hotel",
         time: new Date(),
         status: "old",
-        imgSave:
-          "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
+        imgSave: selectMar?.index
+          ? CATEGORIES[selectMar?.index]?.urlImg
+          : CATEGORIES[0]?.urlImg,
       },
     ]);
   };
@@ -261,6 +328,7 @@ function Map() {
   const handleSaveMarkerCur = (curMar) => {
     setCurMarker(null);
 
+    console.log({ curMar });
     setListMarkerSaved((current) => [
       ...current,
       {
@@ -273,8 +341,10 @@ function Map() {
         lng: Number(curMar?.lng),
         time: new Date(),
         status: "old",
-        imgSave:
-          "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
+        category: curMar?.category ? curMar?.category : "hotel",
+        imgSave: curMar?.index
+          ? CATEGORIES[curMar?.index]?.urlImg
+          : CATEGORIES[0]?.urlImg,
       },
     ]);
   };
@@ -285,6 +355,12 @@ function Map() {
   const handleShowMarkSaved = () => {
     setIsShow((show) => !show);
   };
+
+  useEffect(() => {
+    if (categ === "" || !categ) {
+      setCateg("hotel");
+    }
+  }, []);
 
   useEffect(() => {
     console.log({ centerChanged });
@@ -432,6 +508,7 @@ function Map() {
                 position={{ lat: marker.lat, lng: marker.lng }}
                 onClick={() => {
                   setSelected(marker);
+                  // handleSelectedOnMap(marker, index);
                   setIsOpenPlace(true);
                   setIsOpenInfo(true);
                   setIsOpenInfoDrag(false);
@@ -462,6 +539,27 @@ function Map() {
               <a href={selected?.toUrl} target="_blank">
                 View on Google Maps
               </a>
+              <select
+                ref={selectRef}
+                onChange={() => {
+                  setSelected({
+                    ...selected,
+                    index: selectRef.current.selectedIndex - 1,
+                    category: selectRef.current.value,
+                  });
+                  if (categ === "all") return;
+                  setCateg(selectRef.current.value);
+                  localStorage.setItem("categ", selectRef.current.value);
+                }}
+              >
+                <option>-Choose Place--</option>
+                {CATEGORIES.map((x, idx) => (
+                  <option value={x.value} key={`${idx}-${x?.value}`}>
+                    {x?.name}
+                  </option>
+                ))}
+              </select>
+
               {selected?.status === "new" ? (
                 <Button
                   className={classes.save}
@@ -510,9 +608,31 @@ function Map() {
                   <a href={curMarker?.toUrl} target="_blank">
                     View on Google Maps
                   </a>
-                  <a href={curMarker?.toUrl} target="_blank">
+                  <p href={curMarker?.toUrl} target="_blank">
                     {curMarker?.lat} - {curMarker?.lng}
-                  </a>
+                  </p>
+
+                  <select
+                    ref={selectRef}
+                    onChange={() => {
+                      setCurMarker({
+                        ...curMarker,
+                        index: selectRef.current.selectedIndex - 1,
+                        category: selectRef.current.value,
+                      });
+                      if (categ === "all") return;
+                      setCateg(selectRef.current.value);
+                      localStorage.setItem("categ", selectRef.current.value);
+                    }}
+                  >
+                    <option>-Choose Place--</option>
+                    {CATEGORIES.map((x, idx) => (
+                      <option value={x.value} key={`${idx}-${x?.value}`}>
+                        {x?.name}
+                      </option>
+                    ))}
+                  </select>
+
                   {curMarker?.status === "new" ? (
                     <Button
                       className={classes.save}
@@ -533,7 +653,11 @@ function Map() {
         {storeMarkerSaved &&
           showMapSaved &&
           storeMarkerSaved
-            ?.filter((x) => x?.status === "old")
+            ?.filter(
+              (x) =>
+                (x?.status === "old" && x?.category === categ) ||
+                (x?.status === "old" && categ === "all")
+            )
             ?.map((marker, index) => (
               <Marker
                 key={index}
@@ -554,7 +678,6 @@ function Map() {
         <Box
           className={classes.seletedMarker}
           style={{
-            // || (isOpenPlace && curMarker)
             marginLeft: isOpenPlace ? "0" : "-425px",
           }}
         >
@@ -589,6 +712,21 @@ function Map() {
               toUrl={curMarker?.toUrl}
             />
           ) : null}
+        </Box>
+
+        <Box className={classes.listCategory}>
+          {CATEGORIES.map((x, idx) => (
+            <Button
+              className={classes.btnCategory}
+              key={idx}
+              onClick={() => {
+                setCateg(x?.value);
+                localStorage.setItem("categ", x?.value);
+              }}
+            >
+              <img src={x?.urlImg} alt="" />
+            </Button>
+          ))}
         </Box>
 
         <Box
