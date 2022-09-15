@@ -30,49 +30,61 @@ const CATEGORIES = [
     name: "Hotel",
     value: "hotel",
     urlImg:
-      "https://i.pinimg.com/736x/a0/08/02/a00802aaa967adf9a347ed226de6d90b.jpg",
+      "https://icon-library.com/images/hotel-icon-map/hotel-icon-map-15.jpg",
   },
   {
     id: 1,
     name: "Restaurant",
     value: "restaurant",
     urlImg:
-      "https://www.iconpacks.net/icons/1/free-restaurant-icon-952-thumb.png",
+      "https://cdn0.iconfinder.com/data/icons/travel-vacation/290/travel-transport-hotel-vacation-holidays-tourist-tourism-travelling-traveling_149-512.png",
   },
   {
     id: 2,
     name: "Street",
     value: "street_food",
-    urlImg: "https://cdn-icons-png.flaticon.com/512/651/651209.png",
+    urlImg: "https://cdn0.iconfinder.com/data/icons/food-delivery-outline-stay-home/512/Location-512.png",
   },
   {
     id: 3,
     name: "Hospital",
     value: "hospital",
-    urlImg: "https://cdn-icons-png.flaticon.com/512/33/33777.png",
+    urlImg: "https://www.vhv.rs/dpng/d/406-4069627_hospital-place-pin-map-location-hospital-logo-png.png",
   },
   {
     id: 4,
     name: "Building",
     value: "building",
     urlImg:
-      "https://png.pngtree.com/png-vector/20190927/ourmid/pngtree-school-building-icon-png-image_1753757.jpg",
+      "https://cdn3.vectorstock.com/i/1000x1000/05/07/building-map-pointer-icon-marker-gps-location-vector-15450507.jpg",
   },
   {
     id: 5,
     name: "School",
     value: "school",
     urlImg:
-      "https://cdn1.vectorstock.com/i/1000x1000/36/10/high-school-icon-vector-26623610.jpg",
+      "https://w7.pngwing.com/pngs/475/104/png-transparent-computer-icons-google-maps-school-student-map-monochrome-university-black.png",
   },
   {
     id: 6,
     name: "Office",
     value: "office",
-    urlImg: "https://cdn-icons-png.flaticon.com/512/63/63611.png",
+    urlImg: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTOaskyG6Bv5CcboqdL9BGWH6NhHGYyhC3URFllBFnooDPvwl7pqBUmkUtw_Ac09fkSCs&usqp=CAU",
   },
   {
     id: 7,
+    name: "ATM",
+    value: "atm",
+    urlImg: "https://cdn4.iconfinder.com/data/icons/personal-business-finance-gray-series-set-2/64/gray-72-512.png",
+  },
+  {
+    id: 8,
+    name: "Home",
+    value: "home",
+    urlImg: "https://static.thenounproject.com/png/106445-200.png",
+  },
+  {
+    id: 9,
     name: "All",
     value: "all",
     urlImg: "https://cdn-icons-png.flaticon.com/512/5110/5110770.png",
@@ -314,6 +326,9 @@ function Map() {
         category: selectMar?.category ? selectMar?.category : "hotel",
         time: new Date(),
         status: "old",
+        nameCategory: selectMar?.index
+          ? CATEGORIES[selectMar?.index]?.name
+          : CATEGORIES[0]?.name,
         imgSave: selectMar?.index
           ? CATEGORIES[selectMar?.index]?.urlImg
           : CATEGORIES[0]?.urlImg,
@@ -342,6 +357,9 @@ function Map() {
         time: new Date(),
         status: "old",
         category: curMar?.category ? curMar?.category : "hotel",
+        nameCategory: curMar?.index
+          ? CATEGORIES[curMar?.index]?.name
+          : CATEGORIES[0]?.name,
         imgSave: curMar?.index
           ? CATEGORIES[curMar?.index]?.urlImg
           : CATEGORIES[0]?.urlImg,

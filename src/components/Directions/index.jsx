@@ -358,6 +358,9 @@ function Directions({
                   </Box>
                   <Box className="mid">
                     <Typography variant="body1">{x?.name}</Typography>
+                    <Typography variant="body1" component="span">
+                      {x?.nameCategory}
+                    </Typography>
                   </Box>
                   {/* <Box className="right">
                     <Typography variant="body1">

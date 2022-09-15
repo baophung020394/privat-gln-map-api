@@ -191,7 +191,7 @@ export default makeStyles((theme) => ({
       "&::before": {
         content: `${"attr(data-hover)"}`,
         position: "absolute",
-        top: -40,
+        top: -30,
         right: 0,
         background: "#fff",
         padding: "0 12px",
@@ -207,8 +207,6 @@ export default makeStyles((theme) => ({
         wordBreak: "keep-all",
         fontWeight: "bold",
         fontSize: 14,
-        // minWidth: 50,
-        // width: '100%'
       },
     },
 
@@ -216,7 +214,7 @@ export default makeStyles((theme) => ({
       width: 25,
       height: 25,
       borderRadius: "100%",
-      objectFit: "cover",
+      objectFit: "contain",
     },
   },
 }));

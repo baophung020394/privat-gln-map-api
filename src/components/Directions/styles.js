@@ -170,6 +170,11 @@ export default makeStyles((theme) => ({
         textAlign: "left",
         fontSize: 14,
       },
+
+      "& span": {
+        color: "#70757a",
+        fontSize: 14,
+      },
     },
 
     "& .right": {
