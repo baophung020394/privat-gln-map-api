@@ -41,7 +41,7 @@ const CATEGORIES = [
   },
   {
     id: 2,
-    name: "Street food",
+    name: "Street",
     value: "street_food",
     urlImg: "https://cdn-icons-png.flaticon.com/512/651/651209.png",
   },
@@ -508,7 +508,6 @@ function Map() {
                 position={{ lat: marker.lat, lng: marker.lng }}
                 onClick={() => {
                   setSelected(marker);
-                  // handleSelectedOnMap(marker, index);
                   setIsOpenPlace(true);
                   setIsOpenInfo(true);
                   setIsOpenInfoDrag(false);
@@ -717,6 +716,7 @@ function Map() {
         <Box className={classes.listCategory}>
           {CATEGORIES.map((x, idx) => (
             <Button
+              data-hover={x?.name}
               className={classes.btnCategory}
               key={idx}
               onClick={() => {
@@ -732,7 +732,6 @@ function Map() {
         <Box
           className={classes.directions}
           style={{
-            // || (isOpenPlace && curMarker)
             marginLeft: openDirection ? "0" : "-425px",
           }}
         >

@@ -166,6 +166,7 @@ export default makeStyles((theme) => ({
   },
 
   btnCategory: {
+    position: "relative",
     minWidth: "unset",
     padding: 0,
     margin: "0 0 8px 0",
@@ -186,6 +187,29 @@ export default makeStyles((theme) => ({
     "&:hover": {
       background: "#fff",
       backgroundColor: "#fff",
+
+      "&::before": {
+        content: `${"attr(data-hover)"}`,
+        position: "absolute",
+        top: -40,
+        right: 0,
+        background: "#fff",
+        padding: "0 12px",
+        border: "none",
+        alignItems: "center",
+        borderRadius: 32,
+        color: "rgb(60,64,67)",
+        display: "flex",
+        height: 32,
+        textTransform: "initial",
+        boxShadow:
+          "0 1px 2px rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%)",
+        wordBreak: "keep-all",
+        fontWeight: "bold",
+        fontSize: 14,
+        // minWidth: 50,
+        // width: '100%'
+      },
     },
 
     "& img": {
