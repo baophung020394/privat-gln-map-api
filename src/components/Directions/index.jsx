@@ -122,7 +122,6 @@ function Directions({
       return;
     }
 
-    console.log("ua vo chua?");
     const directionsService =
       new google.maps.DirectionsService(); /*global google*/
     const results = await directionsService.route({

@@ -221,11 +221,7 @@ function Map() {
 
     console.log({ res });
 
-    const placeDetail = await axios.get(
-      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${res?.data.results[0].place_id}&fields=name%2Crating%2Cformatted_phone_number&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
-    );
-    console.log({ placeDetail });
-
+    // console.log({ service });j
     // Set marker current for drag end
     const stringAddress = res?.data.results[0].formatted_address.split(",");
 

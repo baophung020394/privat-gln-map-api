@@ -29,6 +29,7 @@ import {
 } from "@material-ui/core";
 
 import useStyles from "./styles.js";
+import axios from "axios";
 
 function PlacesAutocomplete({
   panTo,
