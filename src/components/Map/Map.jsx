@@ -434,7 +434,7 @@ function Map() {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <h1
+        {/* <h1
           onClick={testChimbeHuyThom}
           style={{
             position: "absolute",
@@ -443,7 +443,7 @@ function Map() {
           }}
         >
           Click
-        </h1>
+        </h1> */}
         {directionsResponse && (
           <DirectionsRenderer
             directions={directionsResponse}
