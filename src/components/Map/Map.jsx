@@ -6,6 +6,7 @@ import {
   Marker,
   useLoadScript,
   DirectionsRenderer,
+  useJsApiLoader,
 } from "@react-google-maps/api";
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AppContext } from "../../context/AppProvider";
@@ -182,9 +183,10 @@ function Map() {
     [directionsResponse]
   );
 
-  const { isLoaded } = useLoadScript({
+  const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: ["places"],
+    libraries: ["places", "geometry"],
+    version: 3,
   });
 
   /**
@@ -221,7 +223,23 @@ function Map() {
 
     console.log({ res });
 
-    // console.log({ service });j
+    // const config = {
+    //   method: "get",
+    //   url: "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=AIzaSyB5-tCnXi58TX6zOjQP8NpcNNewPOFCsh8",
+    //   headers: {
+    // "Access-Control-Allow-Origin": "http://localhost:3000",
+    // "Access-Control-Allow-Credentials": "true",
+    //   },
+    // };
+
+    // axios(config)
+    //   .then(function (response) {
+    //     console.log(JSON.stringify(response.data));
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
+
     // Set marker current for drag end
     const stringAddress = res?.data.results[0].formatted_address.split(",");
 
@@ -349,7 +367,6 @@ function Map() {
   }, []);
 
   useEffect(() => {
-    console.log({ centerChanged });
     if (curMarker) {
       setCenterChanged({
         lat: curMarker?.lat,
@@ -382,6 +399,22 @@ function Map() {
     }
   }, [isShow]);
 
+  const testChimbeHuyThom = async () => {
+    // if (center) {
+    //   const service = await new google.maps.places.PlacesService(
+    //     center
+    //   ); /*global google*/
+    // }
+
+    const config = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials": "true",
+    };
+    const chimbehuy = await axios.get(
+      "https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJ4fIl-jMvdTER48GwNQBQ_WU&key=AIzaSyB5-tCnXi58TX6zOjQP8NpcNNewPOFCsh8",
+      config
+    );
+  };
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
@@ -401,11 +434,22 @@ function Map() {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
+        <h1
+          onClick={testChimbeHuyThom}
+          style={{
+            position: "absolute",
+            zIndex: 9,
+            top: 200,
+          }}
+        >
+          Click
+        </h1>
         {directionsResponse && (
           <DirectionsRenderer
             directions={directionsResponse}
             options={{
               draggable: true,
+              suppressMarkers: false,
             }}
           />
         )}

@@ -1,35 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
-
+import { Box, Button, Typography } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxList,
+  ComboboxOption,
+  ComboboxPopover,
+} from "@reach/combobox";
+import "@reach/combobox/styles.css";
+import React, { useState } from "react";
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from "use-places-autocomplete";
-
-import "@reach/combobox/styles.css";
-
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxPopover,
-  ComboboxList,
-  ComboboxOption,
-} from "@reach/combobox";
-
-import SwapHorizontalCircleIcon from "@material-ui/icons/SwapHorizontalCircle";
-
 import { AppContext } from "../../context/AppProvider";
-import {
-  Box,
-  Button,
-  Icon,
-  Input,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
-
 import useStyles from "./styles.js";
-import axios from "axios";
 
 function PlacesAutocomplete({
   panTo,
@@ -59,14 +44,19 @@ function PlacesAutocomplete({
     setValue(address, false);
     clearSuggestions();
 
+    console.log({ status });
+    console.log({ data });
     const results = await getGeocode({ address });
     const objLo = await getLatLng(results[0]);
     let newObj = { ...objLo };
 
+    console.log({ results });
+    console.log(results[0].geometry );
+    // const stringAddress = data[0]?.description.split(",");
     const stringAddress = results[0]?.formatted_address.split(",");
 
     newObj = {
-      address: results[0].formatted_address,
+      address: results[0]?.formatted_address,
       name: stringAddress[0],
       ward: stringAddress[1],
       district: stringAddress[2],
