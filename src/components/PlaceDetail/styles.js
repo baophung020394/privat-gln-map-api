@@ -15,9 +15,14 @@ export default makeStyles((theme) => ({
     },
   },
 
-  content: {  },
+  content: {},
 
   top: {
+    display: "flex",
+    alignItems: "center",
+    borderBottom: "1px solid #e8eaed",
+
+    padding: "8px 15px",
     "& p": {
       fontWeight: "bold",
     },
@@ -40,11 +45,23 @@ export default makeStyles((theme) => ({
   },
 
   title: {
-    // margin: "15px 0",
     fontSize: 22,
     fontWeight: "400 !important",
-    borderBottom: '1px solid #e8eaed',
-    padding: '5px 10px'
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+  },
+
+  subTitle: {
+    color: "#70757a",
+    fontSize: 14,
+  },
+
+  iconTitle: {
+    width: 30,
+    height: 30,
+    objectFit: "contain",
+    marginRight: 8,
   },
 
   location: {
@@ -63,7 +80,6 @@ export default makeStyles((theme) => ({
     height: "100%",
     zIndex: 1,
     background: "transparent",
-    // background: "rgba(0, 0, 0, 0.8)",
 
     filter: "blur(4px)",
   },
@@ -81,18 +97,21 @@ export default makeStyles((theme) => ({
 
   listContainer: {
     listStyle: "none",
-    padding: "0 10px",
+    padding: "8px 0",
+    margin: 0,
+    borderBottom: "1px solid #e8eaed",
   },
 
   item: {
     display: "flex",
     alignItems: "center",
+    padding: "8px 24px",
 
-    '& p': {
+    "& p": {
       fontWeight: 400,
       fontSize: 14,
-      color: 'rgb(60,64,67)',
-      lineHeight: '20px'
+      color: "rgb(60,64,67)",
+      lineHeight: "20px",
     },
 
     "& img": {

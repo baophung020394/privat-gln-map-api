@@ -1,23 +1,10 @@
 import { Box, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
 
 import useStyles from "./styles.js";
 
-function PlaceDetail({
-  img,
-  address,
-  phone,
-  lng,
-  lat,
-  isOpen,
-  isClose,
-  toUrl,
-  name,
-  ward,
-  district,
-  city,
-  dragStart,
-}) {
+function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
+  console.log({ selected });
   const classes = useStyles();
 
   return (
@@ -34,25 +21,29 @@ function PlaceDetail({
         </Box>
         <Box className={classes.content}>
           <Box className={classes.top}>
+            <img
+              src={
+                selected?.imgSave
+                  ? selected?.imgSave
+                  : "https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png"
+              }
+              className={classes.iconTitle}
+            />
             <Typography variant="body1" className={classes.title}>
-              {name}
+              {selected?.name}
+              <Typography
+                variant="body1"
+                component="span"
+                className={classes.subTitle}
+              >
+                {selected?.nameCategory}
+              </Typography>
             </Typography>
+
             {/* <Box className="">
 
             </Box> */}
-            <ul className={classes.listContainer}>
-              {address ? (
-                <li className={classes.item}>
-                  <img
-                    src="https://www.gstatic.com/images/icons/material/system_gm/1x/place_gm_blue_24dp.png"
-                    alt=""
-                  />
-                  <Typography variant="body1">
-                    {name}, {ward}, {district}, {city}
-                  </Typography>
-                </li>
-              ) : null}
-            </ul>
+
             {/* <Typography variant="body1" className={classes.title}>
               {name}
             </Typography>
@@ -114,6 +105,47 @@ function PlaceDetail({
               />
             </span>
           </Box> */}
+        </Box>
+
+        <Box className={classes.content}>
+          <ul className={classes.listContainer}>
+            {selected?.address ? (
+              <>
+                <li className={classes.item}>
+                  <img
+                    src="https://www.gstatic.com/images/icons/material/system_gm/1x/place_gm_blue_24dp.png"
+                    alt=""
+                  />
+                  <Typography variant="body1">
+                    {selected?.name}, {selected?.ward}, {selected?.district},{" "}
+                    {selected?.city}
+                  </Typography>
+                </li>
+
+                {selected?.plusCode && (
+                  <li className={classes.item}>
+                    <img
+                      src="https://maps.gstatic.com/mapfiles/maps_lite/images/2x/ic_plus_code.png"
+                      alt=""
+                    />
+                    <Typography variant="body1">
+                      {selected?.plusCode}
+                    </Typography>
+                  </li>
+                )}
+
+                {selected?.placeId && (
+                  <li className={classes.item}>
+                    <img
+                      src="https://maps.gstatic.com/mapfiles/maps_lite/images/2x/ic_plus_code.png"
+                      alt=""
+                    />
+                    <Typography variant="body1">{selected?.placeId}</Typography>
+                  </li>
+                )}
+              </>
+            ) : null}
+          </ul>
         </Box>
       </Box>
       {/* <Box

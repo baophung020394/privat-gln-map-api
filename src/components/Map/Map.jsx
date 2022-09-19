@@ -43,13 +43,15 @@ const CATEGORIES = [
     id: 2,
     name: "Street",
     value: "street_food",
-    urlImg: "https://cdn0.iconfinder.com/data/icons/food-delivery-outline-stay-home/512/Location-512.png",
+    urlImg:
+      "https://cdn0.iconfinder.com/data/icons/food-delivery-outline-stay-home/512/Location-512.png",
   },
   {
     id: 3,
     name: "Hospital",
     value: "hospital",
-    urlImg: "https://www.vhv.rs/dpng/d/406-4069627_hospital-place-pin-map-location-hospital-logo-png.png",
+    urlImg:
+      "https://www.vhv.rs/dpng/d/406-4069627_hospital-place-pin-map-location-hospital-logo-png.png",
   },
   {
     id: 4,
@@ -69,13 +71,15 @@ const CATEGORIES = [
     id: 6,
     name: "Office",
     value: "office",
-    urlImg: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTOaskyG6Bv5CcboqdL9BGWH6NhHGYyhC3URFllBFnooDPvwl7pqBUmkUtw_Ac09fkSCs&usqp=CAU",
+    urlImg:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTOaskyG6Bv5CcboqdL9BGWH6NhHGYyhC3URFllBFnooDPvwl7pqBUmkUtw_Ac09fkSCs&usqp=CAU",
   },
   {
     id: 7,
     name: "ATM",
     value: "atm",
-    urlImg: "https://cdn4.iconfinder.com/data/icons/personal-business-finance-gray-series-set-2/64/gray-72-512.png",
+    urlImg:
+      "https://cdn4.iconfinder.com/data/icons/personal-business-finance-gray-series-set-2/64/gray-72-512.png",
   },
   {
     id: 8,
@@ -156,40 +160,10 @@ function Map() {
   /**
    * Click any where on map
    */
-  const onMapClick = React.useCallback(async (e) => {
-    if (e?.latLng.lat() && e?.latLng.lng()) {
-      const res = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${e.latLng.lat()},${e.latLng.lng()}&key=${
-          process.env.REACT_APP_GOOGLE_MAPS_API_KEY
-        }`
-      );
-
-      const stringAddress = res?.data.results[0].formatted_address.split(",");
-
-      setListMarkerInput((current) => [
-        ...current,
-        {
-          address: res?.data.results[0].formatted_address,
-          name: stringAddress[0],
-          ward: stringAddress[1],
-          district: stringAddress[2],
-          city: stringAddress[3],
-          lat: e?.latLng.lat(),
-          lng: e?.latLng.lng(),
-          toUrl: `https://www.google.com/maps/?q=${e?.latLng.lat()},${e?.latLng.lng()}`,
-          time: new Date(),
-          status: "new",
-          imgSabe:
-            "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
-        },
-      ]);
-    }
-  }, []);
 
   const mapRef = React.useRef();
 
   const onMapLoad = React.useCallback((map) => {
-    console.log({ map });
     mapRef.current = map;
   }, []);
 
@@ -212,15 +186,6 @@ function Map() {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
   });
-
-  // const handleCenterChange = () => {
-  //   window.setTimeout(() => {
-  //     mapRef.current.panTo({
-  //       lat: mapRef?.current?.center?.lat(),
-  //       lng: mapRef?.current?.center?.lng(),
-  //     });
-  //   }, 3000);
-  // };
 
   /**
    * Start drag map
@@ -254,6 +219,13 @@ function Map() {
       }`
     );
 
+    console.log({ res });
+
+    const placeDetail = await axios.get(
+      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${res?.data.results[0].place_id}&fields=name%2Crating%2Cformatted_phone_number&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
+    );
+    console.log({ placeDetail });
+
     // Set marker current for drag end
     const stringAddress = res?.data.results[0].formatted_address.split(",");
 
@@ -265,6 +237,8 @@ function Map() {
       city: stringAddress[3],
       lat: mapRef?.current?.center?.lat(),
       lng: mapRef?.current?.center?.lng(),
+      plusCode: res?.data.plus_code.compound_code,
+      placeId: res?.data.results[0].place_id,
       toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
       time: new Date(),
       status: "new",
@@ -290,13 +264,6 @@ function Map() {
     }
   };
 
-  // const handleSelectedOnMap = (marker, idx) => {
-  //   console.log({ idx });
-  //   setSelected({
-  //     ...marker,
-  //     index: idx,
-  //   });
-  // };
   /**
    * Save marker input, drag
    * @param {*} selectMar
@@ -326,6 +293,8 @@ function Map() {
         category: selectMar?.category ? selectMar?.category : "hotel",
         time: new Date(),
         status: "old",
+        plusCode: selectMar.plusCode,
+        placeId: selectMar.placeId,
         nameCategory: selectMar?.index
           ? CATEGORIES[selectMar?.index]?.name
           : CATEGORIES[0]?.name,
@@ -344,6 +313,7 @@ function Map() {
     setCurMarker(null);
 
     console.log({ curMar });
+
     setListMarkerSaved((current) => [
       ...current,
       {
@@ -356,6 +326,8 @@ function Map() {
         lng: Number(curMar?.lng),
         time: new Date(),
         status: "old",
+        plusCode: curMar.plusCode,
+        placeId: curMar.placeId,
         category: curMar?.category ? curMar?.category : "hotel",
         nameCategory: curMar?.index
           ? CATEGORIES[curMar?.index]?.name
@@ -428,7 +400,6 @@ function Map() {
         zoom={17}
         center={center}
         mapContainerClassName="map-container"
-        onClick={onMapClick}
         onLoad={onMapLoad}
         onZoomChanged={handleZoomChanged}
         onDragStart={handleDragStart}
@@ -525,6 +496,7 @@ function Map() {
                 key={`${marker.lat}-${index}`}
                 position={{ lat: marker.lat, lng: marker.lng }}
                 onClick={() => {
+                  console.log({ marker });
                   setSelected(marker);
                   setIsOpenPlace(true);
                   setIsOpenInfo(true);
@@ -591,8 +563,6 @@ function Map() {
             </div>
           </InfoWindow>
         ) : null}
-
-        {/*https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png*/}
 
         {curMarker ? (
           <div
@@ -687,7 +657,7 @@ function Map() {
                   url: `${marker?.imgSave}`,
                   origin: new window.google.maps.Point(0, 0),
                   anchor: new window.google.maps.Point(15, 15),
-                  scaledSize: new window.google.maps.Size(30, 30),
+                  scaledSize: new window.google.maps.Size(35, 35),
                 }}
               />
             ))}
@@ -702,14 +672,7 @@ function Map() {
             <PlaceDetail
               isOpen={isOpen}
               isClose={closePlace}
-              address={selected?.address}
-              name={selected?.name}
-              ward={selected?.ward}
-              district={selected?.district}
-              city={selected?.city}
-              lat={selected?.lat}
-              lng={selected?.lng}
-              toUrl={selected?.toUrl}
+              selected={selected}
               dragStart={dragStart}
             />
           ) : null}
@@ -719,14 +682,7 @@ function Map() {
               dragStart={dragStart}
               isOpen={isOpen}
               isClose={closePlace}
-              address={curMarker?.address}
-              name={curMarker?.name}
-              ward={curMarker?.ward}
-              district={curMarker?.district}
-              city={curMarker?.city}
-              lat={curMarker?.lat}
-              lng={curMarker?.lng}
-              toUrl={curMarker?.toUrl}
+              selected={curMarker}
             />
           ) : null}
         </Box>

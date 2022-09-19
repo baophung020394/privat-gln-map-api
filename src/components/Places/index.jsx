@@ -72,11 +72,12 @@ function PlacesAutocomplete({
       city: stringAddress[3],
       lng: newObj.lng,
       lat: newObj.lat,
+      plusCode: results[0]?.plus_code?.compound_code,
+      placeId: results[0]?.place_id,
       toUrl: `https://www.google.com/maps/?q=${newObj.lat},${newObj.lng}`,
       time: new Date(),
       status: "new",
-      imgSave:
-        "https://cdn3.iconfinder.com/data/icons/map-markers-1/512/market-512.png",
+      imgSave: "",
     };
 
     setIsValue(newObj);

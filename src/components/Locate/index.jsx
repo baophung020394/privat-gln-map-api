@@ -27,10 +27,6 @@ function Locate({
         const res = await axios.get(
           `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position?.coords.latitude},${position?.coords.longitude}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
         );
-        console.log({ res });
-
-        console.log(position?.coords.latitude);
-        console.log(position?.coords.longitude);
 
         // Set marker current for drag end
         const stringAddress = res?.data.results[0].formatted_address.split(",");
@@ -43,6 +39,8 @@ function Locate({
           city: stringAddress[3],
           lat: position?.coords.latitude,
           lng: position?.coords.longitude,
+          plusCode: res?.data.plus_code.compound_code,
+          placeId: res?.data.results[0].place_id,
           toUrl: `https://www.google.com/maps/?q=${position?.coords.latitude},${position?.coords.longitude}`,
           time: new Date(),
           status: "new",
@@ -67,7 +65,7 @@ function Locate({
       });
     }
   }, [curMarker?.lat]);
-  
+
   return (
     <button
       className={classes.locate}
