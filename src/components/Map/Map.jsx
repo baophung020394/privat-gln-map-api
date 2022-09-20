@@ -213,7 +213,8 @@ function Map() {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
-    language: navigator && navigator.languages ? navigator.language.slice(0, 2) : "vi",
+    language:
+      navigator && navigator.languages ? navigator.language.slice(0, 2) : "vi",
     // language: navigator && navigator.languages ? "vi" : "vi",
   });
 
@@ -293,6 +294,8 @@ function Map() {
           phoneNumber: place?.formatted_phone_number
             ? place?.formatted_phone_number
             : "No phone number",
+          rating: place?.rating,
+          userRatingsTotal: place?.user_ratings_total,
           category: "",
           nameCategory: "...",
           toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
@@ -353,6 +356,8 @@ function Map() {
         photos: selectMar?.photos,
         plusCode: selectMar.plusCode,
         placeId: selectMar.placeId,
+        rating: selectMar?.rating,
+        userRatingsTotal: selectMar?.userRatingsTotal,
         openHours: {
           isOpen: selectMar?.openHours.isOpen,
           weekdayText: selectMar?.openHours.weekdayText,
@@ -391,6 +396,8 @@ function Map() {
         plusCode: curMar.plusCode,
         placeId: curMar.placeId,
         photos: curMar?.photos,
+        rating: curMar?.rating,
+        userRatingsTotal: curMar?.userRatingsTotal,
         openHours: {
           isOpen: curMar?.openHours.isOpen,
           weekdayText: curMar?.openHours.weekdayText,

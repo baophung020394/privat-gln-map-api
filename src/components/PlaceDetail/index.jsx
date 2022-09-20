@@ -1,6 +1,6 @@
 import { Box, Typography } from "@material-ui/core";
-import { Skeleton } from "@material-ui/lab";
-import React, { useEffect } from "react";
+import { Rating, Skeleton } from "@material-ui/lab";
+import React, { useEffect, useState } from "react";
 
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -9,9 +9,12 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { format } from "date-fns";
 
 import useStyles from "./styles.js";
+import { currencyFormat } from "../../hooks/useFormatNumber.jsx";
 
 function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
   const classes = useStyles();
+  const [listTime, setListTime] = useState([]);
+
   // console.log(selected);
   const today = new Date();
   const milisecondToday = today.toLocaleString(
@@ -24,7 +27,7 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
   // console.log({ openTime });
   // console.log({ convertOpenTime });
   // console.log({ today });
-  console.log({ milisecondToday });
+  // console.log({ milisecondToday });
 
   const days = [
     "Sunday",
@@ -56,14 +59,21 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
 
   // console.log(openingHours);
 
-  // useEffect(()=>{
-  //   const sortedArr = arr.reduce((acc, element) => {
-  //     if (!element.flag) {
-  //       return [element, ...acc];
-  //     }
-  //     return [...acc, element];
-  //   }, []);
-  // },[])
+  useEffect(() => {
+    const sortedArr = selected?.openHours?.weekdayText?.reduce(
+      (acc, element) => {
+        // console.log({ acc });
+        // console.log(element.split(":")[0]);
+        if (element.split(":")[0].includes(milisecondToday)) {
+          return [element, ...acc];
+        }
+        return [...acc, element];
+      },
+      []
+    );
+    setListTime(sortedArr);
+  }, [selected?.openHours?.weekdayText]);
+
   return (
     <>
       <Box
@@ -95,6 +105,49 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
               <Typography
                 variant="body1"
                 component="span"
+                className={classes.listStar}
+              >
+                {selected?.rating && selected?.rating > 0 && (
+                  <>
+                    <Typography
+                      variant="body1"
+                      component="span"
+                      className={classes.numberStar}
+                    >
+                      {selected?.rating}
+                    </Typography>
+                    <Rating
+                      name="half-rating-read"
+                      value={
+                        Math.floor(selected?.rating) / selected?.rating < 1
+                          ? Math.floor(selected?.rating) + 0.5
+                          : selected?.rating
+                      }
+                      defaultValue={
+                        Math.floor(selected?.rating) / selected?.rating < 1
+                          ? Math.floor(selected?.rating) + 0.5
+                          : selected?.rating
+                      }
+                      precision={0.5}
+                      readOnly
+                      size="small"
+                    />
+                    <Typography
+                      variant="body1"
+                      component="span"
+                      className={classes.reviewRating}
+                    >
+                      {currencyFormat(selected?.userRatingsTotal)}
+                      {navigator && navigator?.language.slice(0, 2) === ""
+                        ? " bài đánh giá"
+                        : " reviews"}
+                    </Typography>
+                  </>
+                )}
+              </Typography>
+              <Typography
+                variant="body1"
+                component="span"
                 className={classes.subTitle}
               >
                 {selected?.nameCategory ? (
@@ -105,44 +158,6 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
               </Typography>
             </Typography>
           </Box>
-
-          {/* <Box className={classes.listImage}>
-            <img src="https://placehold.jp/70x70.png" alt="" />
-            <img src="https://placehold.jp/70x70.png" alt="" />
-            <img src="https://placehold.jp/70x70.png" alt="" />
-            <img src="https://placehold.jp/70x70.png" alt="" />
-            <img src="https://placehold.jp/70x70.png" alt="" />
-            <img src="https://placehold.jp/70x70.png" alt="" />
-            <img src="https://placehold.jp/70x70.png" alt="" />
-            <img src="https://placehold.jp/70x70.png" alt="" />
-          </Box>
-
-          <Box className={classes.bot}>
-            <span className={classes.botItem}>
-              <img
-                src="https://vietgiao.edu.vn/wp-content/uploads/2019/10/contact-page-for-flatsome-wordpress-theme-pointed-icon-phone.png"
-                alt=""
-              />
-            </span>
-            <span className={classes.botItem}>
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/1380/1380370.png"
-                alt=""
-              />
-            </span>
-            <span className={classes.botItem}>
-              <img
-                src="http://cdn.onlinewebfonts.com/svg/img_93271.png"
-                alt=""
-              />
-            </span>
-            <span className={classes.botItem}>
-              <img
-                src="https://cdn.iconscout.com/icon/free/png-256/share-2315658-1921380.png"
-                alt=""
-              />
-            </span>
-          </Box> */}
         </Box>
 
         <Box className={classes.content}>
@@ -220,13 +235,9 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails className={classes.weekdayTextContainer}>
-                      {selected?.openHours &&
-                        selected?.openHours.weekdayText &&
-                        selected?.openHours?.weekdayText.map((x, idx) => {
-                          // console.log(x.split(':')[0])
-                          if (x.split(":")[0].includes(milisecondToday)) {
-                            // console.log("chim bes Huy tho,");
-                          }
+                      {listTime &&
+                        listTime?.length > 0 &&
+                        listTime.map((x, idx) => {
                           return (
                             <Typography
                               key={`${x}-${idx}`}

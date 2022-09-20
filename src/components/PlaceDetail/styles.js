@@ -23,7 +23,7 @@ export default makeStyles((theme) => ({
 
   top: {
     display: "flex",
-    alignItems: "center",
+    alignItems: "flex-start",
     borderBottom: "1px solid #e8eaed",
 
     padding: "8px 15px",
@@ -66,6 +66,7 @@ export default makeStyles((theme) => ({
     height: 30,
     objectFit: "contain",
     marginRight: 8,
+    marginTop: 5,
   },
 
   location: {
@@ -169,9 +170,9 @@ export default makeStyles((theme) => ({
     width: "100%",
     padding: "10px 0",
 
-    '&.active':{
-      fontWeight: 'bold'
-    }
+    "&.active": {
+      fontWeight: "bold",
+    },
   },
 
   text: {
@@ -199,4 +200,22 @@ export default makeStyles((theme) => ({
       color: "#3C4043",
     },
   },
+
+  listStar: {
+    display: "flex",
+    alignItems: "flex-start",
+  },
+
+  numberStar: {
+    color: "#70757a",
+    fontSize: 14,
+    marginRight: 4,
+    fontWeight: 500
+  },
+  reviewRating: {
+    color: "#1a73e8",
+    fontSize: 14,
+    fontWeight: 500,
+    marginLeft: 4
+  }
 }));

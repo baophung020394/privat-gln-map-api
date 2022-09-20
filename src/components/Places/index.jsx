@@ -71,8 +71,12 @@ const PlacesAutocomplete = forwardRef(
           place.geometry &&
           place.geometry.location
         ) {
-          // console.log(place);
-          // console.log(place?.opening_hours.isOpen(new Date("Tue Sep 20 2022 15:00:00 GMT+0700")));
+          console.log(place);
+          // console.log(
+          //   place?.opening_hours.isOpen(
+          //     new Date("Tue Sep 20 2022 15:00:00 GMT+0700")
+          //   )
+          // );
 
           let listPhoto = [];
           if (place?.photos) {
@@ -104,6 +108,8 @@ const PlacesAutocomplete = forwardRef(
               ? results[0]?.place_id
               : "No place id",
             photos: listPhoto,
+            rating: place?.rating,
+            userRatingsTotal: place?.user_ratings_total,
             nameCategory: "...",
             toUrl: `https://www.google.com/maps/?q=${newObj.lat},${newObj.lng}`,
             time: new Date(),

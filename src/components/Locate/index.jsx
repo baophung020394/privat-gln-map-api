@@ -76,6 +76,8 @@ const Locate = forwardRef(
                 phoneNumber: place?.formatted_phone_number
                   ? place?.formatted_phone_number
                   : "No phone number",
+                rating: place?.rating,
+                userRatingsTotal: place?.user_ratings_total,
                 nameCategory: "...",
                 toUrl: `https://www.google.com/maps/?q=${position?.coords.latitude},${position?.coords.longitude}`,
                 time: new Date(),
