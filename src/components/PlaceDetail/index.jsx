@@ -225,7 +225,7 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
                         selected?.openHours?.weekdayText.map((x, idx) => {
                           // console.log(x.split(':')[0])
                           if (x.split(":")[0].includes(milisecondToday)) {
-                            console.log("chim bes Huy tho,");
+                            // console.log("chim bes Huy tho,");
                           }
                           return (
                             <Typography
