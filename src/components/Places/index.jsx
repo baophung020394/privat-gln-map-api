@@ -70,7 +70,9 @@ const PlacesAutocomplete = forwardRef(
           place.geometry &&
           place.geometry.location
         ) {
-          console.log(place);
+          console.log(place?.opening_hours);
+          console.log(place?.opening_hours.isOpen());
+
           let listPhoto = [];
           if (place?.photos) {
             place?.photos.forEach((x) => listPhoto.push(x.getUrl()));
@@ -79,13 +81,21 @@ const PlacesAutocomplete = forwardRef(
           const stringAddress = results[0]?.formatted_address.split(",");
 
           newObj = {
-            address: results[0]?.formatted_address,
-            name: data[0]?.description,
+            address: data[0]?.description,
+            name: place?.name,
             ward: stringAddress[1],
             district: stringAddress[2],
             city: stringAddress[3],
             lng: newObj.lng,
             lat: newObj.lat,
+            openHours: {
+              isOpen: place?.opening_hours?.isOpen() ? "Open" : "Close",
+              weekdayText: place?.opening_hours?.weekday_text,
+              periods: place?.opening_hours?.periods,
+            },
+            phoneNumber: place?.formatted_phone_number
+              ? place?.formatted_phone_number
+              : "No phone number",
             plusCode: results[0]?.plus_code
               ? results[0]?.plus_code?.compound_code
               : "No plus code",

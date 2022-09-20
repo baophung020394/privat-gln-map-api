@@ -7,6 +7,7 @@ export default makeStyles((theme) => ({
     transition: "0.4s",
     height: "100%",
     width: "100%",
+    overflowY: "auto",
   },
 
   image: {
@@ -109,6 +110,7 @@ export default makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     padding: "8px 24px",
+    position: "relative",
 
     "& p": {
       fontWeight: 400,
@@ -120,8 +122,67 @@ export default makeStyles((theme) => ({
     "& img": {
       width: 24,
       height: 24,
-      objectFit: "cotain",
+      objectFit: "contain",
       marginRight: 16,
     },
+
+    "&.times": {
+      "& img": {
+        position: "absolute",
+        top: 32,
+        left: 20,
+        zIndex: 1,
+        transform: "translateY(-50%)",
+      },
+
+      "& .MuiPaper-root.MuiAccordion-root": {
+        width: "100%",
+        marginTop: 0,
+        marginLeft: 40,
+
+        "& .MuiAccordionSummary-root.Mui-expanded": {
+          minHeight: "auto",
+        },
+        "& p": {
+          marginLeft: 0,
+        },
+      },
+    },
+  },
+  timesAccordion: {
+    marginLeft: 40,
+    borderRadius: "0 !important",
+    boxShadow: "none",
+
+    "&::before": {
+      content: "none",
+    },
+  },
+  timeAccordion: {
+    padding: 0,
+  },
+  weekdayTextContainer: {
+    flexDirection: "column",
+    padding: "0 18px",
+  },
+  weekdayText: {
+    width: "100%",
+    padding: "10px 0",
+  },
+  text: { fontSize: 14, color: "#D93025" },
+  timeText: {
+    fontSize: 14,
+    color: "#3C4043",
+    position: 'relative',
+    marginLeft: 16,
+
+    '&::before' :{
+      content: '"."',
+      position: 'absolute',
+      top: -5,
+      left: -8,
+      zIndex: 1,
+      color: "#3C4043",
+    }
   },
 }));

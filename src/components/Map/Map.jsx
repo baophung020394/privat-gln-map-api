@@ -28,10 +28,10 @@ const imageMaker = {
 const CATEGORIES = [
   {
     id: 0,
-    name: "Hotel",
-    value: "hotel",
+    name: "Street",
+    value: "street_food",
     urlImg:
-      "https://icon-library.com/images/hotel-icon-map/hotel-icon-map-15.jpg",
+      "https://cdn0.iconfinder.com/data/icons/food-delivery-outline-stay-home/512/Location-512.png",
   },
   {
     id: 1,
@@ -42,10 +42,10 @@ const CATEGORIES = [
   },
   {
     id: 2,
-    name: "Street",
-    value: "street_food",
+    name: "Hotel",
+    value: "hotel",
     urlImg:
-      "https://cdn0.iconfinder.com/data/icons/food-delivery-outline-stay-home/512/Location-512.png",
+      "https://icon-library.com/images/hotel-icon-map/hotel-icon-map-15.jpg",
   },
   {
     id: 3,
@@ -122,6 +122,7 @@ const TYPES_CATEGORY = [
     urlImg: "",
   },
 ];
+
 function Map() {
   const [curMarker, setCurMarker] = useState();
   const [selected, setSelected] = useState(null);
@@ -275,7 +276,7 @@ function Map() {
 
         setCurMarker({
           address: res?.data.results[0].formatted_address,
-          name: res?.data.results[0].formatted_address,
+          name: place?.name,
           ward: stringAddress[1],
           district: stringAddress[2],
           city: stringAddress[3],
@@ -284,6 +285,14 @@ function Map() {
           plusCode: res?.data.plus_code.compound_code,
           placeId: res?.data.results[0].place_id,
           photos: listPhoto,
+          openHours: {
+            isOpen: place?.opening_hours?.isOpen() ? "Open" : "Close",
+            weekdayText: place?.opening_hours?.weekday_text,
+            periods: place?.opening_hours?.periods,
+          },
+          phoneNumber: place?.formatted_phone_number
+            ? place?.formatted_phone_number
+            : "No phone number",
           category: "",
           nameCategory: "...",
           toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
@@ -341,8 +350,15 @@ function Map() {
         category: selectMar?.category ? selectMar?.category : "street_food",
         time: new Date(),
         status: "old",
+        photos: selectMar?.photos,
         plusCode: selectMar.plusCode,
         placeId: selectMar.placeId,
+        openHours: {
+          isOpen: selectMar?.openHours.isOpen,
+          weekdayText: selectMar?.openHours.weekdayText,
+          periods: selectMar?.openHours.periods,
+        },
+        phoneNumber: selectMar?.phoneNumber,
         nameCategory: selectMar?.index
           ? CATEGORIES[selectMar?.index]?.name
           : CATEGORIES[0]?.name,
@@ -375,6 +391,12 @@ function Map() {
         plusCode: curMar.plusCode,
         placeId: curMar.placeId,
         photos: curMar?.photos,
+        openHours: {
+          isOpen: curMar?.openHours.isOpen,
+          weekdayText: curMar?.openHours.weekdayText,
+          periods: curMar?.openHours.periods,
+        },
+        phoneNumber: curMar?.phoneNumber,
         category: curMar?.category ? curMar?.category : "hotel",
         nameCategory: curMar?.index
           ? CATEGORIES[curMar?.index]?.name
@@ -432,7 +454,6 @@ function Map() {
     }
   }, [isShow]);
 
-  // console.log(mapRef.current)
   if (!isLoaded) return <div>Loading...</div>;
 
   return (

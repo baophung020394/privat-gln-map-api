@@ -49,7 +49,6 @@ const Locate = forwardRef(
                 place?.photos.forEach((x) => listPhoto.push(x.getUrl()));
               }
 
-              console.log({ listPhoto });
               // Set marker current for drag end
               const stringAddress =
                 res?.data.results[0].formatted_address.split(",");
@@ -69,7 +68,15 @@ const Locate = forwardRef(
                   ? res?.data.results[0].place_id
                   : "No place id",
                 photos: listPhoto,
-                nameCategory: '...',
+                openHours: {
+                  isOpen: place?.opening_hours?.isOpen() ? "Open" : "Close",
+                  weekdayText: place?.opening_hours?.weekday_text,
+                  periods: place?.opening_hours?.periods,
+                },
+                phoneNumber: place?.formatted_phone_number
+                  ? place?.formatted_phone_number
+                  : "No phone number",
+                nameCategory: "...",
                 toUrl: `https://www.google.com/maps/?q=${position?.coords.latitude},${position?.coords.longitude}`,
                 time: new Date(),
                 status: "new",
