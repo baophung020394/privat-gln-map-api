@@ -1,10 +1,10 @@
 import { Box, Typography } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 import React, { useEffect } from "react";
 
 import useStyles from "./styles.js";
 
 function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
-  console.log({ selected });
   const classes = useStyles();
 
   return (
@@ -14,10 +14,14 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
         style={{ left: isOpen ? "0px" : "-100%" }}
       >
         <Box className={classes.image}>
-          <img
-            src="https://maps.gstatic.com/tactile/pane/default_geocode-1x.png"
-            alt=""
-          />
+          {selected?.photos && selected?.photos?.length > 0 ? (
+            <img src={selected?.photos ? selected?.photos[0] : ""} alt="" />
+          ) : (
+            <img
+              src="https://maps.gstatic.com/tactile/pane/default_geocode-1x.png"
+              alt=""
+            />
+          )}
         </Box>
         <Box className={classes.content}>
           <Box className={classes.top}>
@@ -30,42 +34,19 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
               className={classes.iconTitle}
             />
             <Typography variant="body1" className={classes.title}>
-              {selected?.name}
+              {selected?.name ? selected?.name : <Skeleton width={310} />}
               <Typography
                 variant="body1"
                 component="span"
                 className={classes.subTitle}
               >
-                {selected?.nameCategory}
+                {selected?.nameCategory ? (
+                  selected?.nameCategory
+                ) : (
+                  <Skeleton width={310} />
+                )}
               </Typography>
             </Typography>
-
-            {/* <Box className="">
-
-            </Box> */}
-
-            {/* <Typography variant="body1" className={classes.title}>
-              {name}
-            </Typography>
-
-            <Typography variant="body1" style={{ fontWeight: "normal" }}>
-              Ward: {ward}
-            </Typography>
-            <Typography variant="body1" style={{ fontWeight: "normal" }}>
-              District: {district}
-            </Typography>
-
-            <Typography variant="body1" style={{ fontWeight: "normal" }}>
-              City: {city}
-            </Typography>
-
-            <Typography variant="body1" className={classes.location}>
-              Lng: {lng ? lng : ""}
-            </Typography>
-
-            <Typography variant="body1" className={classes.location}>
-              Lat: {lat ? lat : ""}
-            </Typography> */}
           </Box>
 
           {/* <Box className={classes.listImage}>
@@ -109,42 +90,49 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
 
         <Box className={classes.content}>
           <ul className={classes.listContainer}>
-            {selected?.address ? (
-              <>
-                <li className={classes.item}>
-                  <img
-                    src="https://www.gstatic.com/images/icons/material/system_gm/1x/place_gm_blue_24dp.png"
-                    alt=""
-                  />
-                  <Typography variant="body1">
-                    {selected?.name}, {selected?.ward}, {selected?.district},{" "}
-                    {selected?.city}
-                  </Typography>
-                </li>
+            <>
+              <li className={classes.item}>
+                <img
+                  src="https://www.gstatic.com/images/icons/material/system_gm/1x/place_gm_blue_24dp.png"
+                  alt=""
+                />
+                <Typography variant="body1">
+                  {selected?.name ? (
+                    `${selected?.name}, ${selected?.ward}, ${selected?.district}, ${selected?.city}`
+                  ) : (
+                    <Skeleton width={300} />
+                  )}
+                </Typography>
+              </li>
 
-                {selected?.plusCode && (
-                  <li className={classes.item}>
-                    <img
-                      src="https://maps.gstatic.com/mapfiles/maps_lite/images/2x/ic_plus_code.png"
-                      alt=""
-                    />
-                    <Typography variant="body1">
-                      {selected?.plusCode}
-                    </Typography>
-                  </li>
-                )}
+              <li className={classes.item}>
+                <img
+                  src="https://maps.gstatic.com/mapfiles/maps_lite/images/2x/ic_plus_code.png"
+                  alt=""
+                />
+                <Typography variant="body1">
+                  {selected?.plusCode ? (
+                    selected?.plusCode
+                  ) : (
+                    <Skeleton width={300} />
+                  )}
+                </Typography>
+              </li>
 
-                {selected?.placeId && (
-                  <li className={classes.item}>
-                    <img
-                      src="https://maps.gstatic.com/mapfiles/maps_lite/images/2x/ic_plus_code.png"
-                      alt=""
-                    />
-                    <Typography variant="body1">{selected?.placeId}</Typography>
-                  </li>
-                )}
-              </>
-            ) : null}
+              <li className={classes.item}>
+                <img
+                  src="https://maps.gstatic.com/mapfiles/maps_lite/images/2x/ic_plus_code.png"
+                  alt=""
+                />
+                <Typography variant="body1">
+                  {selected?.placeId ? (
+                    selected?.placeId
+                  ) : (
+                    <Skeleton width={300} />
+                  )}
+                </Typography>
+              </li>
+            </>
           </ul>
         </Box>
       </Box>
