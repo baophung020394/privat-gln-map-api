@@ -69,6 +69,7 @@ const Locate = forwardRef(
                   ? res?.data.results[0].place_id
                   : "No place id",
                 photos: listPhoto,
+                nameCategory: '...',
                 toUrl: `https://www.google.com/maps/?q=${position?.coords.latitude},${position?.coords.longitude}`,
                 time: new Date(),
                 status: "new",

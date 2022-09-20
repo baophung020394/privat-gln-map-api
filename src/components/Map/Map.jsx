@@ -96,6 +96,32 @@ const CATEGORIES = [
   },
 ];
 
+const TYPES_CATEGORY = [
+  {
+    id: 0,
+    name: "Establishment",
+    value: "establishment",
+    urlImg: "",
+  },
+  {
+    id: 1,
+    name: "Point Of Interest",
+    value: "point_of_interest",
+    urlImg: "",
+  },
+  {
+    id: 2,
+    name: "Food",
+    value: "food",
+    urlImg: "",
+  },
+  {
+    id: 1,
+    name: "Store",
+    value: "store",
+    urlImg: "",
+  },
+];
 function Map() {
   const [curMarker, setCurMarker] = useState();
   const [selected, setSelected] = useState(null);
@@ -224,6 +250,7 @@ function Map() {
 
     const request = {
       placeId: res?.data.results[0].place_id,
+      // fields: ['rating']
     };
 
     const service = new google.maps.places.PlacesService(
@@ -243,7 +270,7 @@ function Map() {
           place?.photos.forEach((x) => listPhoto.push(x.getUrl()));
         }
         // Set marker current for drag end
-
+        console.log(place);
         const stringAddress = res?.data.results[0].formatted_address.split(",");
 
         setCurMarker({
@@ -257,8 +284,8 @@ function Map() {
           plusCode: res?.data.plus_code.compound_code,
           placeId: res?.data.results[0].place_id,
           photos: listPhoto,
-          category: "street_food",
-          nameCategory: "Street",
+          category: "",
+          nameCategory: "...",
           toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
           time: new Date(),
           status: "new",
@@ -544,7 +571,7 @@ function Map() {
             }}
           >
             <div className="wrapper-info">
-              <h3>{selected?.name} </h3>
+              <h3>{selected?.name?.split(",")[0]} </h3>
               <p>Ward: {selected?.ward}</p>
               <p>Disctrict: {selected?.district}</p>
               <p>City: {selected?.city}</p>
@@ -553,11 +580,15 @@ function Map() {
               </a>
               <select
                 ref={selectRef}
-                onChange={() => {
+                onChange={(e) => {
                   setSelected({
                     ...selected,
                     index: selectRef.current.selectedIndex - 1,
                     category: selectRef.current.value,
+                    nameCategory: selectRef.current.value
+                      ? e.nativeEvent.target[selectRef.current.selectedIndex]
+                          .text
+                      : e.nativeEvent.target[0].text,
                   });
                   if (categ === "all") return;
                   setCateg(selectRef.current.value);
@@ -611,7 +642,7 @@ function Map() {
                 }}
               >
                 <div className="wrapper-info">
-                  <h3>{curMarker?.name} </h3>
+                  <h3>{curMarker?.name?.split(",")[0]} </h3>
                   <p>Ward: {curMarker?.ward}</p>
                   <p>Disctrict: {curMarker?.district}</p>
                   <p>City: {curMarker?.city}</p>
@@ -624,11 +655,16 @@ function Map() {
 
                   <select
                     ref={selectRef}
-                    onChange={() => {
+                    onChange={(e) => {
                       setCurMarker({
                         ...curMarker,
                         index: selectRef.current.selectedIndex - 1,
                         category: selectRef.current.value,
+                        nameCategory: selectRef.current.value
+                          ? e.nativeEvent.target[
+                              selectRef.current.selectedIndex
+                            ].text
+                          : e.nativeEvent.target[0].text,
                       });
                       if (categ === "all") return;
                       setCateg(selectRef.current.value);
@@ -637,7 +673,11 @@ function Map() {
                   >
                     <option>-Choose Place--</option>
                     {CATEGORIES.map((x, idx) => (
-                      <option value={x.value} key={`${idx}-${x?.value}`}>
+                      <option
+                        value={x.value}
+                        key={`${idx}-${x?.value}`}
+                        data-attr={x.name}
+                      >
                         {x?.name}
                       </option>
                     ))}

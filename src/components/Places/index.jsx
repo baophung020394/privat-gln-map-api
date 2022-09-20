@@ -70,12 +70,12 @@ const PlacesAutocomplete = forwardRef(
           place.geometry &&
           place.geometry.location
         ) {
+          console.log(place);
           let listPhoto = [];
           if (place?.photos) {
             place?.photos.forEach((x) => listPhoto.push(x.getUrl()));
           }
 
-          // const stringAddress = data[0]?.description.split(",");
           const stringAddress = results[0]?.formatted_address.split(",");
 
           newObj = {
@@ -93,6 +93,7 @@ const PlacesAutocomplete = forwardRef(
               ? results[0]?.place_id
               : "No place id",
             photos: listPhoto,
+            nameCategory: "...",
             toUrl: `https://www.google.com/maps/?q=${newObj.lat},${newObj.lng}`,
             time: new Date(),
             status: "new",
