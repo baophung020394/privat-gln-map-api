@@ -34,7 +34,7 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
               className={classes.iconTitle}
             />
             <Typography variant="body1" className={classes.title}>
-              {selected?.name ? selected?.name : <Skeleton width={310} />}
+              {selected?.name ? selected?.name.split(",")[0] : <Skeleton width={310} />}
               <Typography
                 variant="body1"
                 component="span"
@@ -96,9 +96,10 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
                   src="https://www.gstatic.com/images/icons/material/system_gm/1x/place_gm_blue_24dp.png"
                   alt=""
                 />
+                {/* , ${selected?.ward}, ${selected?.district}, ${selected?.city} */}
                 <Typography variant="body1">
                   {selected?.name ? (
-                    `${selected?.name}, ${selected?.ward}, ${selected?.district}, ${selected?.city}`
+                    `${selected?.name}`
                   ) : (
                     <Skeleton width={300} />
                   )}

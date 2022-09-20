@@ -80,7 +80,7 @@ const PlacesAutocomplete = forwardRef(
 
           newObj = {
             address: results[0]?.formatted_address,
-            name: stringAddress[0],
+            name: data[0]?.description,
             ward: stringAddress[1],
             district: stringAddress[2],
             city: stringAddress[3],
