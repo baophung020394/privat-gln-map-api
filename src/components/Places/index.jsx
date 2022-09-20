@@ -70,8 +70,8 @@ const PlacesAutocomplete = forwardRef(
           place.geometry &&
           place.geometry.location
         ) {
-          console.log(place?.opening_hours);
-          console.log(place?.opening_hours.isOpen());
+          // console.log(place?.opening_hours);
+          // console.log(place?.opening_hours.isOpen());
 
           let listPhoto = [];
           if (place?.photos) {

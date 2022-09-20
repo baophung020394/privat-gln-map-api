@@ -12,11 +12,16 @@ import useStyles from "./styles.js";
 
 function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
   const classes = useStyles();
-  console.log(selected);
-  // const sampleDate = new Date(selected?.openHours?.periods[0]?.open.hours);
-  // const convertDate = format(sampleDate, "HH:mm");
-  // console.log({ sampleDate });
-  // console.log({ convertDate });
+  // console.log(selected);
+  // const today = new Date();
+  // const milisecondToday = today.getTime();
+
+  // const openTime = new Date(selected?.openHours?.periods[2].open.nextDate);
+  // const convertOpenTime = format(openTime, "dd/MM/yyyy");
+  // console.log({ openTime });
+  // console.log({ convertOpenTime });
+  // console.log({ today });
+  // console.log({ milisecondToday });
 
   const days = [
     "Sunday",
@@ -137,7 +142,6 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
                   src="https://www.gstatic.com/images/icons/material/system_gm/1x/place_gm_blue_24dp.png"
                   alt=""
                 />
-                {/* , ${selected?.ward}, ${selected?.district}, ${selected?.city} */}
                 <Typography variant="body1">
                   {selected?.address ? (
                     `${selected?.address}`
@@ -178,7 +182,12 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
                         <Typography
                           variant="body1"
                           component="span"
-                          className={classes.text}
+                          className={`${classes.text} ${
+                            selected?.openHours &&
+                            selected?.openHours.isOpen === "Open"
+                              ? "green"
+                              : "red"
+                          }`}
                         >
                           {selected?.openHours
                             ? selected?.openHours.isOpen
@@ -190,6 +199,8 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
                           className={classes.timeText}
                         >
                           Opens
+                          {selected?.openHours?.periods[0].open.time ===
+                            "0000" && " 24 hours"}
                         </Typography>
                       </Typography>
                     </AccordionSummary>

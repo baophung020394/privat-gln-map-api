@@ -169,20 +169,30 @@ export default makeStyles((theme) => ({
     width: "100%",
     padding: "10px 0",
   },
-  text: { fontSize: 14, color: "#D93025" },
+
+  text: {
+    fontSize: 14,
+    "&.green": {
+      color: "#188038",
+    },
+    "&.red": {
+      color: "#D93025",
+    },
+  },
+
   timeText: {
     fontSize: 14,
     color: "#3C4043",
-    position: 'relative',
+    position: "relative",
     marginLeft: 16,
 
-    '&::before' :{
+    "&::before": {
       content: '"."',
-      position: 'absolute',
+      position: "absolute",
       top: -5,
       left: -8,
       zIndex: 1,
       color: "#3C4043",
-    }
+    },
   },
 }));

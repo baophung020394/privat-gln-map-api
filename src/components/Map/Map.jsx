@@ -213,6 +213,8 @@ function Map() {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
+    language: navigator && navigator.languages ? navigator.language.slice(0, 2) : "vi",
+    // language: navigator && navigator.languages ? "vi" : "vi",
   });
 
   /**
@@ -247,8 +249,6 @@ function Map() {
       }`
     );
 
-    console.log({ res });
-
     const request = {
       placeId: res?.data.results[0].place_id,
       // fields: ['rating']
@@ -271,7 +271,7 @@ function Map() {
           place?.photos.forEach((x) => listPhoto.push(x.getUrl()));
         }
         // Set marker current for drag end
-        console.log(place);
+        // console.log(place);
         const stringAddress = res?.data.results[0].formatted_address.split(",");
 
         setCurMarker({
@@ -453,6 +453,14 @@ function Map() {
       setShowMapSaved(JSON.parse(localStorage.getItem("showMapSaved")));
     }
   }, [isShow]);
+
+  useEffect(() => {
+    if (navigator.languages !== undefined) {
+      console.log(navigator.languages);
+      console.log(navigator.language.slice(0, 2));
+      console.log(navigator.userAgent);
+    }
+  }, []);
 
   if (!isLoaded) return <div>Loading...</div>;
 
