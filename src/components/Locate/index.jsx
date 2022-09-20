@@ -55,7 +55,7 @@ const Locate = forwardRef(
 
               setCurMarker({
                 address: res?.data.results[0].formatted_address,
-                name: res?.data.results[0].formatted_address,
+                name: place?.name,
                 ward: stringAddress[1],
                 district: stringAddress[2],
                 city: stringAddress[3],

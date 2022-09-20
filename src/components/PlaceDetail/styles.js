@@ -168,6 +168,10 @@ export default makeStyles((theme) => ({
   weekdayText: {
     width: "100%",
     padding: "10px 0",
+
+    '&.active':{
+      fontWeight: 'bold'
+    }
   },
 
   text: {

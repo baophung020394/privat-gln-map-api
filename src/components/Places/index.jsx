@@ -56,6 +56,7 @@ const PlacesAutocomplete = forwardRef(
 
       const request = {
         placeId: results[0]?.place_id,
+        // fields: ["rating"],
       };
 
       const service = new google.maps.places.PlacesService(
@@ -70,8 +71,8 @@ const PlacesAutocomplete = forwardRef(
           place.geometry &&
           place.geometry.location
         ) {
-          // console.log(place?.opening_hours);
-          // console.log(place?.opening_hours.isOpen());
+          // console.log(place);
+          // console.log(place?.opening_hours.isOpen(new Date("Tue Sep 20 2022 15:00:00 GMT+0700")));
 
           let listPhoto = [];
           if (place?.photos) {

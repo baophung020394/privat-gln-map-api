@@ -13,15 +13,18 @@ import useStyles from "./styles.js";
 function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
   const classes = useStyles();
   // console.log(selected);
-  // const today = new Date();
-  // const milisecondToday = today.getTime();
+  const today = new Date();
+  const milisecondToday = today.toLocaleString(
+    `${navigator.language.slice(0, 2)}`,
+    { weekday: "long" }
+  );
 
-  // const openTime = new Date(selected?.openHours?.periods[2].open.nextDate);
+  // const openTime = new Date(selected?.openHours?.periods[2]?.open.nextDate);
   // const convertOpenTime = format(openTime, "dd/MM/yyyy");
   // console.log({ openTime });
   // console.log({ convertOpenTime });
   // console.log({ today });
-  // console.log({ milisecondToday });
+  console.log({ milisecondToday });
 
   const days = [
     "Sunday",
@@ -53,6 +56,14 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
 
   // console.log(openingHours);
 
+  // useEffect(()=>{
+  //   const sortedArr = arr.reduce((acc, element) => {
+  //     if (!element.flag) {
+  //       return [element, ...acc];
+  //     }
+  //     return [...acc, element];
+  //   }, []);
+  // },[])
   return (
     <>
       <Box
@@ -198,24 +209,38 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
                           component="span"
                           className={classes.timeText}
                         >
-                          Opens
                           {selected?.openHours?.periods[0].open.time ===
-                            "0000" && " 24 hours"}
+                            "0000" &&
+                            `${
+                              navigator.language.slice(0, 2) === "vi"
+                                ? " Mở cả ngày"
+                                : "Opens 24 hours"
+                            }`}
                         </Typography>
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails className={classes.weekdayTextContainer}>
                       {selected?.openHours &&
                         selected?.openHours.weekdayText &&
-                        selected?.openHours?.weekdayText.map((x, idx) => (
-                          <Typography
-                            key={`${x}-${idx}`}
-                            variant="body1"
-                            className={classes.weekdayText}
-                          >
-                            {x}
-                          </Typography>
-                        ))}
+                        selected?.openHours?.weekdayText.map((x, idx) => {
+                          // console.log(x.split(':')[0])
+                          if (x.split(":")[0].includes(milisecondToday)) {
+                            console.log("chim bes Huy tho,");
+                          }
+                          return (
+                            <Typography
+                              key={`${x}-${idx}`}
+                              variant="body1"
+                              className={`${classes.weekdayText} ${
+                                x.split(":")[0].includes(milisecondToday)
+                                  ? "active"
+                                  : ""
+                              }`}
+                            >
+                              {x}
+                            </Typography>
+                          );
+                        })}
                     </AccordionDetails>
                   </Accordion>
                 </li>
