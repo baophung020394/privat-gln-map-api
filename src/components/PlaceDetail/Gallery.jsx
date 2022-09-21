@@ -8,7 +8,7 @@ function Gallery({ isOpen, selected, setIsOpenGallery }) {
 
   return (
     <Box
-      className={classes.ratingContainer}
+      className={classes.galleryContainer}
       style={{ left: isOpen ? 0 : "-425px" }}
     >
       <Box className={classes.headerGallery}>

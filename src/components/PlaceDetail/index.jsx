@@ -7,6 +7,7 @@ import { Rating, Skeleton } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
 import { currencyFormat } from "../../hooks/useFormatNumber.jsx";
 import Gallery from "./Gallery.jsx";
+import RatingDetail from "./RatingDetail.jsx";
 import Schedule from "./Schedule.jsx";
 import useStyles from "./styles.js";
 
@@ -16,7 +17,9 @@ function PlaceDetail({
   dragStart,
   selected,
   isOpenGallery,
+  isOpenRatingDetail,
   setIsOpenGallery,
+  setIsOpenRatingDetail,
 }) {
   const classes = useStyles();
 
@@ -139,6 +142,7 @@ function PlaceDetail({
                 variant="body1"
                 component="span"
                 className={classes.listStar}
+                onClick={() => setIsOpenRatingDetail(true)}
               >
                 {selected?.rating && selected?.rating > 0 && (
                   <>
@@ -337,6 +341,12 @@ function PlaceDetail({
         isOpen={isOpenGallery}
         selected={selected}
         setIsOpenGallery={setIsOpenGallery}
+      />
+
+      <RatingDetail
+        isOpen={isOpenRatingDetail}
+        selected={selected}
+        setIsOpenRatingDetail={setIsOpenRatingDetail}
       />
       {/* <Box
         className={classes.layer}

@@ -126,6 +126,7 @@ const TYPES_CATEGORY = [
 function Map() {
   const [curMarker, setCurMarker] = useState();
   const [isOpenGallery, setIsOpenGallery] = useState(false);
+  const [isOpenRatingDetail, setIsOpenRatingDetail] = useState(false);
   const [selected, setSelected] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [dragStart, setDragStart] = useState(null);
@@ -255,7 +256,6 @@ function Map() {
 
     const request = {
       placeId: res?.data.results[0].place_id,
-      // fields: ['rating']
     };
 
     const service = new google.maps.places.PlacesService(
@@ -289,6 +289,7 @@ function Map() {
           plusCode: res?.data.plus_code.compound_code,
           placeId: res?.data.results[0].place_id,
           photos: listPhoto,
+          reviews: place?.reviews,
           openHours: {
             isOpen: place?.opening_hours?.isOpen() ? "Open" : "Closed",
             weekdayText: place?.opening_hours?.weekday_text,
@@ -363,6 +364,7 @@ function Map() {
         time: new Date(),
         status: "old",
         photos: selectMar?.photos,
+        reviews: selectMar?.reviews,
         plusCode: selectMar.plusCode,
         placeId: selectMar.placeId,
         rating: selectMar?.rating,
@@ -411,6 +413,7 @@ function Map() {
         plusCode: curMar.plusCode,
         placeId: curMar.placeId,
         photos: curMar?.photos,
+        reviews: curMar?.reviews,
         rating: curMar?.rating,
         website: curMar?.website ? curMar?.website : "No website",
         userRatingsTotal: curMar?.userRatingsTotal,
@@ -786,7 +789,7 @@ function Map() {
           className={classes.seletedMarker}
           style={{
             marginLeft: isOpenPlace ? "0" : "-425px",
-            zIndex: isOpenGallery ? 1 : 0,
+            zIndex: isOpenGallery || isOpenRatingDetail ? 1 : 0,
           }}
         >
           {selected ? (
@@ -797,6 +800,8 @@ function Map() {
               dragStart={dragStart}
               isOpenGallery={isOpenGallery}
               setIsOpenGallery={setIsOpenGallery}
+              setIsOpenRatingDetail={setIsOpenRatingDetail}
+              isOpenRatingDetail={isOpenRatingDetail}
             />
           ) : null}
 
@@ -808,6 +813,8 @@ function Map() {
               selected={curMarker}
               isOpenGallery={isOpenGallery}
               setIsOpenGallery={setIsOpenGallery}
+              setIsOpenRatingDetail={setIsOpenRatingDetail}
+              isOpenRatingDetail={isOpenRatingDetail}
             />
           ) : null}
         </Box>

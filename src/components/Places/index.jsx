@@ -67,9 +67,10 @@ const PlacesAutocomplete = forwardRef(
         if (
           status ===
             google.maps.places.PlacesServiceStatus.OK /*global google*/ &&
-          place &&
-          place.geometry &&
-          place.geometry.location
+          place
+          // &&
+          // place.geometry &&
+          // place.geometry.location
         ) {
           console.log(place);
 
@@ -103,6 +104,7 @@ const PlacesAutocomplete = forwardRef(
               ? results[0]?.place_id
               : "No place id",
             photos: listPhoto,
+            reviews: place?.reviews,
             icons: {
               icon: place?.icon,
               url: place?.icon_mask_base_uri,

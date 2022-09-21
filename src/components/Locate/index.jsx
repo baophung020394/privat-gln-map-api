@@ -68,6 +68,7 @@ const Locate = forwardRef(
                   ? res?.data.results[0].place_id
                   : "No place id",
                 photos: listPhoto,
+                photos: place?.reviews,
                 openHours: {
                   isOpen: place?.opening_hours?.isOpen() ? "Open" : "Close",
                   weekdayText: place?.opening_hours?.weekday_text,

@@ -274,6 +274,7 @@ export default makeStyles((theme) => ({
   listStar: {
     display: "flex",
     alignItems: "flex-start",
+    cursor: "pointer",
   },
 
   numberStar: {
@@ -288,7 +289,7 @@ export default makeStyles((theme) => ({
     fontWeight: 500,
     marginLeft: 4,
   },
-  ratingContainer: {
+  galleryContainer: {
     position: "absolute",
     top: 0,
     left: -425,
@@ -298,6 +299,7 @@ export default makeStyles((theme) => ({
     width: 425,
     transition: "0.4s",
     overflowY: "auto",
+    paddingBottom: 60,
 
     "&:hover": {
       overflowY: "auto",
@@ -323,13 +325,14 @@ export default makeStyles((theme) => ({
     alignItems: "center",
     padding: "4px 12px",
     background: "#fff",
-    position: 'sticky',
+    position: "sticky",
     top: 0,
+    zIndex: 1,
 
     "& p": {
       fontSize: 18,
       color: "#202124",
-      fontWeight: 500
+      fontWeight: 500,
     },
   },
   backIcon: {
@@ -348,6 +351,116 @@ export default makeStyles((theme) => ({
     "& img": {
       width: "100%",
       cursor: "pointer",
+    },
+  },
+  contentReviews: {},
+  reviewPoint: {
+    display: "flex",
+    justifyContent: "center",
+    borderBottom: "1px solid #e8eaed",
+    paddingBottom: 12,
+  },
+  leftPoint: {
+    "& .itemPoint": {
+      display: "flex",
+      alignItems: "center",
+      marginRight: 16,
+      marginBottom: 2,
+
+      "& span": {
+        color: "#70757a",
+        fontSize: 14,
+        marginRight: 16,
+      },
+    },
+  },
+  progressbars: {
+    position: "relative",
+    // minWidth: 225,
+    // maxWidth: 225,
+    minHeight: 8,
+    maxHeight: 8,
+    borderRadius: 4,
+    background: "#e8eaed",
+  },
+  progressbar: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    // width: "50%",
+    borderRadius: 4,
+    height: "100%",
+    background: "#fbbc04",
+  },
+  rightPoint: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+
+    "& h1": {
+      fontSize: 56,
+      color: "#000000",
+      lineHeight: 1.2,
+    },
+  },
+  textReviewPoint: {
+    fontSize: 14,
+    color: "#70757a",
+  },
+  listReviews: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    padding: "15px 20px",
+  },
+  userReview: {
+    marginBottom: 16,
+  },
+  heading: {
+    display: "flex",
+
+    "& p": {
+      color: "#3c4043",
+      fontSize: 15,
+      marginLeft: 8,
+      fontWeight: 500
+    },
+
+    "& .avatar": {
+      width: 32,
+      height: 32,
+    },
+
+    "& .right": {
+      "& a": {
+        textDecoration: "none",
+        color: "#3c4043",
+        fontSize: 15,
+        fontWeight: 500
+      },
+    },
+  },
+  timeRating: {
+    display: "flex",
+    alignItems: "center",
+    marginTop: 8,
+    "& span": {
+      fontSize: 14,
+    },
+
+    "& .timeago": {
+      fontSize: 14,
+      color: "#70757a",
+      marginLeft: 6,
+    },
+  },
+  contentReivew: {
+    marginTop: 3,
+
+    "& p": {
+      color: "#3c4043",
+      fontSize: 14,
     },
   },
 }));
