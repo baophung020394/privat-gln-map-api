@@ -204,13 +204,17 @@ export default makeStyles((theme) => ({
     "&.red": {
       color: "#D93025",
     },
+
+    "&.green.activeBlack": {
+      color: "#3C4043",
+    },
   },
 
   resultTime: {
     fontSize: 14,
     color: "#3C4043",
     fontWeight: "500",
-    position: 'relative',
+    position: "relative",
 
     "&::after": {
       content: '"."',

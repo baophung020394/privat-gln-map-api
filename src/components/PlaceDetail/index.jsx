@@ -1,6 +1,6 @@
 import { Box, Typography } from "@material-ui/core";
 import { Rating, Skeleton } from "@material-ui/lab";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -10,13 +10,17 @@ import { format } from "date-fns";
 
 import useStyles from "./styles.js";
 import { currencyFormat } from "../../hooks/useFormatNumber.jsx";
+import Schedule from "./Schedule.jsx";
 
 function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
   const classes = useStyles();
   const [listTime, setListTime] = useState([]);
-  const [schedule, setSchedule] = useState(null);
+  const [schedule, setSchedule] = useState({
+    status: 0,
+  });
 
   const today = new Date();
+
   const milisecondToday = today.toLocaleString(
     `${navigator.language.slice(0, 2) === "vi" ? "vi" : "en"}`,
     { weekday: "long" }
@@ -35,112 +39,21 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
 
     if (selected?.openHours?.isOpen === "Open") {
       stringTime = `Closes ${formatTime(scheduleObj?.close?.hours)}`;
-
       return (
-        <>
-          {selected?.openHours?.periods &&
-          selected?.openHours?.periods[0]?.open?.time !== "0000" ? (
-            <Typography
-              variant="body1"
-              component="span"
-              className={classes.timeText}
-            >
-              <Typography
-                variant="body1"
-                component="span"
-                className={`${classes.text} ${
-                  selected?.openHours && selected?.openHours.isOpen === "Open"
-                    ? "green"
-                    : "red"
-                }`}
-              >
-                {selected?.openHours ? selected?.openHours.isOpen : ""}
-              </Typography>
-              <Typography
-                variant="body1"
-                component="span"
-                className={classes.resultTime}
-              >
-                {stringTime}
-              </Typography>
-            </Typography>
-          ) : (
-            <>
-              <Typography
-                variant="body1"
-                component="span"
-                className={`${classes.text} ${
-                  selected?.openHours && selected?.openHours.isOpen === "Open"
-                    ? "green"
-                    : "red"
-                }`}
-              >
-                {navigator.language.slice(0, 2) === "vi"
-                  ? " Mở cả ngày"
-                  : "Opens 24 hours"}
-              </Typography>
-            </>
-          )}
-        </>
+        <Schedule
+          stringTime={stringTime}
+          selected={selected}
+          status={schedule?.status}
+        />
       );
     } else {
       stringTime = `Opens ${formatTime(scheduleObj?.open?.hours)}`;
-
       return (
-        <>
-          {selected?.openHours?.periods &&
-          selected?.openHours?.periods[0]?.open?.time !== "0000" ? (
-            <Typography
-              variant="body1"
-              component="span"
-              className={classes.timeText}
-            >
-              <Typography
-                variant="body1"
-                component="span"
-                className={`${classes.text} ${
-                  selected?.openHours && selected?.openHours.isOpen === "Open"
-                    ? "green"
-                    : "red"
-                }`}
-              >
-                {selected?.openHours ? selected?.openHours.isOpen : ""}
-              </Typography>
-              <Typography
-                variant="body1"
-                component="span"
-                className={classes.resultTime}
-              >
-                {stringTime}
-              </Typography>
-            </Typography>
-          ) : (
-            <Typography
-              variant="body1"
-              component="span"
-              className={classes.timeText}
-            >
-              <Typography
-                variant="body1"
-                component="span"
-                className={`${classes.text} ${
-                  selected?.openHours && selected?.openHours.isOpen === "Open"
-                    ? "green"
-                    : "red"
-                }`}
-              >
-                {selected?.openHours ? selected?.openHours.isOpen : ""}
-              </Typography>
-              <Typography
-                variant="body1"
-                component="span"
-                className={classes.resultTime}
-              >
-                {stringTime}
-              </Typography>
-            </Typography>
-          )}
-        </>
+        <Schedule
+          stringTime={stringTime}
+          selected={selected}
+          status={schedule?.status}
+        />
       );
     }
   };
@@ -156,6 +69,7 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
 
         if (todayTextLocale.includes(milisecondToday)) {
           setSchedule({
+            ...schedule,
             open: x?.open,
             close: x?.close,
           });
@@ -298,7 +212,22 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
                     src="https://www.gstatic.com/images/icons/material/system_gm/1x/schedule_gm_blue_24dp.png"
                     alt=""
                   />
-                  <Accordion className={classes.timesAccordion}>
+                  <Accordion
+                    className={classes.timesAccordion}
+                    onChange={(e, expanded) => {
+                      if (expanded) {
+                        setSchedule({
+                          ...schedule,
+                          status: 1,
+                        });
+                      } else {
+                        setSchedule({
+                          ...schedule,
+                          status: 0,
+                        });
+                      }
+                    }}
+                  >
                     <AccordionSummary
                       expandIcon={<ExpandMoreIcon />}
                       aria-controls="panel1a-content"
@@ -306,20 +235,6 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
                       className={classes.timeAccordion}
                     >
                       <Typography className={classes.heading}>
-                        {/* <Typography
-                          variant="body1"
-                          component="span"
-                          className={`${classes.text} ${
-                            selected?.openHours &&
-                            selected?.openHours.isOpen === "Open"
-                              ? "green"
-                              : "red"
-                          }`}
-                        >
-                          {selected?.openHours
-                            ? selected?.openHours.isOpen
-                            : ""}
-                        </Typography> */}
                         {renderTime(schedule)}
                       </Typography>
                     </AccordionSummary>
