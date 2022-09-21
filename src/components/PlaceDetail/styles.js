@@ -8,8 +8,8 @@ export default makeStyles((theme) => ({
     height: "100%",
     width: "100%",
     paddingBottom: 60,
-    overflowY: 'auto',
-    
+    overflowY: "auto",
+
     "&:hover": {
       overflowY: "auto",
     },
@@ -195,6 +195,9 @@ export default makeStyles((theme) => ({
 
   text: {
     fontSize: 14,
+    marginRight: 16,
+    position: "relative",
+
     "&.green": {
       color: "#188038",
     },
@@ -203,14 +206,13 @@ export default makeStyles((theme) => ({
     },
   },
 
-  timeText: {
+  resultTime: {
     fontSize: 14,
     color: "#3C4043",
-    position: "relative",
-    marginLeft: 16,
-    fontWeight: '500',
+    fontWeight: "500",
+    position: 'relative',
 
-    "&::before": {
+    "&::after": {
       content: '"."',
       position: "absolute",
       top: -5,
@@ -218,6 +220,13 @@ export default makeStyles((theme) => ({
       zIndex: 1,
       color: "#3C4043",
     },
+  },
+
+  timeText: {
+    fontSize: 14,
+    color: "#3C4043",
+    position: "relative",
+    fontWeight: "500",
   },
 
   listStar: {

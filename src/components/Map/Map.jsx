@@ -151,6 +151,8 @@ function Map() {
     JSON.parse(localStorage.getItem("showMapSaved"))
   );
 
+  let libraries = ["places"];
+
   const {
     listMarkerInput,
     setListMarkerInput,
@@ -212,7 +214,7 @@ function Map() {
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: ["places"],
+    libraries,
     language:
       navigator && navigator.languages ? navigator.language.slice(0, 2) : "vi",
     // language: navigator && navigator.languages ? "vi" : "vi",
@@ -287,7 +289,7 @@ function Map() {
           placeId: res?.data.results[0].place_id,
           photos: listPhoto,
           openHours: {
-            isOpen: place?.opening_hours?.isOpen() ? "Open" : "Close",
+            isOpen: place?.opening_hours?.isOpen() ? "Open" : "Closed",
             weekdayText: place?.opening_hours?.weekday_text,
             periods: place?.opening_hours?.periods,
           },

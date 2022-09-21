@@ -16,7 +16,6 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
   const [listTime, setListTime] = useState([]);
   const [schedule, setSchedule] = useState(null);
 
-  // console.log(selected);
   const today = new Date();
   const milisecondToday = today.toLocaleString(
     `${navigator.language.slice(0, 2) === "vi" ? "vi" : "en"}`,
@@ -31,6 +30,121 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
     return strTime;
   };
 
+  const renderTime = (scheduleObj) => {
+    let stringTime = "";
+
+    if (selected?.openHours?.isOpen === "Open") {
+      stringTime = `Closes ${formatTime(scheduleObj?.close?.hours)}`;
+
+      return (
+        <>
+          {selected?.openHours?.periods &&
+          selected?.openHours?.periods[0]?.open?.time !== "0000" ? (
+            <Typography
+              variant="body1"
+              component="span"
+              className={classes.timeText}
+            >
+              <Typography
+                variant="body1"
+                component="span"
+                className={`${classes.text} ${
+                  selected?.openHours && selected?.openHours.isOpen === "Open"
+                    ? "green"
+                    : "red"
+                }`}
+              >
+                {selected?.openHours ? selected?.openHours.isOpen : ""}
+              </Typography>
+              <Typography
+                variant="body1"
+                component="span"
+                className={classes.resultTime}
+              >
+                {stringTime}
+              </Typography>
+            </Typography>
+          ) : (
+            <>
+              <Typography
+                variant="body1"
+                component="span"
+                className={`${classes.text} ${
+                  selected?.openHours && selected?.openHours.isOpen === "Open"
+                    ? "green"
+                    : "red"
+                }`}
+              >
+                {navigator.language.slice(0, 2) === "vi"
+                  ? " Mở cả ngày"
+                  : "Opens 24 hours"}
+              </Typography>
+            </>
+          )}
+        </>
+      );
+    } else {
+      stringTime = `Opens ${formatTime(scheduleObj?.open?.hours)}`;
+
+      return (
+        <>
+          {selected?.openHours?.periods &&
+          selected?.openHours?.periods[0]?.open?.time !== "0000" ? (
+            <Typography
+              variant="body1"
+              component="span"
+              className={classes.timeText}
+            >
+              <Typography
+                variant="body1"
+                component="span"
+                className={`${classes.text} ${
+                  selected?.openHours && selected?.openHours.isOpen === "Open"
+                    ? "green"
+                    : "red"
+                }`}
+              >
+                {selected?.openHours ? selected?.openHours.isOpen : ""}
+              </Typography>
+              <Typography
+                variant="body1"
+                component="span"
+                className={classes.resultTime}
+              >
+                {stringTime}
+              </Typography>
+            </Typography>
+          ) : (
+            <Typography
+              variant="body1"
+              component="span"
+              className={classes.timeText}
+            >
+              <Typography
+                variant="body1"
+                component="span"
+                className={`${classes.text} ${
+                  selected?.openHours && selected?.openHours.isOpen === "Open"
+                    ? "green"
+                    : "red"
+                }`}
+              >
+                {selected?.openHours ? selected?.openHours.isOpen : ""}
+              </Typography>
+              <Typography
+                variant="body1"
+                component="span"
+                className={classes.resultTime}
+              >
+                {stringTime}
+              </Typography>
+            </Typography>
+          )}
+        </>
+      );
+    }
+  };
+
   useEffect(() => {
     if (selected?.openHours?.weekdayText) {
       selected?.openHours?.periods?.forEach((x) => {
@@ -40,18 +154,10 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
           { weekday: "long" }
         );
 
-        if (
-          todayTextLocale.includes(milisecondToday) &&
-          selected?.openHours?.isOpen === "Open"
-        ) {
+        if (todayTextLocale.includes(milisecondToday)) {
           setSchedule({
-            status: 0,
-            time: x.close,
-          });
-        } else {
-          setSchedule({
-            status: 1,
-            time: x.open,
+            open: x?.open,
+            close: x?.close,
           });
         }
       });
@@ -59,8 +165,6 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
 
     const sortedArr = selected?.openHours?.weekdayText?.reduce(
       (acc, element) => {
-        // console.log({ acc });
-        // console.log(element.split(","));
         if (element.split(":")[0].includes(milisecondToday)) {
           return [element, ...acc];
         }
@@ -202,7 +306,7 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
                       className={classes.timeAccordion}
                     >
                       <Typography className={classes.heading}>
-                        <Typography
+                        {/* <Typography
                           variant="body1"
                           component="span"
                           className={`${classes.text} ${
@@ -215,27 +319,8 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
                           {selected?.openHours
                             ? selected?.openHours.isOpen
                             : ""}
-                        </Typography>
-
-                        <Typography
-                          variant="body1"
-                          component="span"
-                          className={classes.timeText}
-                        >
-                          {schedule?.time && schedule?.time?.time !== "0000"
-                            ? `${
-                                schedule?.time?.status === 1
-                                  ? `Close  ${formatTime(
-                                      schedule?.time?.hours
-                                    )}`
-                                  : `Opens ${formatTime(schedule?.time?.hours)}`
-                              } `
-                            : `${
-                                navigator.language.slice(0, 2) === "vi"
-                                  ? " Mở cả ngày"
-                                  : "Opens 24 hours"
-                              }`}
-                        </Typography>
+                        </Typography> */}
+                        {renderTime(schedule)}
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails className={classes.weekdayTextContainer}>

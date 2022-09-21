@@ -89,7 +89,7 @@ const PlacesAutocomplete = forwardRef(
             lng: newObj.lng,
             lat: newObj.lat,
             openHours: {
-              isOpen: place?.opening_hours?.isOpen() ? "Open" : "Close",
+              isOpen: place?.opening_hours?.isOpen() ? "Open" : "Closed",
               weekdayText: place?.opening_hours?.weekday_text,
               periods: place?.opening_hours?.periods,
             },
