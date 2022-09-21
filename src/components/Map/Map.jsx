@@ -125,6 +125,7 @@ const TYPES_CATEGORY = [
 
 function Map() {
   const [curMarker, setCurMarker] = useState();
+  const [isOpenGallery, setIsOpenGallery] = useState(false);
   const [selected, setSelected] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [dragStart, setDragStart] = useState(null);
@@ -298,6 +299,12 @@ function Map() {
             : "No phone number",
           rating: place?.rating,
           userRatingsTotal: place?.user_ratings_total,
+          website: place?.website ? place?.website : "No website",
+          icons: {
+            icon: place?.icon,
+            url: place?.icon_mask_base_uri,
+            backgroundColor: place?.icon_background_color,
+          },
           category: "",
           nameCategory: "...",
           toUrl: `https://www.google.com/maps/?q=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}`,
@@ -359,11 +366,17 @@ function Map() {
         plusCode: selectMar.plusCode,
         placeId: selectMar.placeId,
         rating: selectMar?.rating,
+        website: selectMar?.website ? selectMar?.website : "No website",
         userRatingsTotal: selectMar?.userRatingsTotal,
         openHours: {
           isOpen: selectMar?.openHours.isOpen,
           weekdayText: selectMar?.openHours.weekdayText,
           periods: selectMar?.openHours.periods,
+        },
+        icons: {
+          icon: selectMar?.icons.icon,
+          url: selectMar?.icons.icon_mask_base_uri,
+          backgroundColor: selectMar?.icons.icon_background_color,
         },
         phoneNumber: selectMar?.phoneNumber,
         nameCategory: selectMar?.index
@@ -399,11 +412,17 @@ function Map() {
         placeId: curMar.placeId,
         photos: curMar?.photos,
         rating: curMar?.rating,
+        website: curMar?.website ? curMar?.website : "No website",
         userRatingsTotal: curMar?.userRatingsTotal,
         openHours: {
           isOpen: curMar?.openHours.isOpen,
           weekdayText: curMar?.openHours.weekdayText,
           periods: curMar?.openHours.periods,
+        },
+        icons: {
+          icon: curMar?.icons.icon,
+          url: curMar?.icons.icon_mask_base_uri,
+          backgroundColor: curMar?.icons.icon_background_color,
         },
         phoneNumber: curMar?.phoneNumber,
         category: curMar?.category ? curMar?.category : "hotel",
@@ -767,6 +786,7 @@ function Map() {
           className={classes.seletedMarker}
           style={{
             marginLeft: isOpenPlace ? "0" : "-425px",
+            zIndex: isOpenGallery ? 1 : 0,
           }}
         >
           {selected ? (
@@ -775,6 +795,8 @@ function Map() {
               isClose={closePlace}
               selected={selected}
               dragStart={dragStart}
+              isOpenGallery={isOpenGallery}
+              setIsOpenGallery={setIsOpenGallery}
             />
           ) : null}
 
@@ -784,6 +806,8 @@ function Map() {
               isOpen={isOpen}
               isClose={closePlace}
               selected={curMarker}
+              isOpenGallery={isOpenGallery}
+              setIsOpenGallery={setIsOpenGallery}
             />
           ) : null}
         </Box>

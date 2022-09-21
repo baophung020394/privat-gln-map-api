@@ -56,7 +56,7 @@ const PlacesAutocomplete = forwardRef(
 
       const request = {
         placeId: results[0]?.place_id,
-        // fields: ["rating"],
+        // fields: ["name", "geometry", "photos", "opening_hours"],
       };
 
       const service = new google.maps.places.PlacesService(
@@ -71,7 +71,7 @@ const PlacesAutocomplete = forwardRef(
           place.geometry &&
           place.geometry.location
         ) {
-          // console.log(place);
+          console.log(place);
 
           let listPhoto = [];
           if (place?.photos) {
@@ -103,6 +103,12 @@ const PlacesAutocomplete = forwardRef(
               ? results[0]?.place_id
               : "No place id",
             photos: listPhoto,
+            icons: {
+              icon: place?.icon,
+              url: place?.icon_mask_base_uri,
+              backgroundColor: place?.icon_background_color,
+            },
+            website: place?.website ? place?.website : "No website",
             rating: place?.rating,
             userRatingsTotal: place?.user_ratings_total,
             nameCategory: "...",

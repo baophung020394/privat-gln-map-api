@@ -29,11 +29,49 @@ export default makeStyles((theme) => ({
   },
 
   image: {
+    position: "relative",
+
     "& img": {
       width: 425,
       maxHeight: 300,
       minHeight: 300,
       objectFit: "cover",
+    },
+
+    "& .hoverImage": {
+      position: "absolute",
+      bottom: 20,
+      left: 20,
+      zIndex: 1,
+      display: "flex",
+      alignItems: "center",
+      background: "#000000",
+      opacity: 0,
+      borderRadius: 6,
+      padding: "4px 12px",
+      cursor: "pointer",
+      transition: "0.4s",
+
+      "& img": {
+        width: 18,
+        height: 18,
+        maxWidth: 18,
+        maxHeight: 18,
+        minHeight: 18,
+        objectFit: "cover",
+        marginRight: 8,
+      },
+
+      "& span": {
+        fontSize: 16,
+        color: "#ffffff",
+        fontWeight: "bold",
+      },
+    },
+    "&:hover": {
+      "& .hoverImage": {
+        opacity: 0.8,
+      },
     },
   },
 
@@ -249,5 +287,67 @@ export default makeStyles((theme) => ({
     fontSize: 14,
     fontWeight: 500,
     marginLeft: 4,
+  },
+  ratingContainer: {
+    position: "absolute",
+    top: 0,
+    left: -425,
+    zIndex: 5,
+    background: "#fff",
+    height: "100%",
+    width: 425,
+    transition: "0.4s",
+    overflowY: "auto",
+
+    "&:hover": {
+      overflowY: "auto",
+    },
+
+    "&::-webkit-scrollbar": {
+      width: 4,
+    },
+    "&::-webkit-scrollbar-track ": {
+      background: "#f1f1f1",
+    },
+    "&::-webkit-scrollbar-thumb ": {
+      background: "#888",
+    },
+    "&::-webkit-scrollbar-thumb:hover ": {
+      background: "#555",
+    },
+  },
+  headerGallery: {
+    minHeight: 64,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "4px 12px",
+    background: "#fff",
+    position: 'sticky',
+    top: 0,
+
+    "& p": {
+      fontSize: 18,
+      color: "#202124",
+      fontWeight: 500
+    },
+  },
+  backIcon: {
+    minWidth: "unset",
+    padding: 0,
+
+    "& img": {
+      width: 24,
+      height: 24,
+      objectFit: "cover",
+      cursor: "pointer",
+    },
+  },
+  contentGallery: {},
+  listImages: {
+    "& img": {
+      width: "100%",
+      cursor: "pointer",
+    },
   },
 }));

@@ -135,6 +135,7 @@ export default makeStyles((theme) => ({
     left: 0,
     zIndex: 0,
     height: "100%",
+    // overflowX: 'hidden'
   },
 
   save: {

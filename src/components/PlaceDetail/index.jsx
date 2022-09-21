@@ -1,19 +1,25 @@
 import { Box, Typography } from "@material-ui/core";
-import { Rating, Skeleton } from "@material-ui/lab";
-import React, { useEffect, useRef, useState } from "react";
-
 import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { format } from "date-fns";
-
-import useStyles from "./styles.js";
+import { Rating, Skeleton } from "@material-ui/lab";
+import React, { useEffect, useState } from "react";
 import { currencyFormat } from "../../hooks/useFormatNumber.jsx";
+import Gallery from "./Gallery.jsx";
 import Schedule from "./Schedule.jsx";
+import useStyles from "./styles.js";
 
-function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
+function PlaceDetail({
+  isOpen,
+  isClose,
+  dragStart,
+  selected,
+  isOpenGallery,
+  setIsOpenGallery,
+}) {
   const classes = useStyles();
+
   const [listTime, setListTime] = useState([]);
   const [schedule, setSchedule] = useState({
     status: 0,
@@ -103,6 +109,18 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
               src="https://maps.gstatic.com/tactile/pane/default_geocode-1x.png"
               alt=""
             />
+          )}
+
+          {selected?.photos?.length > 0 && (
+            <Box className="hoverImage" onClick={() => setIsOpenGallery(true)}>
+              <img
+                src="https://www.gstatic.com/images/icons/material/system_gm/1x/photo_library_white_18dp.png"
+                alt=""
+              />
+              <Typography variant="body1" component="span">
+                {selected?.photos?.length} photos
+              </Typography>
+            </Box>
           )}
         </Box>
         <Box className={classes.content}>
@@ -277,6 +295,29 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
 
               <li className={classes.item}>
                 <img
+                  src="https://www.gstatic.com/images/icons/material/system_gm/1x/public_gm_blue_24dp.png"
+                  alt=""
+                />
+                <Typography variant="body1">
+                  {selected?.website ? (
+                    <a
+                      href={
+                        selected?.website !== "No website"
+                          ? selected?.website
+                          : "#"
+                      }
+                      target="_blank"
+                    >
+                      {selected?.website}
+                    </a>
+                  ) : (
+                    <Skeleton width={300} />
+                  )}
+                </Typography>
+              </li>
+
+              <li className={classes.item}>
+                <img
                   src="https://www.gstatic.com/images/icons/material/system_gm/1x/label_gm_blue_24dp.png"
                   alt=""
                 />
@@ -292,6 +333,11 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
           </ul>
         </Box>
       </Box>
+      <Gallery
+        isOpen={isOpenGallery}
+        selected={selected}
+        setIsOpenGallery={setIsOpenGallery}
+      />
       {/* <Box
         className={classes.layer}
         onClick={isClose}
