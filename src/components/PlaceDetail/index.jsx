@@ -14,56 +14,53 @@ import { currencyFormat } from "../../hooks/useFormatNumber.jsx";
 function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
   const classes = useStyles();
   const [listTime, setListTime] = useState([]);
+  const [schedule, setSchedule] = useState(null);
 
   // console.log(selected);
   const today = new Date();
   const milisecondToday = today.toLocaleString(
-    `${navigator.language.slice(0, 2)}`,
+    `${navigator.language.slice(0, 2) === "vi" ? "vi" : "en"}`,
     { weekday: "long" }
   );
 
-  // const openTime = new Date(selected?.openHours?.periods[2]?.open.nextDate);
-  // const convertOpenTime = format(openTime, "dd/MM/yyyy");
-  // console.log({ openTime });
-  // console.log({ convertOpenTime });
-  // console.log({ today });
-  // console.log({ milisecondToday });
-
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-
-  // const openingHours = selected?.openHours?.periods
-  //   .map((p) => ({
-  //     day: p.open.day,
-  //     time: `${p.open.time} - ${p.close.time}`,
-  //   }))
-  //   .reduce(
-  //     (acc, current) => {
-  //       let time = acc[current.day];
-  //       time.push(current.time);
-  //       return Object.assign([], acc, { [current.day]: time });
-  //     },
-  //     days.map((d) => [])
-  //   )
-  //   .map((p, index) => {
-  //     const status = p.length == 0 ? "Closed" : p.join(" and ");
-  //     return `${days[index]}: ${status}`;
-  //   });
-
-  // console.log(openingHours);
+  const formatTime = (number) => {
+    let ampm = number >= 12 ? "PM" : "AM";
+    number = number % 12;
+    number = number ? number : 12; // the hour '0' should be '12'
+    let strTime = number + ampm;
+    return strTime;
+  };
 
   useEffect(() => {
+    if (selected?.openHours?.weekdayText) {
+      selected?.openHours?.periods?.forEach((x) => {
+        const todayText = new Date(x.open.nextDate);
+        const todayTextLocale = todayText.toLocaleString(
+          `${navigator.language.slice(0, 2) === "vi" ? "vi" : "en"}`,
+          { weekday: "long" }
+        );
+
+        if (
+          todayTextLocale.includes(milisecondToday) &&
+          selected?.openHours?.isOpen === "Open"
+        ) {
+          setSchedule({
+            status: 0,
+            time: x.close,
+          });
+        } else {
+          setSchedule({
+            status: 1,
+            time: x.open,
+          });
+        }
+      });
+    }
+
     const sortedArr = selected?.openHours?.weekdayText?.reduce(
       (acc, element) => {
         // console.log({ acc });
-        // console.log(element.split(":")[0]);
+        // console.log(element.split(","));
         if (element.split(":")[0].includes(milisecondToday)) {
           return [element, ...acc];
         }
@@ -219,18 +216,25 @@ function PlaceDetail({ isOpen, isClose, dragStart, selected }) {
                             ? selected?.openHours.isOpen
                             : ""}
                         </Typography>
+
                         <Typography
                           variant="body1"
                           component="span"
                           className={classes.timeText}
                         >
-                          {selected?.openHours?.periods[0].open.time ===
-                            "0000" &&
-                            `${
-                              navigator.language.slice(0, 2) === "vi"
-                                ? " Mở cả ngày"
-                                : "Opens 24 hours"
-                            }`}
+                          {schedule?.time && schedule?.time?.time !== "0000"
+                            ? `${
+                                schedule?.time?.status === 1
+                                  ? `Close  ${formatTime(
+                                      schedule?.time?.hours
+                                    )}`
+                                  : `Opens ${formatTime(schedule?.time?.hours)}`
+                              } `
+                            : `${
+                                navigator.language.slice(0, 2) === "vi"
+                                  ? " Mở cả ngày"
+                                  : "Opens 24 hours"
+                              }`}
                         </Typography>
                       </Typography>
                     </AccordionSummary>

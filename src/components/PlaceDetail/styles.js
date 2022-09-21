@@ -7,12 +7,30 @@ export default makeStyles((theme) => ({
     transition: "0.4s",
     height: "100%",
     width: "100%",
-    overflowY: "auto",
+    paddingBottom: 60,
+    overflowY: 'auto',
+    
+    "&:hover": {
+      overflowY: "auto",
+    },
+
+    "&::-webkit-scrollbar": {
+      width: 4,
+    },
+    "&::-webkit-scrollbar-track ": {
+      background: "#f1f1f1",
+    },
+    "&::-webkit-scrollbar-thumb ": {
+      background: "#888",
+    },
+    "&::-webkit-scrollbar-thumb:hover ": {
+      background: "#555",
+    },
   },
 
   image: {
     "& img": {
-      width: "100%",
+      width: 425,
       maxHeight: 300,
       minHeight: 300,
       objectFit: "cover",
@@ -190,6 +208,7 @@ export default makeStyles((theme) => ({
     color: "#3C4043",
     position: "relative",
     marginLeft: 16,
+    fontWeight: '500',
 
     "&::before": {
       content: '"."',
@@ -210,12 +229,12 @@ export default makeStyles((theme) => ({
     color: "#70757a",
     fontSize: 14,
     marginRight: 4,
-    fontWeight: 500
+    fontWeight: 500,
   },
   reviewRating: {
     color: "#1a73e8",
     fontSize: 14,
     fontWeight: 500,
-    marginLeft: 4
-  }
+    marginLeft: 4,
+  },
 }));
