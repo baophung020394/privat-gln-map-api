@@ -199,24 +199,24 @@ function Map() {
     // rtl: true,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
-    // responsive: [
-    //   {
-    //     breakpoint: 1198,
-    //     settings: {
-    //       slidesToShow: 2,
-    //       slidesToScroll: 2,
-    //       rows: 2,
-    //     },
-    //   },
-    //   {
-    //     breakpoint: 576,
-    //     settings: {
-    //       slidesToShow: 1,
-    //       slidesToScroll: 1,
-    //       rows: 1,
-    //     },
-    //   },
-    // ],
+    responsive: [
+      {
+        breakpoint: 1198,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          rows: 2,
+        },
+      },
+      {
+        breakpoint: 576,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          rows: 1,
+        },
+      },
+    ],
   };
 
   const {
@@ -677,74 +677,74 @@ function Map() {
               <>
                 <Box className={classes.wrapBtnsNear}>
                   <Slider ref={refSlide} {...settings}>
-                    <Button
-                      className={classes.btnOption}
+                    <button
+                      className="slideBtn"
                       onClick={() => {
                         setIsCloseNear(true);
                         nearMe("atm");
                       }}
                     >
                       ATM
-                    </Button>
+                    </button>
 
-                    <Button
-                      className={classes.btnOption}
+                    <button
+                      className="slideBtn"
                       onClick={() => {
                         setIsCloseNear(true);
                         nearMe("bank");
                       }}
                     >
                       Bank
-                    </Button>
+                    </button>
 
-                    <Button
-                      className={classes.btnOption}
+                    <button
+                      className="slideBtn"
                       onClick={() => {
                         setIsCloseNear(true);
                         nearMe("restaurant");
                       }}
                     >
                       Restaurant
-                    </Button>
-                    <Button
-                      className={classes.btnOption}
+                    </button>
+                    <button
+                      className="slideBtn"
                       onClick={() => {
                         setIsCloseNear(true);
                         nearMe("hotel");
                       }}
                     >
                       Hotel
-                    </Button>
-                    <Button
-                      className={classes.btnOption}
+                    </button>
+                    <button
+                      className="slideBtn"
                       onClick={() => {
                         setIsCloseNear(true);
                         nearMe("cafe");
                       }}
                     >
                       Cafe
-                    </Button>
-                    <Button
-                      className={classes.btnOption}
+                    </button>
+                    <button
+                      className="slideBtn"
                       onClick={() => {
                         setIsCloseNear(true);
                         nearMe("hospital");
                       }}
                     >
                       Hospital
-                    </Button>
-                    <Button
-                      className={classes.btnOption}
+                    </button>
+                    <button
+                      className="slideBtn"
                       onClick={() => {
                         setIsCloseNear(true);
                         nearMe("gas_station");
                       }}
                     >
                       Gas station
-                    </Button>
+                    </button>
                     {showMapSaved ? (
-                      <Button
-                        className={classes.btnOption}
+                      <button
+                        className="slideBtn"
                         onClick={() => {
                           handleShowMarkSaved();
                           localStorage.setItem(
@@ -754,10 +754,10 @@ function Map() {
                         }}
                       >
                         Show map saved
-                      </Button>
+                      </button>
                     ) : (
-                      <Button
-                        className={classes.btnOption}
+                      <button
+                        className="slideBtn"
                         onClick={() => {
                           handleShowMarkSaved();
                           localStorage.setItem(
@@ -767,11 +767,11 @@ function Map() {
                         }}
                       >
                         Show map saved
-                      </Button>
+                      </button>
                     )}
 
-                    <Button
-                      className={classes.btnOption}
+                    <button
+                      className="slideBtn"
                       onClick={() => {
                         localStorage.removeItem("listItemSaved");
                         setSelected(null);
@@ -782,7 +782,7 @@ function Map() {
                       }}
                     >
                       Clear map saved
-                    </Button>
+                    </button>
                   </Slider>
                 </Box>
               </>
