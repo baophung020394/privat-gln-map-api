@@ -606,7 +606,6 @@ function Map() {
                 key={`${marker.lat}-${index}`}
                 position={{ lat: marker.lat, lng: marker.lng }}
                 onClick={() => {
-                  console.log({ marker });
                   setSelected(marker);
                   setIsOpenPlace(true);
                   setIsOpenInfo(true);

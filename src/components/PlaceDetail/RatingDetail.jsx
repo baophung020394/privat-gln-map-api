@@ -9,6 +9,8 @@ import useStyles from "./styles.js";
 function RatingDetail({ isOpen, selected, setIsOpenRatingDetail }) {
   const classes = useStyles();
 
+  console.log({ selected });
+  console.log(selected?.rating);
   return (
     <Box
       className={classes.galleryContainer}
@@ -87,25 +89,29 @@ function RatingDetail({ isOpen, selected, setIsOpenRatingDetail }) {
             </Box>
           </Box>
           <Box className={classes.rightPoint}>
-            <Typography variant="body1" component="h1">
-              {selected?.rating}
-            </Typography>
-            <Rating
-              name="half-rating-read"
-              value={
-                Math.floor(selected?.rating) / selected?.rating < 1
-                  ? Math.floor(selected?.rating) + 0.5
-                  : selected?.rating
-              }
-              defaultValue={
-                Math.floor(selected?.rating) / selected?.rating < 1
-                  ? Math.floor(selected?.rating) + 0.5
-                  : selected?.rating
-              }
-              precision={0.5}
-              readOnly
-              size="small"
-            />
+            {selected?.rating && (
+              <>
+                <Typography variant="body1" component="h1">
+                  {selected?.rating}
+                </Typography>
+                <Rating
+                  name="half-rating-read"
+                  value={
+                    Math.floor(selected?.rating) / selected?.rating < 1
+                      ? Math.floor(selected?.rating) + 0.5
+                      : selected?.rating
+                  }
+                  defaultValue={
+                    Math.floor(selected?.rating) / selected?.rating < 1
+                      ? Math.floor(selected?.rating) + 0.5
+                      : selected?.rating
+                  }
+                  precision={0.5}
+                  readOnly
+                  size="small"
+                />
+              </>
+            )}
             <Typography
               variant="body1"
               component="span"
