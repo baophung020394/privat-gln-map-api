@@ -19,6 +19,7 @@ const Locate = forwardRef(
     };
 
     const handleGetLocation = async () => {
+      ref.current.setZoom(15);
       setCurMarker(null);
       await navigator.geolocation.getCurrentPosition(
         async (position) => {
@@ -92,10 +93,16 @@ const Locate = forwardRef(
             }
           });
 
-          setCenterChanged({
+          ref.current.setZoom(17);
+          ref.current.panTo({
             lat: position?.coords.latitude,
             lng: position?.coords.longitude,
           });
+
+          // setCenterChanged({
+          //   lat: position?.coords.latitude,
+          //   lng: position?.coords.longitude,
+          // });
         },
         () => null,
         options

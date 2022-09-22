@@ -79,6 +79,8 @@ export default makeStyles((theme) => ({
 
   optionsChoose: {
     display: "flex",
+    width: "100%",
+    justifyContent: "flex-end",
 
     "& button": {
       background: "#fff",
@@ -102,6 +104,7 @@ export default makeStyles((theme) => ({
   },
 
   btnOption: {
+    marginRight: 8,
     "&:hover": {
       background: "#fff",
     },
@@ -112,7 +115,6 @@ export default makeStyles((theme) => ({
     alignItems: "center",
     background: "#fff",
     borderRadius: 8,
-    minWidth: 200,
     boxShadow: "0 2px 4px rgb(0 0 0 / 20%), 0 -1px 0px rgb(0 0 0 / 2%)",
     transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
     padding: "10px 16px",
@@ -216,6 +218,37 @@ export default makeStyles((theme) => ({
       height: 25,
       borderRadius: "100%",
       objectFit: "contain",
+    },
+  },
+
+  wrapBtnsNear: {
+    width: "100%",
+    maxWidth: 400,
+    marginRight: 30,
+
+    "& button": {
+      marginRight: 8,
+    },
+    "& .section-outstanding__slider": {
+      // display: "none",
+      maxHeight: 52,
+
+      "& .slick-prev": {
+        "&::before": {
+          color: "#000",
+        },
+      },
+      "& .slick-next": {
+        "&::before": {
+          color: "#000",
+        },
+      },
+      "& .slick-slide": {
+        marginRight: 8,
+      },
+      // "& .slick-list": {
+      //   margin: "0 -27px",
+      // },
     },
   },
 }));

@@ -16,6 +16,12 @@ import PlacesAutocomplete from "../Places";
 import useStyles from "./styles.js";
 import axios from "axios";
 import Directions from "../Directions";
+import NearByMe from "./NearByMe";
+import ListMarkerInput from "./ListMarkerInput";
+import InforWindowCustom from "./InforWindowCustom";
+import CurrentMarker from "./CurrentMarker";
+
+import Slider from "react-slick/lib/slider";
 
 const imageMaker = {
   market:
@@ -96,34 +102,48 @@ const CATEGORIES = [
   },
 ];
 
-const TYPES_CATEGORY = [
-  {
-    id: 0,
-    name: "Establishment",
-    value: "establishment",
-    urlImg: "",
-  },
-  {
-    id: 1,
-    name: "Point Of Interest",
-    value: "point_of_interest",
-    urlImg: "",
-  },
-  {
-    id: 2,
-    name: "Food",
-    value: "food",
-    urlImg: "",
-  },
-  {
-    id: 1,
-    name: "Store",
-    value: "store",
-    urlImg: "",
-  },
-];
+function SampleNextArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{
+        ...style,
+        display: "flex",
+        background: "#fff",
+        borderRadius: "100%",
+        width: 20,
+        height: 20,
+        justifyContent: "center !important",
+        alignContent: "center !important",
+      }}
+      onClick={onClick}
+    />
+  );
+}
+
+function SamplePrevArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{
+        ...style,
+        display: "flex",
+        background: "#fff",
+        borderRadius: "100%",
+        width: 20,
+        height: 20,
+        justifyContent: "center !important",
+        alignContent: "center !important",
+      }}
+      onClick={onClick}
+    />
+  );
+}
 
 function Map() {
+  const [isCloseNear, setIsCloseNear] = useState(false);
   const [curMarker, setCurMarker] = useState();
   const [isOpenGallery, setIsOpenGallery] = useState(false);
   const [isOpenRatingDetail, setIsOpenRatingDetail] = useState(false);
@@ -144,7 +164,8 @@ function Map() {
   const [autocomplete, setAutocomplete] = useState("");
   const [autocompleteDes, setAutocompleteDes] = useState("");
   const [categ, setCateg] = useState(localStorage.getItem("categ"));
-
+  const [nearByMe, setNearByMe] = useState([]);
+  const [selectNearByMe, setSelectNearByMe] = useState(null);
   const [storeMarkerSaved, setStoreMarkerSaved] = useState(
     JSON.parse(localStorage.getItem("listItemSaved")) || []
   );
@@ -153,7 +174,50 @@ function Map() {
     JSON.parse(localStorage.getItem("showMapSaved"))
   );
 
+  const refSlide = useRef({});
+
   let libraries = ["places"];
+
+  const next = () => {
+    console.log("phai");
+    refSlide.current.slickNext();
+  };
+
+  const previous = () => {
+    console.log("trai");
+    refSlide.current.slickPrev();
+  };
+
+  const settings = {
+    className: "section-outstanding__slider",
+    dots: false,
+    infinite: true,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: false,
+    autoplaySpeed: 2000,
+    // rtl: true,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
+    // responsive: [
+    //   {
+    //     breakpoint: 1198,
+    //     settings: {
+    //       slidesToShow: 2,
+    //       slidesToScroll: 2,
+    //       rows: 2,
+    //     },
+    //   },
+    //   {
+    //     breakpoint: 576,
+    //     settings: {
+    //       slidesToShow: 1,
+    //       slidesToScroll: 1,
+    //       rows: 1,
+    //     },
+    //   },
+    // ],
+  };
 
   const {
     listMarkerInput,
@@ -243,11 +307,6 @@ function Map() {
     setIsOpenInfoDrag(true);
     setIsSaved(false);
 
-    mapRef.current.panTo({
-      lat: mapRef?.current?.center?.lat(),
-      lng: mapRef?.current?.center?.lng(),
-    });
-
     const res = await axios.get(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${mapRef?.current?.center?.lat()},${mapRef?.current?.center?.lng()}&key=${
         process.env.REACT_APP_GOOGLE_MAPS_API_KEY
@@ -266,7 +325,7 @@ function Map() {
       if (
         status ===
           google.maps.places.PlacesServiceStatus.OK /*global google*/ &&
-        place 
+        place
         // &&
         // place.geometry &&
         // place.geometry.location
@@ -442,6 +501,72 @@ function Map() {
     ]);
   };
 
+  const nearMe = async (type) => {
+    mapRef.current.setZoom(15);
+
+    const options = {
+      enableHighAccuracy: false,
+      timeout: 5000,
+      maximumAge: Infinity,
+    };
+    setCurMarker(null);
+
+    await navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const res = await axios.get(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position?.coords.latitude},${position?.coords.longitude}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
+        );
+
+        console.log({ res });
+        const params = {
+          lat: res?.data?.results[0]?.geometry.location.lat,
+          lng: res?.data?.results[0]?.geometry.location.lng,
+        };
+        const request = {
+          location: params,
+          radius: "5000",
+          type: [`${type}`],
+        };
+
+        const service = new google.maps.places.PlacesService(
+          mapRef.current
+        ); /*global google*/
+
+        service.nearbySearch(request, function (place, status) {
+          if (
+            status ===
+              google.maps.places.PlacesServiceStatus.OK /*global google*/ &&
+            place
+          ) {
+            place?.forEach((x) => {
+              setNearByMe((current) => [
+                ...current,
+                {
+                  name: x?.name,
+                  lat: x?.geometry?.location?.lat(),
+                  lng: x?.geometry?.location?.lng(),
+                  icons: {
+                    icon: x?.icon,
+                    url: x?.icon_mask_base_uri,
+                    backgroundColor: x?.icon_background_color,
+                  },
+                  imgSave: CATEGORIES[0]?.urlImg,
+                },
+              ]);
+            });
+          }
+        });
+
+        mapRef.current.setZoom(15);
+        mapRef.current.panTo({
+          lat: position?.coords.latitude,
+          lng: position?.coords.longitude,
+        });
+      },
+      () => null,
+      options
+    );
+  };
   /**
    * Show mark saved
    */
@@ -487,14 +612,6 @@ function Map() {
       setShowMapSaved(JSON.parse(localStorage.getItem("showMapSaved")));
     }
   }, [isShow]);
-
-  // useEffect(() => {
-  //   if (navigator.languages !== undefined) {
-  //     console.log(navigator.languages);
-  //     console.log(navigator.language.slice(0, 2));
-  //     console.log(navigator.userAgent);
-  //   }
-  // }, []);
 
   if (!isLoaded) return <div>Loading...</div>;
 
@@ -556,210 +673,226 @@ function Map() {
           </Box>
 
           <Box className={classes.optionsChoose}>
-            {showMapSaved ? (
-              <Button
-                className={classes.btnOption}
-                onClick={() => {
-                  handleShowMarkSaved();
-                  localStorage.setItem(
-                    "showMapSaved",
-                    `${JSON.stringify(false)}`
-                  );
-                }}
-              >
-                Show map saved
-              </Button>
+            {!isCloseNear ? (
+              <>
+                <Box className={classes.wrapBtnsNear}>
+                  <Slider ref={refSlide} {...settings}>
+                    <Button
+                      className={classes.btnOption}
+                      onClick={() => {
+                        setIsCloseNear(true);
+                        nearMe("atm");
+                      }}
+                    >
+                      ATM
+                    </Button>
+
+                    <Button
+                      className={classes.btnOption}
+                      onClick={() => {
+                        setIsCloseNear(true);
+                        nearMe("bank");
+                      }}
+                    >
+                      Bank
+                    </Button>
+
+                    <Button
+                      className={classes.btnOption}
+                      onClick={() => {
+                        setIsCloseNear(true);
+                        nearMe("restaurant");
+                      }}
+                    >
+                      Restaurant
+                    </Button>
+                    <Button
+                      className={classes.btnOption}
+                      onClick={() => {
+                        setIsCloseNear(true);
+                        nearMe("hotel");
+                      }}
+                    >
+                      Hotel
+                    </Button>
+                    <Button
+                      className={classes.btnOption}
+                      onClick={() => {
+                        setIsCloseNear(true);
+                        nearMe("cafe");
+                      }}
+                    >
+                      Cafe
+                    </Button>
+                    <Button
+                      className={classes.btnOption}
+                      onClick={() => {
+                        setIsCloseNear(true);
+                        nearMe("hospital");
+                      }}
+                    >
+                      Hospital
+                    </Button>
+                    <Button
+                      className={classes.btnOption}
+                      onClick={() => {
+                        setIsCloseNear(true);
+                        nearMe("gas_station");
+                      }}
+                    >
+                      Gas station
+                    </Button>
+                    {showMapSaved ? (
+                      <Button
+                        className={classes.btnOption}
+                        onClick={() => {
+                          handleShowMarkSaved();
+                          localStorage.setItem(
+                            "showMapSaved",
+                            `${JSON.stringify(false)}`
+                          );
+                        }}
+                      >
+                        Show map saved
+                      </Button>
+                    ) : (
+                      <Button
+                        className={classes.btnOption}
+                        onClick={() => {
+                          handleShowMarkSaved();
+                          localStorage.setItem(
+                            "showMapSaved",
+                            `${JSON.stringify(true)}`
+                          );
+                        }}
+                      >
+                        Show map saved
+                      </Button>
+                    )}
+
+                    <Button
+                      className={classes.btnOption}
+                      onClick={() => {
+                        localStorage.removeItem("listItemSaved");
+                        setSelected(null);
+                        setCurMarker(null);
+                        setStoreMarkerSaved([]);
+                        setListMarkerInput([]);
+                        window.location.reload();
+                      }}
+                    >
+                      Clear map saved
+                    </Button>
+                  </Slider>
+                </Box>
+              </>
             ) : (
               <Button
                 className={classes.btnOption}
                 onClick={() => {
-                  handleShowMarkSaved();
-                  localStorage.setItem(
-                    "showMapSaved",
-                    `${JSON.stringify(true)}`
-                  );
+                  setIsCloseNear(false);
+                  setNearByMe([]);
                 }}
               >
-                Show map saved
+                {nearByMe?.length > 0 ? (
+                  "Close filter"
+                ) : (
+                  <div className="loaders">
+                    <div className="loader">
+                      <span className="loader__element"></span>
+                      <span className="loader__element"></span>
+                      <span className="loader__element"></span>
+                    </div>
+                  </div>
+                )}
               </Button>
             )}
-
-            <Button
-              className={classes.btnOption}
-              onClick={() => {
-                localStorage.removeItem("listItemSaved");
-                setSelected(null);
-                setCurMarker(null);
-                setStoreMarkerSaved([]);
-                setListMarkerInput([]);
-                window.location.reload();
-              }}
-            >
-              Clear map saved
-            </Button>
           </Box>
         </Box>
 
-        {listMarkerInput &&
-          listMarkerInput
-            .filter((x) => x?.status === "new")
-            .map((marker, index) => (
+        {nearByMe?.length > 0 &&
+          nearByMe?.map((x, index) => {
+            return (
               <Marker
-                // draggable={true}
-                key={`${marker.lat}-${index}`}
-                position={{ lat: marker.lat, lng: marker.lng }}
+                key={`${x?.lat}-${index}`}
+                position={{
+                  lat: x?.lat,
+                  lng: x?.lng,
+                }}
                 onClick={() => {
-                  setSelected(marker);
-                  setIsOpenPlace(true);
-                  setIsOpenInfo(true);
-                  setIsOpenInfoDrag(false);
-                  setIsSaved(false);
+                  setSelectNearByMe(x);
+                  // setIsOpenPlace(true);
+                  // setIsOpenInfo(true);
+                  // setIsOpenInfoDrag(false);
+                  // setIsSaved(false);
                 }}
                 icon={{
-                  url: `https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png`,
+                  url: x?.icons?.icon,
                   origin: new window.google.maps.Point(0, 0),
                   anchor: new window.google.maps.Point(15, 15),
                   scaledSize: new window.google.maps.Size(30, 30),
                 }}
               />
-            ))}
+            );
+          })}
 
-        {isOpenInfo && selected?.status === "new" ? (
+        {selectNearByMe ? (
           <InfoWindow
             zIndex={2}
-            position={{ lat: selected?.lat, lng: selected?.lng }}
+            position={{ lat: selectNearByMe?.lat, lng: selectNearByMe?.lng }}
             onCloseClick={() => {
-              setIsOpenInfo(false);
+              setSelectNearByMe(null);
             }}
           >
             <div className="wrapper-info">
-              <h3>{selected?.name?.split(",")[0]} </h3>
-              <p>Ward: {selected?.ward}</p>
-              <p>Disctrict: {selected?.district}</p>
-              <p>City: {selected?.city}</p>
-              <a href={selected?.toUrl} target="_blank">
-                View on Google Maps
-              </a>
-              <select
-                ref={selectRef}
-                onChange={(e) => {
-                  setSelected({
-                    ...selected,
-                    index: selectRef.current.selectedIndex - 1,
-                    category: selectRef.current.value,
-                    nameCategory: selectRef.current.value
-                      ? e.nativeEvent.target[selectRef.current.selectedIndex]
-                          .text
-                      : e.nativeEvent.target[0].text,
-                  });
-                  if (categ === "all") return;
-                  setCateg(selectRef.current.value);
-                  localStorage.setItem("categ", selectRef.current.value);
-                }}
-              >
-                <option>-Choose Place--</option>
-                {CATEGORIES.map((x, idx) => (
-                  <option value={x.value} key={`${idx}-${x?.value}`}>
-                    {x?.name}
-                  </option>
-                ))}
-              </select>
-
-              {selected?.status === "new" ? (
-                <Button
-                  className={classes.save}
-                  onClick={() => {
-                    handleSaveMarker(selected);
-                    setIsSaved(true);
-                  }}
-                >
-                  Save
-                </Button>
-              ) : null}
+              <h3>{selectNearByMe?.name} </h3>
             </div>
           </InfoWindow>
         ) : null}
 
+        <ListMarkerInput
+          listMarkerInput={listMarkerInput}
+          setSelected={setSelected}
+          setIsOpenPlace={setIsOpenPlace}
+          setIsOpenInfo={setIsOpenInfo}
+          setIsOpenInfoDrag={setIsOpenInfoDrag}
+          setIsSaved={setIsSaved}
+        />
+
+        {isOpenInfo && selected?.status === "new" ? (
+          <InforWindowCustom
+            categ={categ}
+            selected={selected}
+            setSelected={setSelected}
+            setIsOpenInfo={setIsOpenInfo}
+            handleSaveMarker={handleSaveMarker}
+            listCategory={CATEGORIES}
+            setCateg={setCateg}
+            ref={selectRef}
+            setIsSaved={setIsSaved}
+          />
+        ) : null}
+
         {curMarker ? (
-          <div
-            className={`curMarker ${classes.currentMark} ${
-              dragStart ? "shadow" : ""
-            }`}
-            style={{
-              backgroundImage: `url(${imageMaker?.marker})`,
-            }}
-            onClick={() => {
-              setIsOpenPlace(true);
-              setIsOpenInfo(false);
-              setIsOpenInfoDrag(true);
-              setSelected(null);
-            }}
-          >
-            {!dragStart && isOpenInfoDrag && curMarker?.status === "new" ? (
-              <InfoWindow
-                zIndex={2}
-                position={{ lat: curMarker?.lat, lng: curMarker?.lng }}
-                onCloseClick={() => {
-                  setIsOpenInfoDrag(false);
-                }}
-              >
-                <div className="wrapper-info">
-                  <h3>{curMarker?.name?.split(",")[0]} </h3>
-                  <p>Ward: {curMarker?.ward}</p>
-                  <p>Disctrict: {curMarker?.district}</p>
-                  <p>City: {curMarker?.city}</p>
-                  <a href={curMarker?.toUrl} target="_blank">
-                    View on Google Maps
-                  </a>
-                  <p href={curMarker?.toUrl} target="_blank">
-                    {curMarker?.lat} - {curMarker?.lng}
-                  </p>
-
-                  <select
-                    ref={selectRef}
-                    onChange={(e) => {
-                      setCurMarker({
-                        ...curMarker,
-                        index: selectRef.current.selectedIndex - 1,
-                        category: selectRef.current.value,
-                        nameCategory: selectRef.current.value
-                          ? e.nativeEvent.target[
-                              selectRef.current.selectedIndex
-                            ].text
-                          : e.nativeEvent.target[0].text,
-                      });
-                      if (categ === "all") return;
-                      setCateg(selectRef.current.value);
-                      localStorage.setItem("categ", selectRef.current.value);
-                    }}
-                  >
-                    <option>-Choose Place--</option>
-                    {CATEGORIES.map((x, idx) => (
-                      <option
-                        value={x.value}
-                        key={`${idx}-${x?.value}`}
-                        data-attr={x.name}
-                      >
-                        {x?.name}
-                      </option>
-                    ))}
-                  </select>
-
-                  {curMarker?.status === "new" ? (
-                    <Button
-                      className={classes.save}
-                      onClick={() => {
-                        handleSaveMarkerCur(curMarker);
-                        setIsSaved(true);
-                      }}
-                    >
-                      Save
-                    </Button>
-                  ) : null}
-                </div>
-              </InfoWindow>
-            ) : null}
-          </div>
+          <CurrentMarker
+            handleSaveMarkerCur={handleSaveMarkerCur}
+            setCurMarker={setCurMarker}
+            setIsOpenInfoDrag={setIsOpenInfoDrag}
+            setIsOpenPlace={setIsOpenPlace}
+            dragStart={dragStart}
+            curMarker={curMarker}
+            imageMaker={imageMaker}
+            isOpenInfoDrag={isOpenInfoDrag}
+            categ={categ}
+            selected={selected}
+            setSelected={setSelected}
+            setIsOpenInfo={setIsOpenInfo}
+            handleSaveMarker={handleSaveMarker}
+            listCategory={CATEGORIES}
+            setCateg={setCateg}
+            ref={selectRef}
+            setIsSaved={setIsSaved}
+          />
         ) : null}
 
         {storeMarkerSaved &&

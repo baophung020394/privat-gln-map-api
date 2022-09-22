@@ -28,7 +28,8 @@ function Gallery({ isOpen, selected, setIsOpenGallery }) {
 
       <Box className={classes.contentGallery}>
         <Box className={classes.listImages}>
-          {selected?.photos?.length > 0 &&
+          {selected?.photos &&
+            selected?.photos?.length > 0 &&
             selected?.photos.map((x, idx) => <img key={idx} src={x} />)}
         </Box>
       </Box>

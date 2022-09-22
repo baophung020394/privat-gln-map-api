@@ -71,3 +71,50 @@
 .gm-style-iw.gm-style-iw-c:nth-child(6) {
   display: none;
 }
+
+:root {
+  --main-color: #fff;
+  --point-color: #555;
+  --size: 2px;
+}
+.loaders {
+  position: "relative"; 
+  height: 32px; 
+  width: 100%;
+  border-radius: 32px;
+}
+.loader {
+  border-radius: 32px;
+  background-color: var(--main-color);
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0; left: 0;
+  display: flex;
+  align-items: center;
+  align-content: center; 
+  justify-content: center;  
+  z-index: 100000;
+}
+
+.loader__element {
+  border-radius: 100%;
+  border: var(--size) solid var(--point-color);
+  margin: calc(var(--size)*2);
+}
+
+.loader__element:nth-child(1) {
+  animation: preloader .6s ease-in-out alternate infinite;
+}
+.loader__element:nth-child(2) {
+  animation: preloader .6s ease-in-out alternate .2s infinite;
+}
+
+.loader__element:nth-child(3) {
+  animation: preloader .6s ease-in-out alternate .4s infinite;
+}
+
+@keyframes preloader {
+  100% { transform: scale(2); }
+}
