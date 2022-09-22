@@ -266,10 +266,12 @@ function Map() {
       if (
         status ===
           google.maps.places.PlacesServiceStatus.OK /*global google*/ &&
-        place &&
-        place.geometry &&
-        place.geometry.location
+        place 
+        // &&
+        // place.geometry &&
+        // place.geometry.location
       ) {
+        console.log({ place });
         let listPhoto = [];
         if (place?.photos) {
           place?.photos.forEach((x) => listPhoto.push(x.getUrl()));
@@ -339,6 +341,7 @@ function Map() {
    * @param {*} selectMar
    */
   const handleSaveMarker = (selectMar) => {
+    console.log({ selectMar });
     setListMarkerInput(
       listMarkerInput?.map((x) =>
         x?.lng === selectMar?.lng ? { ...x, status: "old" } : x
@@ -377,8 +380,8 @@ function Map() {
         },
         icons: {
           icon: selectMar?.icons.icon,
-          url: selectMar?.icons.icon_mask_base_uri,
-          backgroundColor: selectMar?.icons.icon_background_color,
+          url: selectMar?.icons.url,
+          backgroundColor: selectMar?.icons.backgroundColor,
         },
         phoneNumber: selectMar?.phoneNumber,
         nameCategory: selectMar?.index
@@ -424,8 +427,8 @@ function Map() {
         },
         icons: {
           icon: curMar?.icons.icon,
-          url: curMar?.icons.icon_mask_base_uri,
-          backgroundColor: curMar?.icons.icon_background_color,
+          url: curMar?.icons.url,
+          backgroundColor: curMar?.icons.backgroundColor,
         },
         phoneNumber: curMar?.phoneNumber,
         category: curMar?.category ? curMar?.category : "hotel",
@@ -485,13 +488,13 @@ function Map() {
     }
   }, [isShow]);
 
-  useEffect(() => {
-    if (navigator.languages !== undefined) {
-      console.log(navigator.languages);
-      console.log(navigator.language.slice(0, 2));
-      console.log(navigator.userAgent);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (navigator.languages !== undefined) {
+  //     console.log(navigator.languages);
+  //     console.log(navigator.language.slice(0, 2));
+  //     console.log(navigator.userAgent);
+  //   }
+  // }, []);
 
   if (!isLoaded) return <div>Loading...</div>;
 

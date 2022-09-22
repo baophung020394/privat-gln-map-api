@@ -52,7 +52,7 @@ const PlacesAutocomplete = forwardRef(
       const objLo = await getLatLng(results[0]);
       let newObj = { ...objLo };
 
-      console.log({ results });
+      // console.log({ results });
 
       const request = {
         placeId: results[0]?.place_id,

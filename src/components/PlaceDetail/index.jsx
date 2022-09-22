@@ -21,7 +21,7 @@ function PlaceDetail({
   setIsOpenGallery,
   setIsOpenRatingDetail,
 }) {
-  // console.log({ selected });
+  console.log({ selected });
   // console.log(selected?.rating);
   const classes = useStyles();
 
@@ -132,8 +132,8 @@ function PlaceDetail({
           <Box className={classes.top}>
             <img
               src={
-                selected?.imgSave
-                  ? selected?.imgSave
+                selected?.icons
+                  ? selected?.icons.icon
                   : "https://xuonginthanhpho.com/wp-content/uploads/2020/03/map-marker-icon.png"
               }
               className={classes.iconTitle}

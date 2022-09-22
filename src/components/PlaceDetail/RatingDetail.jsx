@@ -6,11 +6,23 @@ import { format, formatDistance, formatRelative, subDays } from "date-fns";
 
 import useStyles from "./styles.js";
 
+function relativeDays(timestamp) {
+  const rtf = new Intl.RelativeTimeFormat("en", {
+    numeric: "auto",
+  });
+  const oneDayInMs = 1000 * 60 * 60 * 24;
+  const daysDifference = Math.round(
+    (timestamp - new Date().getTime()) / oneDayInMs
+  );
+
+  return rtf.format(daysDifference, "day");
+}
+
 function RatingDetail({ isOpen, selected, setIsOpenRatingDetail }) {
   const classes = useStyles();
 
-  console.log({ selected });
-  console.log(selected?.rating);
+  // console.log({ selected });
+  // console.log(selected?.rating);
   return (
     <Box
       className={classes.galleryContainer}

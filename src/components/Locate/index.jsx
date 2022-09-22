@@ -26,8 +26,6 @@ const Locate = forwardRef(
             `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position?.coords.latitude},${position?.coords.longitude}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
           );
 
-          console.log({ res });
-
           const request = {
             placeId: res?.data.results[0]?.place_id,
           };
