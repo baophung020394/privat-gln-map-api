@@ -742,49 +742,49 @@ function Map() {
                     >
                       Gas station
                     </button>
-                    {showMapSaved ? (
-                      <button
-                        className="slideBtn"
-                        onClick={() => {
-                          handleShowMarkSaved();
-                          localStorage.setItem(
-                            "showMapSaved",
-                            `${JSON.stringify(false)}`
-                          );
-                        }}
-                      >
-                        Show map saved
-                      </button>
-                    ) : (
-                      <button
-                        className="slideBtn"
-                        onClick={() => {
-                          handleShowMarkSaved();
-                          localStorage.setItem(
-                            "showMapSaved",
-                            `${JSON.stringify(true)}`
-                          );
-                        }}
-                      >
-                        Show map saved
-                      </button>
-                    )}
-
-                    <button
-                      className="slideBtn"
-                      onClick={() => {
-                        localStorage.removeItem("listItemSaved");
-                        setSelected(null);
-                        setCurMarker(null);
-                        setStoreMarkerSaved([]);
-                        setListMarkerInput([]);
-                        window.location.reload();
-                      }}
-                    >
-                      Clear map saved
-                    </button>
                   </Slider>
                 </Box>
+                {showMapSaved ? (
+                  <button
+                    className="slideBtn"
+                    onClick={() => {
+                      handleShowMarkSaved();
+                      localStorage.setItem(
+                        "showMapSaved",
+                        `${JSON.stringify(false)}`
+                      );
+                    }}
+                  >
+                    Show
+                  </button>
+                ) : (
+                  <button
+                    className="slideBtn"
+                    onClick={() => {
+                      handleShowMarkSaved();
+                      localStorage.setItem(
+                        "showMapSaved",
+                        `${JSON.stringify(true)}`
+                      );
+                    }}
+                  >
+                    Show
+                  </button>
+                )}
+
+                <button
+                  className="slideBtn"
+                  onClick={() => {
+                    localStorage.removeItem("listItemSaved");
+                    setSelected(null);
+                    setCurMarker(null);
+                    setStoreMarkerSaved([]);
+                    setListMarkerInput([]);
+                    window.location.reload();
+                  }}
+                >
+                  Clear
+                </button>
               </>
             ) : (
               <Button

@@ -222,7 +222,7 @@ export default makeStyles((theme) => ({
 
   wrapBtnsNear: {
     width: "100%",
-    maxWidth: 400,
+    maxWidth: 300,
     marginRight: 30,
     "& .slideBtn": {
       color: "rgb(60,64,67)",
