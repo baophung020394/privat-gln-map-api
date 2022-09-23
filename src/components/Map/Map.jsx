@@ -22,6 +22,7 @@ import InforWindowCustom from "./InforWindowCustom";
 import CurrentMarker from "./CurrentMarker";
 
 import Slider from "react-slick/lib/slider";
+import PlaceNearMe from "./PlaceNearMe";
 
 const imageMaker = {
   market:
@@ -166,6 +167,8 @@ function Map() {
   const [categ, setCateg] = useState(localStorage.getItem("categ"));
   const [nearByMe, setNearByMe] = useState([]);
   const [selectNearByMe, setSelectNearByMe] = useState(null);
+  const [isOpenListNear, setIsOpenListNear] = useState(false);
+
   const [storeMarkerSaved, setStoreMarkerSaved] = useState(
     JSON.parse(localStorage.getItem("listItemSaved")) || []
   );
@@ -517,15 +520,17 @@ function Map() {
           `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position?.coords.latitude},${position?.coords.longitude}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
         );
 
-        console.log({ res });
         const params = {
           lat: res?.data?.results[0]?.geometry.location.lat,
           lng: res?.data?.results[0]?.geometry.location.lng,
         };
+
+        console.log(type);
         const request = {
           location: params,
           radius: "5000",
-          type: [`${type}`],
+          keyword: type,
+          type: type,
         };
 
         const service = new google.maps.places.PlacesService(
@@ -538,7 +543,8 @@ function Map() {
               google.maps.places.PlacesServiceStatus.OK /*global google*/ &&
             place
           ) {
-            place?.forEach((x) => {
+            console.log({ place });
+            place?.forEach((x, idx) => {
               setNearByMe((current) => [
                 ...current,
                 {
@@ -550,9 +556,23 @@ function Map() {
                     url: x?.icon_mask_base_uri,
                     backgroundColor: x?.icon_background_color,
                   },
+                  rating: x?.rating,
+                  userRating: x?.user_ratings_total,
+                  openHours: {
+                    isOpen:
+                      x?.opening_hours && x?.opening_hours?.open_now
+                        ? "Open"
+                        : "Closed",
+                  },
+                  placeId: x?.place_id ? x?.place_id : "",
+                  vicinity: x?.vicinity ? x?.vicinity : "",
+                  photos: x?.photos && x?.photos[0]?.getUrl(),
                   imgSave: CATEGORIES[0]?.urlImg,
+                  types: x?.types ? x?.types : [],
                 },
               ]);
+
+              setIsOpenListNear(true);
             });
           }
         });
@@ -567,6 +587,8 @@ function Map() {
       options
     );
   };
+
+  console.log({ nearByMe });
   /**
    * Show mark saved
    */
@@ -681,7 +703,7 @@ function Map() {
                       className="slideBtn"
                       onClick={() => {
                         setIsCloseNear(true);
-                        nearMe("atm");
+                        nearMe(["atm"]);
                       }}
                     >
                       ATM
@@ -691,7 +713,7 @@ function Map() {
                       className="slideBtn"
                       onClick={() => {
                         setIsCloseNear(true);
-                        nearMe("bank");
+                        nearMe(["bank"]);
                       }}
                     >
                       Bank
@@ -701,7 +723,7 @@ function Map() {
                       className="slideBtn"
                       onClick={() => {
                         setIsCloseNear(true);
-                        nearMe("restaurant");
+                        nearMe(["restaurant, food"]);
                       }}
                     >
                       Restaurant
@@ -710,7 +732,7 @@ function Map() {
                       className="slideBtn"
                       onClick={() => {
                         setIsCloseNear(true);
-                        nearMe("hotel");
+                        nearMe(["hotel"]);
                       }}
                     >
                       Hotel
@@ -719,7 +741,7 @@ function Map() {
                       className="slideBtn"
                       onClick={() => {
                         setIsCloseNear(true);
-                        nearMe("cafe");
+                        nearMe(["cafe"]);
                       }}
                     >
                       Cafe
@@ -728,7 +750,7 @@ function Map() {
                       className="slideBtn"
                       onClick={() => {
                         setIsCloseNear(true);
-                        nearMe("hospital");
+                        nearMe(["hospital"]);
                       }}
                     >
                       Hospital
@@ -737,7 +759,16 @@ function Map() {
                       className="slideBtn"
                       onClick={() => {
                         setIsCloseNear(true);
-                        nearMe("gas_station");
+                        nearMe(["health"]);
+                      }}
+                    >
+                      Medical
+                    </button>
+                    <button
+                      className="slideBtn"
+                      onClick={() => {
+                        setIsCloseNear(true);
+                        nearMe(["gas_station"]);
                       }}
                     >
                       Gas station
@@ -792,6 +823,7 @@ function Map() {
                 onClick={() => {
                   setIsCloseNear(false);
                   setNearByMe([]);
+                  setIsOpenListNear(false);
                 }}
               >
                 {nearByMe?.length > 0 ? (
@@ -829,8 +861,8 @@ function Map() {
                 icon={{
                   url: x?.icons?.icon,
                   origin: new window.google.maps.Point(0, 0),
-                  anchor: new window.google.maps.Point(15, 15),
-                  scaledSize: new window.google.maps.Size(30, 30),
+                  anchor: new window.google.maps.Point(30, 30),
+                  scaledSize: new window.google.maps.Size(20, 20),
                 }}
               />
             );
@@ -849,6 +881,17 @@ function Map() {
             </div>
           </InfoWindow>
         ) : null}
+
+        {/* {nearByMe?.length > 0 && ( */}
+        <PlaceNearMe
+          listPlaces={nearByMe}
+          isOpen={isOpenListNear}
+          setIsOpenListNear={setIsOpenListNear}
+          setIsCloseNear={setIsCloseNear}
+          setNearByMe={setNearByMe}
+          ref={mapRef}
+        />
+        {/* )} */}
 
         <ListMarkerInput
           listMarkerInput={listMarkerInput}

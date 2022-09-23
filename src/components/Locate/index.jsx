@@ -93,7 +93,7 @@ const Locate = forwardRef(
             }
           });
 
-          ref.current.setZoom(17);
+          ref.current.setZoom(15);
           ref.current.panTo({
             lat: position?.coords.latitude,
             lng: position?.coords.longitude,

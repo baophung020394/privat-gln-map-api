@@ -200,12 +200,12 @@ export default makeStyles((theme) => ({
 
         color: "rgb(60,64,67)",
         fontSize: 14,
-        fontWeight: 'bold',
+        fontWeight: "bold",
         background: "#fff",
         border: "none",
         borderRadius: 32,
         height: 32,
-        lineHeight:'32px',
+        lineHeight: "32px",
         padding: "0 10px",
         boxShadow:
           "0 1px 2px rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%)",
@@ -222,12 +222,12 @@ export default makeStyles((theme) => ({
 
   wrapBtnsNear: {
     width: "100%",
-    maxWidth: 300,
+    maxWidth: 500,
     marginRight: 30,
     "& .slideBtn": {
       color: "rgb(60,64,67)",
       fontSize: 14,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       background: "#fff",
       border: "none",
       borderRadius: 32,
@@ -259,6 +259,122 @@ export default makeStyles((theme) => ({
       // "& .slick-list": {
       //   margin: "0 -27px",
       // },
+    },
+  },
+
+  nearMeContainer: {
+    position: "absolute",
+    top: 0,
+    left: -425,
+    zIndex: 5,
+    background: "#fff",
+    height: "100%",
+    width: 425,
+    transition: "0.4s",
+    overflowY: "auto",
+    boxShadow: "0 2px 4px rgb(0 0 0 / 20%), 0 -1px 0px rgb(0 0 0 / 2%)",
+    paddingBottom: 60,
+
+    "&:hover": {
+      overflowY: "auto",
+    },
+
+    "&::-webkit-scrollbar": {
+      width: 4,
+    },
+    "&::-webkit-scrollbar-track ": {
+      background: "#f1f1f1",
+    },
+    "&::-webkit-scrollbar-thumb ": {
+      background: "#888",
+    },
+    "&::-webkit-scrollbar-thumb:hover ": {
+      background: "#555",
+    },
+  },
+
+  headerNearMe: {
+    minHeight: 64,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "4px 12px",
+    background: "#fff",
+    position: "sticky",
+    top: 0,
+    zIndex: 2,
+    boxShadow:
+      "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)",
+
+    "& p": {
+      fontSize: 18,
+      color: "#202124",
+      fontWeight: 500,
+    },
+  },
+  backIcon: {
+    minWidth: "unset",
+    padding: 0,
+
+    "& img": {
+      width: 24,
+      height: 24,
+      objectFit: "cover",
+      cursor: "pointer",
+    },
+  },
+  contentPlaces: {
+    marginTop: 16,
+  },
+  placeDetailNearMe: {},
+  listPlacesDetail: {},
+  placeDetail: {
+    display: "flex",
+    marginBottom: 16,
+    borderBottom: "1px solid #e8eaed",
+
+    "& .rating": {
+      display: "flex",
+      alignItems: "center",
+    },
+
+    "& h2": {
+      fontSize: 16,
+      fontWeight: "bold",
+    },
+
+    "& span.number": {
+      color: "#70757a",
+      fontSize: 14,
+      marginRight: 3,
+    },
+
+    "& .ratingstar": {
+      fontSize: 15,
+      marginRight: 3,
+    },
+
+    "& .openTime": {
+      fontSize: 14,
+      "&.green": {
+        color: "#188038",
+      },
+      "&.red": {
+        color: "#D93025",
+      },
+    },
+  },
+  leftPlaceDetail: {
+    flex: 3,
+    padding: 15,
+  },
+  rightPlaceDetail: {
+    flex: 1,
+    "& img": {
+      width: 84,
+      height: 84,
+      objectFit: "cover",
+      borderRadius: 12,
     },
   },
 }));

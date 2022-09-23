@@ -21,7 +21,7 @@ function PlaceDetail({
   setIsOpenGallery,
   setIsOpenRatingDetail,
 }) {
-  console.log({ selected });
+  // console.log({ selected });
   // console.log(selected?.rating);
   const classes = useStyles();
 
